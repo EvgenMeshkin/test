@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ android:orientation="vertical"
+ android:layout_width="match_parent"
+ android:background="#000000" 
+ android:layout_height="match_parent">
+
+<TextView
+    android:id="@+id/textView1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Парамметры:  "
+    android:textAlignment="center"
+    android:textColor="#C0C0C0"
+    android:textSize="@dimen/abc_action_bar_title_text_size"
+    android:textStyle="italic" >
+
+</TextView>
+
+<EditText
+    android:id="@+id/editText1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/textView1"
+      android:textColor="#C0C0C0"
+    android:layout_marginTop="14dp"
+    android:ems="10"
+    android:hint="Город" />
+
+<Button
+    android:id="@+id/btnActTwoo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/editText1"
+    android:layout_alignTop="@+id/editText1"
+    android:layout_toRightOf="@+id/editText1"
+    android:text="Показать" />
+
+<EditText
+    android:id="@+id/editText2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignRight="@+id/textView1"
+      android:textColor="#C0C0C0"
+    android:layout_below="@+id/editText1"
+    android:ems="10"
+    android:hint="Lat" >
+
+    <requestFocus />
+</EditText>
+
+<Button
+    android:id="@+id/btnkor"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/editText4"
+    android:layout_alignLeft="@+id/btnActTwoo"
+    android:layout_alignRight="@+id/btnActTwoo"
+    android:layout_below="@+id/btnActTwoo"
+    android:text="Показать" />
+
+<EditText
+    android:id="@+id/editText3"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/editText2"
+    android:ems="10"
+    android:hint="id Города" />
+
+<Button
+    android:id="@+id/btnid"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/editText3"
+    android:layout_alignLeft="@+id/btmkor"
+    android:layout_alignRight="@+id/btnkor"
+    android:layout_below="@+id/btnkor"
+    android:text="Показать" />
+
+<EditText
+    android:id="@+id/editText4"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignRight="@+id/editText1"
+    android:layout_below="@+id/editText1"
+    android:layout_toRightOf="@+id/editText2"
+    android:ems="10"
+    android:hint="Lon" />
+
+</RelativeLayout>

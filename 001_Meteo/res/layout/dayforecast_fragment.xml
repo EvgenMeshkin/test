@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+   
+     >
+     
+        <!--  Image weather condition -->
+
+    <ImageView
+        android:id="@+id/forCondIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
+    
+     <TextView
+        android:id="@+id/skydescForecast"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#C0C0C0"
+        android:layout_centerHorizontal="true" 
+        android:textAlignment="center"
+        android:layout_alignStart="@id/temp"
+        android:layout_below="@id/forCondIcon" >
+    </TextView>
+
+      
+    <TextView
+        android:id="@+id/tempForecast"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#C0C0C0"
+        android:layout_below="@id/skydescForecast"
+        android:layout_centerHorizontal="true" 
+        android:textAlignment="center"
+        android:layout_alignStart="@id/forCondIcon">
+    </TextView>
+
+   
+
+</RelativeLayout>

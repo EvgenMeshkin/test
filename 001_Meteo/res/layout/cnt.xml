@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000" 
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+             android:textColor="#C0C0C0" 
+            android:text="Прогноз погоды: "
+            android:textStyle="italic" 
+            android:textSize="@dimen/abc_action_bar_title_text_size" />
+
+        <EditText
+            android:id="@+id/editdn"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignRight="@+id/textView1"
+            android:layout_below="@+id/textView1"
+            android:ems="10"
+            android:hint="Кол-во дней"
+            android:textColor="#C0C0C0" />
+
+        <Button
+            android:id="@+id/butshow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editdn"
+            android:layout_below="@+id/textView1"
+            android:layout_toRightOf="@+id/editdn"
+            android:text="Показать"
+            android:textSize="@dimen/abc_action_bar_subtitle_text_size" />
+
+        <Button
+            android:id="@+id/butexit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/butshow"
+            android:layout_alignTop="@+id/butshow"
+            android:layout_toRightOf="@+id/butshow"
+            android:text=" Назад "
+            android:textSize="@dimen/abc_action_bar_subtitle_text_size" />
+
+        <TextView
+            android:id="@+id/gor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/editdn"
+            android:layout_marginTop="18dp"
+            android:text="Город "
+            android:textAlignment="center"
+            android:textColor="#C0C0C0"
+            android:textSize="@dimen/abc_action_bar_title_text_size"
+            android:textStyle="italic" />
+
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+    
+    android:id="@+id/pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="6" >
+
+    <android.support.v4.view.PagerTitleStrip
+        android:id="@+id/pager_title_strip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="#E6E6E6"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:textColor="#fff" />
+    
+	</android.support.v4.view.ViewPager> 
+
+</LinearLayout>

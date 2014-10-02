@@ -1,0 +1,130 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000" 
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <TextView
+        android:id="@+id/cityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.5"
+        android:text="Загрузка"
+        android:textColor="#D00000"
+        android:textSize="@dimen/abc_dropdownitem_icon_width" />
+
+    <TextView
+        android:id="@+id/temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/condDescr"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.8"
+        android:text="1"
+        android:textAlignment="center"
+        android:textColor="#00FF00"
+        android:textSize="@dimen/abc_action_button_min_width" />
+
+    <TextView
+        android:id="@+id/hum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+       android:textColor="#C0C0C0" 
+        android:layout_below="@+id/temp"
+        android:text="2" />
+
+    <TextView
+        android:id="@+id/press"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#C0C0C0" 
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/hum"
+        android:text="3" />
+
+    <TextView
+        android:id="@+id/windSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#C0C0C0" 
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/press"
+        android:text="4" />
+
+    <TextView
+        android:id="@+id/windDeg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#C0C0C0" 
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/windSpeed"
+        android:text="5" />
+
+    <ImageView
+        android:id="@+id/condIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#C0C0C0" 
+        
+        android:layout_below="@+id/obl"               />
+
+    <TextView
+        android:id="@+id/condDescr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:textColor="#C0C0C0" 
+        android:layout_below="@+id/cityText"
+        android:text="6" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:textColor="#C0C0C0" 
+        android:layout_below="@+id/windDeg"
+        android:text="7" />
+     <TextView
+        android:id="@+id/obl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:textColor="#C0C0C0" 
+        android:layout_below="@+id/date"
+        android:text="8" />
+
+     <TextView
+         android:id="@+id/par"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/obl"
+         android:layout_centerHorizontal="true"
+         android:alpha="0.8"
+         android:text="7"
+         android:textColor="#880000"
+         android:textSize="@dimen/abc_action_bar_title_text_size"
+         android:textStyle="italic" />
+
+    <Button
+        android:id="@+id/btncnt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnActTwo"
+        android:layout_alignTop="@+id/btnActTwo"
+        android:layout_gravity="center"
+        android:layout_toRightOf="@+id/btnActTwo"
+        android:text=" Прогноз " />
+
+    <Button
+        android:id="@+id/btnActTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/par"
+        android:layout_alignParentLeft="true"
+        android:text="Настройка" />
+
+</RelativeLayout>
