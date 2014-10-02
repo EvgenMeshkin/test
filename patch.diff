@@ -1,0 +1,21 @@
+From 3cc10ef24f8720a2ba191f6f76b4d1884626450d Mon Sep 17 00:00:00 2001
+From: EvgenMeshkin <programmbel@mail.ru>
+Date: Thu, 2 Oct 2014 11:38:52 +0200
+Subject: [PATCH] one add file
+
+---
+ sample1/Testing.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 sample1/Testing.txt
+
+diff --git a/sample1/Testing.txt b/sample1/Testing.txt
+new file mode 100644
+index 0000000..bd41cba
+--- /dev/null
++++ b/sample1/Testing.txt
+@@ -0,0 +1 @@
++12345
+\ No newline at end of file
+-- 
+1.8.3.msysgit.0
+
