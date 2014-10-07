@@ -1,18 +1,27 @@
 package com.example.evgenmeshkin.task_manager;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    public static TextView rez = null;
+    public static final int requestF = 0;
+    String Text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
+        rez = (TextView) findViewById(R.id.rez);
+   //     if (getIntent().getExtras().getString("textF").equals("")){
+   //         rez.setText(""); }
+    //        else rez.setText(getIntent().getExtras().getString("textF"));
+      }
 
 
     @Override
@@ -33,4 +42,11 @@ public class MainActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void onFinderClick(View view) {
+        startActivity(new Intent(this, FindActivity.class));
+    }
+
+
+
 }
