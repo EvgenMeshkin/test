@@ -18,9 +18,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rez = (TextView) findViewById(R.id.rez);
-   //     if (getIntent().getExtras().getString("textF").equals("")){
-   //         rez.setText(""); }
-    //        else rez.setText(getIntent().getExtras().getString("textF"));
+       // if (("").equals((getIntent().getExtras().getString("textF")))){
+       //     rez.setText(""); }
+      //     else
+      try {
+        rez.setText(String.valueOf(getIntent().getExtras().getString("textF")));}
+      catch (NullPointerException  e) {rez.setText("");}
       }
 
 

@@ -18,29 +18,35 @@ public class FindActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
         rez = (TextView) findViewById(R.id.rez);
-        rez.setText("");
+//        rez.setText("");
+        try {
+            rez.setText(String.valueOf(getIntent().getExtras().getString("textF")));}
+        catch (NullPointerException  e) {rez.setText("");}
 
     }
 
+
+    public void onHomeClick(View view) {
+        startActivity(new Intent(this, MainActivity.class));
+    }
 
 
     public void onFindClick(View view) {
 
         Text = (EditText) findViewById(R.id.edit_text);
         if (Text.getText().toString().equals("")) {
+        //startActivity(new Intent(this, FindActivity.class));
+        //rez.setText("Input error");
+            Intent intent = new Intent(this, FindActivity.class);
+            intent.putExtra("textF", "Input error"); // в ключ username пихаем текст из первого текстового поля
+            startActivity(intent);
 
-        startActivity(new Intent(this, FindActivity.class));
-        rez.setText("Input error");}
+        }
         else {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("textF", Text.getText().toString()); // в ключ username пихаем текст из первого текстового поля
-            setResult(RESULT_OK, intent);
-          //  finish();
             startActivity(intent);
-           // rez.setText("");
-          //  startActivity(new Intent(this, MainActivity.class));
-          //  MainActivity.rez.setText(Text.getText().toString());
-        }
+                 }
     }
 
 
