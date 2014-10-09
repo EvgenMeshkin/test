@@ -49,7 +49,13 @@ public class MainActivity extends ActionBarActivity {
     public void onFinderClick(View view) {
         startActivity(new Intent(this, FindActivity.class));
     }
-
-
-
+    public void onListVClick(View view) {
+        startActivity(new Intent(this, ListviewActivity.class));
+    }
+    public void onGoogleClick(View view) {
+        startActivity(new Intent(this, GoogleActivity.class));
+    }
+    public void onVkClick(View view) {
+        startActivity(new Intent(this, VkActivity.class));
+    }
 }
