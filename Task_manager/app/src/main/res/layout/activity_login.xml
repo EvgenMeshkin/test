@@ -9,14 +9,7 @@
     tools:context=".LoginActivity">
 
 
-<<<<<<< HEAD
-    <EditText
-        android:id="@+id/edit_text"
-        android:layout_width="match_parent"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"
-        />
-=======
+
         <EditText
             android:id="@+id/edit_text"
             android:layout_width="match_parent"
@@ -24,7 +17,7 @@
             android:inputType="textEmailAddress"
             android:layout_height="wrap_content"
            />
->>>>>>> 26ace2c62c5201a66cd50c200ba215e1897606c7
+
 
         <EditText
             android:id="@+id/password"
