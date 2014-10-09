@@ -2,13 +2,17 @@ package com.example.evgenmeshkin.task_manager;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Created by User on 07.10.2014.
  */
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends ActionBarActivity implements TextView.OnEditorActionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +25,8 @@ public class LoginActivity extends ActionBarActivity {
                 finish();
             }
         });
+        EditText editGo = (EditText) findViewById(R.id.password);
+        editGo.setOnEditorActionListener(this);
     }
 
     public void onLoginFinish(View view) {
@@ -32,4 +38,25 @@ public class LoginActivity extends ActionBarActivity {
         setResult(RESULT_OK);
         finish();
     }
+
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+     //   if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            // обрабатываем нажатие кнопки поиска
+     //   }
+        if (actionId == EditorInfo.IME_ACTION_GO) {
+            // обрабатываем нажание кнопки GO
+           Authorized.setLogged(true);
+           setResult(RESULT_OK);
+            finish();
+
+            return true;
+        }
+
+        return false;
+
+    }
+
+
 }

@@ -20,12 +20,24 @@
             android:label="@string/app_name"/>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name=".FindActivity"
             android:label="@string/app_name"
         />
+        <activity
+            android:name=".ListviewActivity"
+            android:label="@string/app_name"
+            />
+        <activity
+            android:name=".GoogleActivity"
+            android:label="@string/app_name"
+            />
+        <activity
+            android:name=".VkActivity"
+            android:label="@string/app_name"
+            />
 
     </application>
 
