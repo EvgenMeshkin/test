@@ -3,4 +3,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/draw_bar"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:drawablePadding="16dip"
+        android:background="#666"
+        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentLeft="true"
+        android:text="Hello Activity"/>
+    <View
+        android:layout_width="0dip"
+        android:layout_centerInParent="true"
+        android:layout_weight="0.5"
+        android:layout_height="match_parent"
+        android:id="@+id/view" />
+    <ImageView
+        android:id="@+id/image_view"
+        android:background="#666"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:paddingLeft="16dip"
+        android:layout_width="48dip"
+        android:layout_alignParentRight="true"
+        android:paddingRight="16dip"
+        android:layout_height="?attr/actionBarSize"
+        />
+
+
+    <TextView
+        android:id="@+id/draw2_bar"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_below="@id/image_view"
+        android:drawablePadding="16dip"
+        android:background="#999"
+        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+        android:drawableRight="@android:drawable/arrow_down_float"
+        android:paddingRight="16dip"
+        android:paddingLeft="4dip"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentLeft="true"
+        android:text="Hello Activity"/>
+    <View
+        android:layout_width="0dip"
+        android:layout_centerInParent="true"
+        android:layout_weight="0.5"
+        android:layout_height="match_parent"
+
+        android:id="@+id/view2" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:dividerHeight="8dip"
+        android:headerDividersEnabled="true"
+        android:layout_below="@+id/draw2_bar"
+        android:layout_centerHorizontal="true" />
+
+
 </RelativeLayout>

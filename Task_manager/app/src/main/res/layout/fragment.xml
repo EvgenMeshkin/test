@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="32dip"
         android:paddingRight="4dip"
-        android:background="#666"
+
         android:src="@drawable/abc_ic_go"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
@@ -48,7 +48,6 @@
             android:layout_height="wrap_content"
             android:text="123"
             android:singleLine="true"
-
             android:layout_toRightOf="@id/text2"
             android:layout_alignParentRight="true"
             android:textSize="15sp"
