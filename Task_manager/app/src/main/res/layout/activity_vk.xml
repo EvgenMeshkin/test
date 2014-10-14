@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:clickable="false"
     android:focusable="false"
-    android:focusableInTouchMode="false">
+    android:focusableInTouchMode="false"
+    >
 
     <!-- The main content view -->
     <FrameLayout

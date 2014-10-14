@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -24,6 +25,10 @@ public class VkfActivity extends Fragment {
     private static final String TITLE = "catname"; // Верхний текст
     private static final String DESCRIPTION = "description"; // ниже главного
     private static final String ICON = "icon";  // будущая картинка
+    String[] data = {"a", "b", "c", "d", "e", "f"};
+
+    GridView gvMain;
+    ArrayAdapter<String> adaptergrid;
 
 
     String[] colors = { "Красны", "Оранжевый", "Желтый", "Зелёный", "Голубой", "Синий", "Фиолетовый"};
@@ -34,7 +39,7 @@ public class VkfActivity extends Fragment {
                              Bundle savedInstanceState) {
               //    View rootView = inflater.inflate(R.layout.activity_listview, container, false);
 
-        final View content = inflater.inflate(R.layout.activity_google,null);
+        final View content = inflater.inflate(R.layout.activity_vkf,null);
         ListView list = (ListView) content.findViewById(R.id.listView1);
         catList = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> hm;
@@ -62,6 +67,10 @@ public class VkfActivity extends Fragment {
         hm.put(DESCRIPTION, "Болеет за Барселону hjhjhjh");
         hm.put(ICON,  R.drawable.abc_ic_go);
         catList.add(hm);
+
+        adaptergrid = new ArrayAdapter<String>(getActivity(), R.layout.itemgrid, R.id.tvText, data);
+        gvMain = (GridView) content.findViewById(R.id.gridView1);
+        gvMain.setAdapter(adaptergrid);
 
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), catList,
                 R.layout.fragmentg, new String[] { TITLE, DESCRIPTION, ICON},

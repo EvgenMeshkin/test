@@ -2,28 +2,90 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#4F4F4F"
     >
+
+
+
+
 
     <TextView
         android:id="@+id/txtLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:textSize="16sp"
-        android:text="Main View"/>
+        android:text="Evgen Meshkin"
+        android:gravity="center"
+        android:textColor="@color/drawer_item_color"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_toEndOf="@+id/imageView" />
 
     <ImageView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txtLabel"
         android:src="@drawable/ic_launcher"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
+        android:id="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-    <ListView
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gridView1"
+        android:numColumns="3"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:paddingTop="16dip"
+        android:paddingBottom="16dip"
+        android:background="#4F4F4F"
+        android:layout_below="@+id/imageView"
+        android:textAlignment="center"
+        android:verticalSpacing="5dp"
+        android:horizontalSpacing="5dp"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher"
+        android:id="@+id/imageView1"
+        android:layout_below="@id/gridView1"
+        android:layout_centerInParent="true"
+         />
+
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listView1"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:text="Foto"
+        android:background="#1874CD"
+        android:layout_below="@id/imageView1"
+        android:layout_alignParentRight="true"
+        android:id="@+id/button" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fgfgggfgf stene"
+        android:background="#1874CD"
+        android:textColor="@color/drawer_item_color"
+        android:layout_below="@id/imageView1"
+        android:layout_toLeftOf="@id/button"
+        android:id="@+id/button1" />
+
+    <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button"
+            android:id="@+id/listView1"
+            android:background="#E0FFFF"
+            android:divider="#999"
+            android:dividerHeight="8dip"
+            android:headerDividersEnabled="true"
+            android:layout_centerHorizontal="true" />
+
+    <ImageSwitcher
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageSwitcher" />
 
 </RelativeLayout>
