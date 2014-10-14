@@ -19,10 +19,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class VkActivity extends Activity {
+    private ArrayList<HashMap<String, Object>> catList;
+    private static final String TITLE = "catname"; // Верхний текст
+    private static final String DESCRIPTION = "description"; // ниже главного
+    private static final String ICON = "icon";  // будущая картинка
 
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
@@ -97,9 +104,10 @@ public class VkActivity extends Activity {
         Fragment fragment = null;
         switch (position) {
             case 0:
-
-
                 fragment = new VkfActivity();
+
+
+
                 break;
             case 1:
              //   fragment = new SecondFragment();
