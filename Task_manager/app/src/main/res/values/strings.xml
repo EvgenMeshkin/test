@@ -8,5 +8,12 @@
         <item>Второй экран</item>
         <item>Третий экран</item>
     </string-array>
+    <string-array name="catlist">
+        <item>Все</item>
+        <item>Последнее</item>
+        <item>Популярное</item>
+        <item>Поиск</item>
+        <item>Мои круги</item>
+    </string-array>
     <string name="menu">Меню</string>
 </resources>

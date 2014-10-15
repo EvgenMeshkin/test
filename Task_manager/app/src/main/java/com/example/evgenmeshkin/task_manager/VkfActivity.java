@@ -25,13 +25,13 @@ public class VkfActivity extends Fragment {
     private static final String TITLE = "catname"; // Верхний текст
     private static final String DESCRIPTION = "description"; // ниже главного
     private static final String ICON = "icon";  // будущая картинка
-    String[] data = {"a", "b", "c", "d", "e", "f"};
+    String[] data = {"Друзья", "Подписчики", "Группы", "Фото", "Видео", "Аудио"};
 
     GridView gvMain;
     ArrayAdapter<String> adaptergrid;
 
 
-    String[] colors = { "Красны", "Оранжевый", "Желтый", "Зелёный", "Голубой", "Синий", "Фиолетовый"};
+
     public VkfActivity(){}
 
     @Override
@@ -45,26 +45,26 @@ public class VkfActivity extends Fragment {
         HashMap<String, Object> hm;
 
         hm = new HashMap<String, Object>();
-        hm.put(TITLE, "Рыжик"); // Название
-        hm.put(DESCRIPTION, "Рыжий и хитрый"); // Описание
+        hm.put(TITLE, "Отправитель"); // Название
+        hm.put(DESCRIPTION, "Текст"); // Описание
         hm.put(ICON,  R.drawable.abc_ic_go); // Картинка
         catList.add(hm);
 
         hm = new HashMap<String, Object>();
-        hm.put(TITLE, "Васька");
-        hm.put(DESCRIPTION, "Слушает да ест");
+        hm.put(TITLE, "Отправитель"); // Название
+        hm.put(DESCRIPTION, "Текст"); // Описание
         hm.put(ICON,  R.drawable.abc_ic_go);
         catList.add(hm);
 
         hm = new HashMap<String, Object>();
-        hm.put(TITLE, "Мурзик");
-        hm.put(DESCRIPTION, "Спит и мурлыкает");
+        hm.put(TITLE, "Отправитель"); // Название
+        hm.put(DESCRIPTION, "Текст"); // Описание
         hm.put(ICON,  R.drawable.abc_ic_go);
         catList.add(hm);
 
         hm = new HashMap<String, Object>();
-        hm.put(TITLE, "Барсик");
-        hm.put(DESCRIPTION, "Болеет за Барселону hjhjhjh");
+        hm.put(TITLE, "Отправитель"); // Название
+        hm.put(DESCRIPTION, "Текст"); // Описание
         hm.put(ICON,  R.drawable.abc_ic_go);
         catList.add(hm);
 

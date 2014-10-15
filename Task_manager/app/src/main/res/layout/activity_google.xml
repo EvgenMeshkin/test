@@ -34,19 +34,7 @@
         android:id="@+id/view" />
 
 
-    <TextView
-        android:id="@+id/draw2_bar"
-        android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:layout_below="@id/image_view"
-        android:drawablePadding="16dip"
-        android:background="#E0FFFF"
-        android:drawableRight="@android:drawable/arrow_down_float"
-        android:paddingRight="16dip"
-        android:paddingLeft="48dip"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentLeft="true"
-        android:text="Все"/>
+
     <View
         android:layout_width="0dip"
         android:layout_centerInParent="true"
@@ -54,6 +42,14 @@
         android:layout_height="match_parent"
 
         android:id="@+id/view2" />
+    <Spinner
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/spinner"
+    android:layout_below="@+id/image_view"
+    android:layout_alignParentRight="true"
+    android:entries="@array/catlist"
+    />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -63,7 +59,7 @@
         android:background="#999"
         android:paddingBottom="8dip"
 
-        android:layout_below="@+id/draw2_bar">
+        android:layout_below="@+id/spinner">
 
         <ListView
         android:layout_width="wrap_content"
@@ -74,6 +70,8 @@
             android:dividerHeight="8dip"
         android:headerDividersEnabled="true"
         android:layout_centerHorizontal="true" />
-</RelativeLayout>
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

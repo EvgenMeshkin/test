@@ -34,26 +34,26 @@ public class ListviewActivity extends ActionBarActivity {
         HashMap<String, Object> hm;
 
         hm = new HashMap<String, Object>();
-        hm.put(TITLE, "Рыжик"); // Название
-        hm.put(DESCRIPTION, "Рыжий и хитрый"); // Описание
+        hm.put(TITLE, "321"); // Название
+        hm.put(DESCRIPTION, "Текст"); // Описание
         hm.put(ICON,  R.drawable.abc_ic_go); // Картинка
         catList.add(hm);
 
         hm = new HashMap<String, Object>();
-        hm.put(TITLE, "Васька");
-        hm.put(DESCRIPTION, "Слушает да ест");
+        hm.put(TITLE, "321");
+        hm.put(DESCRIPTION, "Текст текст");
         hm.put(ICON,  R.drawable.abc_ic_go);
         catList.add(hm);
 
         hm = new HashMap<String, Object>();
-        hm.put(TITLE, "Мурзик");
-        hm.put(DESCRIPTION, "Спит и мурлыкает");
+        hm.put(TITLE, "321");
+        hm.put(DESCRIPTION, "Текст текст текст");
         hm.put(ICON,  R.drawable.abc_ic_go);
         catList.add(hm);
 
         hm = new HashMap<String, Object>();
-        hm.put(TITLE, "Барсик");
-        hm.put(DESCRIPTION, "Болеет за Барселону hjhjhjh");
+        hm.put(TITLE, "321");
+        hm.put(DESCRIPTION, "Текст текст текст текст");
         hm.put(ICON,  R.drawable.abc_ic_go);
         catList.add(hm);
 
