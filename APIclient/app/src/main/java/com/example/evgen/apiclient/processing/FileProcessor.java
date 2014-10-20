@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 /**
  * Created by evgen on 18.10.2014.
  */
-public class FileReaderProcessor implements Processor<String, File> {
+public class FileProcessor implements Processor<String, File> {
 
     final String LOG_TAG = "myLogs";
     @Override

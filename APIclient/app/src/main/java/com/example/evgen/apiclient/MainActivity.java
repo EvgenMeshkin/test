@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.example.evgen.apiclient.callbacks.SimpleCallback;
 import com.example.evgen.apiclient.helper.DataManager;
-import com.example.evgen.apiclient.processing.FileReaderProcessor;
+import com.example.evgen.apiclient.processing.FileProcessor;
 import com.example.evgen.apiclient.processing.RedirectProcessor;
 import com.example.evgen.apiclient.processing.StringProcessor;
 import com.example.evgen.apiclient.source.ArrayStringDataSource;
@@ -24,6 +24,7 @@ import com.example.evgen.apiclient.source.FileDataSource;
 import com.example.evgen.apiclient.source.HttpDataSource;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 
@@ -94,8 +95,6 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
             findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
         }
         AdapterView listView = (AbsListView) findViewById(android.R.id.list);
-        TextView textView1 = (TextView) findViewById(R.id.rez);
-        textView1.setText(data.toString());
 
         if (mAdapter == null) {
             mAdapter = new ArrayAdapter<String>(this, R.layout.adapter_item, android.R.id.text1, data) {
@@ -141,13 +140,14 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
         // получаем путь к SD
         File sdPath = Environment.getExternalStorageDirectory();
         FileDataSource filedatasource = new FileDataSource();
-        FileReaderProcessor fileprocessor = new FileReaderProcessor();
+        FileProcessor fileprocessor = new FileProcessor();
         SimpleCallback<String> callback = new SimpleCallback<String>() {
 
             @Override
             public void onDone(Object data) {
                 setContentView(R.layout.activity_main);
                 TextView textView1 = (TextView) findViewById(R.id.rez);
+                textView1.setVisibility(View.VISIBLE);
                 textView1.setText("Данные записаны в файл");
                 Log.d("MainActivity", "onDone " + data);
 
@@ -168,13 +168,14 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
         // получаем путь к SD
         File sdPath = Environment.getExternalStorageDirectory();
         FileDataSource filedatasource = new FileDataSource();
-        FileReaderProcessor fileprocessor = new FileReaderProcessor();
+        FileProcessor fileprocessor = new FileProcessor();
         SimpleCallback<String> callback = new SimpleCallback<String>() {
 
             @Override
             public void onDone(Object data) {
                 setContentView(R.layout.activity_main);
                 TextView textView1 = (TextView) findViewById(R.id.rez);
+                textView1.setVisibility(View.VISIBLE);
                 textView1.setText(data.toString());
                 Log.d("MainActivity", "onDone " + data);
 
@@ -186,6 +187,20 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
 
 
 
+
     }
+
+    public void onGetingClick(View view) throws Exception {
+        InputStream input = getAssets().open("Proba.txt");
+        int size = input.available();
+        byte[] buffer = new byte[size];
+        input.read(buffer);
+        input.close();
+        String text = new String(buffer);
+        setContentView(R.layout.activity_main);
+        TextView textView1 = (TextView) findViewById(R.id.rez);
+        textView1.setText(new String(buffer));
+    }
+
 
 }
