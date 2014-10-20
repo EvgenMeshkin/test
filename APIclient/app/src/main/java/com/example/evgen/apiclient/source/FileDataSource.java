@@ -1,0 +1,42 @@
+package com.example.evgen.apiclient.source;
+
+import android.content.Context;
+
+import com.example.evgen.apiclient.CoreApplication;
+
+import java.io.Closeable;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+/**
+ * Created by evgen on 18.10.2014.
+ */
+public class FileDataSource implements DataSource<InputStream, String> {
+
+    public static final String KEY = "FileDataSource";
+
+    public static FileDataSource get(Context context) {
+        return CoreApplication.get(context, KEY);
+    }
+
+    @Override
+    public FileInputStream getResult(String p) throws Exception {
+        //download data and return
+        //URL url = new URL(p);
+        // Read all the text returned by the server
+        return new FileInputStream(p);
+    }
+
+    public static void close(Closeable in) {
+        if (in != null) {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
