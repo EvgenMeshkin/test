@@ -3,11 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
+    <Button
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set"
+        android:onClick="onAddClick"
+        android:id="@+id/button" />
+    <Button
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get"
+        android:onClick="onGetClick"
+        android:id="@+id/button1" />
+    <TextView
+        android:id="@+id/rez"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="Ничего нет!!!"
+         />
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/button">
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"

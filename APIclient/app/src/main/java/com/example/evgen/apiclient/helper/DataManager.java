@@ -51,4 +51,41 @@ public class DataManager {
         }).start();
     }
 
+    public static <ProcessingResult, DataSourceResult, Params> void
+    setData(
+            final Callback<ProcessingResult> callback,
+            final Params params,
+            final DataSource<DataSourceResult, Params> dataSource,
+            final Processor<ProcessingResult, DataSourceResult> processor) {
+        if (callback == null) {
+            throw new IllegalArgumentException("callback can't be null");
+        }
+        final Handler handler = new Handler();
+        callback.onDataLoadStart();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final DataSourceResult result = dataSource.setResult(params);
+                    final ProcessingResult processingResult = processor.processwriter(result);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onDone(processingResult);
+                        }
+                    });
+                } catch (final Exception e) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onError(e);
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+
+
 }

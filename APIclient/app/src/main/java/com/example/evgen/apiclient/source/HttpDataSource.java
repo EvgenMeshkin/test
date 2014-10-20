@@ -28,6 +28,11 @@ public class HttpDataSource implements DataSource<InputStream, String> {
         return url.openStream();
     }
 
+    @Override
+    public InputStream setResult(String s) throws Exception {
+        return null;
+    }
+
     public static void close(Closeable in) {
         if (in != null) {
             try {

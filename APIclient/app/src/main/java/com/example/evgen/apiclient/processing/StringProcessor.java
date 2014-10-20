@@ -29,4 +29,9 @@ public class StringProcessor implements Processor<String, InputStream> {
             HttpDataSource.close(inputStream);
         }
     }
+
+    @Override
+    public String processwriter(InputStream inputStream) throws Exception {
+        return null;
+    }
 }
