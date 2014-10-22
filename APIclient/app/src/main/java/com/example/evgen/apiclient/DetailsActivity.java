@@ -15,7 +15,7 @@ public class DetailsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        NoteGsonModel noteGsonModel = (NoteGsonModel) getIntent().getSerializableExtra("item");
+        NoteGsonModel noteGsonModel = (NoteGsonModel) getIntent().getParcelableExtra("item");
         ((TextView)findViewById(android.R.id.text1)).setText(noteGsonModel.getTitle());
         ((TextView)findViewById(android.R.id.text2)).setText(noteGsonModel.getContent());
     }
