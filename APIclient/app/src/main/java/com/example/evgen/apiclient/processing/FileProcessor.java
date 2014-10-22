@@ -43,7 +43,7 @@ public class FileProcessor implements Processor<String, File> {
         }
     }
 
-    @Override
+  /*  @Override
     public String processwriter(File file) throws Exception {
         InputStreamReader inputStreamReader = null;
         BufferedWriter bw = null;
@@ -63,7 +63,7 @@ public class FileProcessor implements Processor<String, File> {
             FileDataSource.close(inputStreamReader);
 
         }
-    }
+    }*/
 
 
 }

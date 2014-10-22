@@ -39,9 +39,9 @@ public class CoreApplication extends Application {
             context = context.getApplicationContext();
             systemService = (T) context.getSystemService(key);
         }
-   ///     if (systemService == null) {
-   ////         throw new IllegalStateException(key + " not available");
-   //     }
+       if (systemService == null) {
+            throw new IllegalStateException(key + " not available");
+        }
         return systemService;
     }
 

@@ -30,8 +30,5 @@ public class StringProcessor implements Processor<String, InputStream> {
         }
     }
 
-    @Override
-    public String processwriter(InputStream inputStream) throws Exception {
-        return null;
-    }
+
 }

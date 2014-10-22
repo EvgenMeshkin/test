@@ -51,7 +51,7 @@ public class DataManager {
         }).start();
     }
 
-    public static <ProcessingResult, DataSourceResult, Params> void
+ /*   public static <ProcessingResult, DataSourceResult, Params> void
     setData(
             final Callback<ProcessingResult> callback,
             final Params params,
@@ -84,7 +84,7 @@ public class DataManager {
                 }
             }
         }).start();
-    }
+    }*/
 
 
 

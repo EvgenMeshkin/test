@@ -29,8 +29,8 @@ public class ArrayStringDataSource  implements DataSource<ArrayList<String>, Voi
         return (ArrayList<String>) getData();
     }
 
-    @Override
+    /*@Override
     public ArrayList<String> setResult(Void aVoid) throws Exception {
         return null;
-    }
+    }*/
 }

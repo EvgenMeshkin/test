@@ -6,7 +6,7 @@ package com.example.evgen.apiclient.processing;
 public interface Processor<ProcessingResult, Source> {
 
     ProcessingResult process(Source source) throws Exception;
-    ProcessingResult processwriter(Source source) throws Exception;
+    //ProcessingResult processwriter(Source source) throws Exception;
 
 
 }

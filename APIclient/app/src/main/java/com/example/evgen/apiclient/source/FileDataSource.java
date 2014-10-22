@@ -44,7 +44,7 @@ public class FileDataSource implements DataSource<File, String> {
         return sdFile;
     }
 
-    @Override
+    /*@Override
     public File setResult(String s) throws Exception {
 
         File sdPath = Environment.getExternalStorageDirectory();
@@ -53,7 +53,7 @@ public class FileDataSource implements DataSource<File, String> {
         sdPath.mkdirs();
         File sdFile = new File(s, FILENAME_SD);
         return sdFile;
-    }
+    }*/
 
     public static void close(Closeable in) {
         if (in != null) {

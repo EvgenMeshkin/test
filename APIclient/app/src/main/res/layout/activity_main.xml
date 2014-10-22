@@ -10,6 +10,7 @@
         android:layout_height="36dip"
         android:text="Set"
         android:onClick="onAddClick"
+        android:visibility="gone"
         android:id="@+id/button" />
     <Button
         android:layout_alignParentTop="true"
@@ -18,6 +19,7 @@
         android:layout_height="36dip"
         android:text="Get"
         android:onClick="onGetClick"
+        android:visibility="gone"
         android:id="@+id/button1" />
     <TextView
         android:id="@+id/rez"

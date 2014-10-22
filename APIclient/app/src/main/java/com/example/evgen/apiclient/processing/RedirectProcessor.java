@@ -9,8 +9,5 @@ public class RedirectProcessor <DataSourceResult> implements Processor<DataSourc
         return dataSourceResult;
     }
 
-    @Override
-    public DataSourceResult processwriter(DataSourceResult dataSourceResult) throws Exception {
-        return null;
-    }
+
 }
