@@ -62,4 +62,22 @@ public class JSONObjectWrapper implements Parcelable {
             e.printStackTrace();
         }
     }
+
+    public static final Parcelable.Creator<JSONObjectWrapper> CREATOR = new Creator<JSONObjectWrapper>() {
+
+        @Override
+        public JSONObjectWrapper createFromParcel(Parcel source) {
+            return new JSONObjectWrapper(source);
+        }
+
+        @Override
+        public JSONObjectWrapper[] newArray(int size) {
+            return new JSONObjectWrapper[size];
+        }
+    };
+
+    public JSONObjectWrapper(Parcel source) {
+        this(source.readString());
+    }
+
 }

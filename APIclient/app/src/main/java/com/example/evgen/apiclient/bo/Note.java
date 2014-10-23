@@ -7,9 +7,14 @@ import org.json.JSONObject;
  */
 public class Note extends JSONObjectWrapper {
 
-    private static final String TITLE = "title";
+  /*  private static final String TITLE = "title";
     private static final String CONTENT = "content";
-    private static final String ID = "id";
+    private static final String ID = "id";*/
+  private String title;
+
+    private String content;
+
+    private String id;
 
    public Note(String jsonObject) {
         super(jsonObject);
@@ -20,15 +25,26 @@ public class Note extends JSONObjectWrapper {
     }
 
     public String getTitle() {
-        return getString(TITLE);
+        return getString("title");
     }
 
     public String getContent() {
-        return getString(CONTENT);
+        return getString("content");
     }
 
     public Long getId() {
-        return getLong(ID);
+        return getLong("id");
     }
+   /*public String getTitle() {
+       return title;
+   }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return content;
+    }*/
 
 }
