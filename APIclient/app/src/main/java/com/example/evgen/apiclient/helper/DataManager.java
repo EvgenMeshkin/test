@@ -1,5 +1,6 @@
 package com.example.evgen.apiclient.helper;
 
+import android.os.AsyncTask;
 import android.os.Handler;
 
 import com.example.evgen.apiclient.processing.Processor;
@@ -50,6 +51,8 @@ public class DataManager {
             }
         }).start();
     }
+
+
 
  /*   public static <ProcessingResult, DataSourceResult, Params> void
     setData(
