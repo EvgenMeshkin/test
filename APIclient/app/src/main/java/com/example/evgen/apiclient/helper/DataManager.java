@@ -27,10 +27,18 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> extends Asy
 
     public static final int IS_ASYNC_TASK = 4;
     public static final int LOADER_ID = 1;
-    private Callback<MainActivity> callback;
+    public static final  String LOADER_ST = "Peremen";
+    private Callback<ProcessingResult> callback;
     private Params params;
     private DataSource<DataSourceResult, Params> dataSource;
     private Processor<ProcessingResult, DataSourceResult> processor;
+
+    public static interface Callback<Result> {
+        void onDataLoadStart();
+        void onDone(Result data);
+        void onError(Exception e);
+    }
+
 
     @Override
     protected void onStartLoading() {
@@ -39,49 +47,45 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> extends Asy
         Log.d("datamanager", "start " );
     }
 
-    public static interface Callback<Result> {
-        void onDataLoadStart();
-        void onDone(Result data);
-        void onError(Exception e);
-    }
 
-    public DataManager(Context context,  Params url, DataSource dataSource, Processor processor) {
+
+    public DataManager(Context context, Callback<ProcessingResult> call,  Params url, DataSource<DataSourceResult, Params> dataSource, Processor<ProcessingResult, DataSourceResult> processor) {
         super(context);
-      //  this.callback = call;
+        this.callback = call;
         this.params = url;
         this.dataSource = dataSource;
         this.processor = processor;
-        Log.d("datamanager", "запуск " );
+        Log.d("datamanager", "запуск "  + LOADER_ST  );
+        callback.onDataLoadStart();
+        try {
+            final DataSourceResult result = dataSource.getResult(params);
+            final ProcessingResult processingResult = processor.process(result);
 
+            Log.d("Datamanager", "переход2 " );
+            callback.onDone(processingResult);
+
+        } catch (final Exception e) {
+
+            callback.onError(e);
+        }
     }
 
 
     @Override
     public Integer loadInBackground() {
-        Log.d("Datamanager", "переход " );
-     //  final Handler handler = new Handler();
-        callback.onDataLoadStart();
+        Log.d("Datamanager", "переход " + LOADER_ST );
+        //   callback.onDataLoadStart();
 
                 try {
                     final DataSourceResult result = dataSource.getResult(params);
                     final ProcessingResult processingResult = processor.process(result);
-   //                 handler.post(new Runnable() {
-   //                     @Override
-    //                    public void run() {
                             Log.d("Datamanager", "переход2 " );
-                            callback.onDone((MainActivity) processingResult);
-   //                     }
-  //                  });
-               } catch (final Exception e) {
-    //                handler.post(new Runnable() {
-     //                   @Override
-    //                    public void run() {
+                            callback.onDone(processingResult);
+                  } catch (final Exception e) {
+
                             callback.onError(e);
                         }
-     //               });
-     //           }
-   //         }
-   //     }).start();
+
         return Log.d("Datamanager", "переход3 " );
     }
 

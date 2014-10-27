@@ -76,7 +76,7 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
                     @Override
                     public Loader<Integer> onCreateLoader(int id, Bundle bundle) {
                         Log.d("MainActivity", "запуск " );
-                        return new DataManager(MainActivity.this, URL, dataSource, processor);
+                        return new DataManager(MainActivity.this, MainActivity.this, URL, dataSource, processor);
                     }
 
                     @Override
