@@ -50,7 +50,6 @@ public class NoteGsonModel implements Parcelable {
     public NoteGsonModel  createFromParcel(Parcel in) {
         return new NoteGsonModel(in);
     }
-
     public NoteGsonModel[] newArray(int size) {
         return new NoteGsonModel[size];
 
