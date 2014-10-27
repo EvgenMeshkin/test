@@ -1,11 +1,10 @@
 package com.example.evgen.apiclient.helper;
 
 
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.os.Bundle;
+import android.content.Context;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -13,43 +12,77 @@ import android.util.Log;
 import com.example.evgen.apiclient.MainActivity;
 import com.example.evgen.apiclient.R;
 import com.example.evgen.apiclient.os.AsyncTask;
-import com.example.evgen.apiclient.os.MyLoader;
+//import com.example.evgen.apiclient.os.MyLoader;
+import com.example.evgen.apiclient.processing.NoteArrayProcessor;
 import com.example.evgen.apiclient.processing.Processor;
 import com.example.evgen.apiclient.source.DataSource;
+import com.example.evgen.apiclient.source.HttpDataSource;
 
 import static android.app.PendingIntent.getActivity;
 
 /**
  * Created by evgen on 18.10.2014.
  */
-public class DataManager implements LoaderManager.LoaderCallbacks<String> {
+public class DataManager<ProcessingResult, DataSourceResult, Params> extends AsyncTaskLoader<Integer> {
 
-    public static final int IS_ASYNC_TASK = 2;
+    public static final int IS_ASYNC_TASK = 4;
     public static final int LOADER_ID = 1;
-    @Override
-    public Loader<String> onCreateLoader(int i, Bundle bundle) {
-        Loader<String> loader = null;
-        if (i == LOADER_ID) {
-            loader = new MyLoader(this, bundle);
-      //      Log.d(LOG_TAG, "onCreateLoader: " + loader.hashCode());
-        }
-        return loader;
-    }
+    private Callback<MainActivity> callback;
+    private Params params;
+    private DataSource<DataSourceResult, Params> dataSource;
+    private Processor<ProcessingResult, DataSourceResult> processor;
 
     @Override
-    public void onLoadFinished(Loader<String> stringLoader, String s) {
-        callback.onDone(processingResult);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<String> stringLoader) {
-
+    protected void onStartLoading() {
+        super.onStartLoading();
+         forceLoad();
+        Log.d("datamanager", "start " );
     }
 
     public static interface Callback<Result> {
         void onDataLoadStart();
         void onDone(Result data);
         void onError(Exception e);
+    }
+
+    public DataManager(Context context,  Params url, DataSource dataSource, Processor processor) {
+        super(context);
+      //  this.callback = call;
+        this.params = url;
+        this.dataSource = dataSource;
+        this.processor = processor;
+        Log.d("datamanager", "запуск " );
+
+    }
+
+
+    @Override
+    public Integer loadInBackground() {
+        Log.d("Datamanager", "переход " );
+     //  final Handler handler = new Handler();
+        callback.onDataLoadStart();
+
+                try {
+                    final DataSourceResult result = dataSource.getResult(params);
+                    final ProcessingResult processingResult = processor.process(result);
+   //                 handler.post(new Runnable() {
+   //                     @Override
+    //                    public void run() {
+                            Log.d("Datamanager", "переход2 " );
+                            callback.onDone((MainActivity) processingResult);
+   //                     }
+  //                  });
+               } catch (final Exception e) {
+    //                handler.post(new Runnable() {
+     //                   @Override
+    //                    public void run() {
+                            callback.onError(e);
+                        }
+     //               });
+     //           }
+   //         }
+   //     }).start();
+        return Log.d("Datamanager", "переход3 " );
     }
 
     public static <ProcessingResult, DataSourceResult, Params> void
@@ -70,16 +103,12 @@ public class DataManager implements LoaderManager.LoaderCallbacks<String> {
                 executeInThread(callback, params, dataSource, processor);
                 break;
             case 3:
-                LoaderManager supportLoaderManager = getSupportLoaderManager();
-                supportLoaderManager.restartLoader(LOADER_ID, new Bundle(), callback);
+               /* LoaderManager supportLoaderManager = getActivity(MainActivity).getSupportLoaderManager();
+                supportLoaderManager.restartLoader(LOADER_ID, new Bundle(), callback);*/
                 break;
 
         }
-     /*   if (IS_ASYNC_TASK) {
-            executeInAsyncTask(callback, params, dataSource);
-        } else {
-            executeInThread(callback, params, dataSource, processor);
-        }*/
+
     }
 
     private static <ProcessingResult, DataSourceResult, Params> void executeInAsyncTask(final Callback<ProcessingResult> callback, Params params, final DataSource<DataSourceResult, Params> dataSource) {
@@ -136,42 +165,6 @@ public class DataManager implements LoaderManager.LoaderCallbacks<String> {
             }
         }).start();
     }
-
- /*   public static <ProcessingResult, DataSourceResult, Params> void
-    setData(
-            final Callback<ProcessingResult> callback,
-            final Params params,
-            final DataSource<DataSourceResult, Params> dataSource,
-            final Processor<ProcessingResult, DataSourceResult> processor) {
-        if (callback == null) {
-            throw new IllegalArgumentException("callback can't be null");
-        }
-        final Handler handler = new Handler();
-        callback.onDataLoadStart();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final DataSourceResult result = dataSource.setResult(params);
-                    final ProcessingResult processingResult = processor.processwriter(result);
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onDone(processingResult);
-                        }
-                    });
-                } catch (final Exception e) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onError(e);
-                        }
-                    });
-                }
-            }
-        }).start();
-    }*/
-
 
 
 }

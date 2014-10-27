@@ -12,6 +12,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -50,7 +51,7 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
     final String DIR_SD = "MyFiles";
     final String FILENAME_SD = "fileSD";
 
-    public static final int LOADER_ID = 0;
+    public static final int LOADER_ID = 1;
     private Cursor mCursor;
     @Override
     protected void onCreate(Bundle pSavedInstanceState) {
@@ -67,55 +68,27 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
         });
         DataManager.loadData(MainActivity.this, URL, dataSource, processor);
 
-     /*   HttpDataSource httpDataSource = HttpDataSource.get(this);
-        SimpleCallback<String> callback = new SimpleCallback<String>() {
-
-            @Override
-            public void onDone(Object data) {
-                Log.d("MainActivity", "onDone " + data);
-            }
-
-        };
-        StringProcessor stringProcessor = new StringProcessor();
-        DataManager.loadData(
-                callback,
-                "https://dl.dropboxusercontent.com/u/16403954/test.json",
-                httpDataSource,
-                stringProcessor
-        );
-
-        DataManager.loadData(
-                callback,
-                "http://google.com",
-                httpDataSource,
-                stringProcessor);*/
         LoaderManager supportLoaderManager = getSupportLoaderManager();
         supportLoaderManager.restartLoader(LOADER_ID,
                 new Bundle(),
-                new LoaderManager.LoaderCallbacks<Cursor>() {
+                new LoaderManager.LoaderCallbacks<Integer>() {
 
                     @Override
-                    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-                        return new CursorLoader(MainActivity.this){
-
-                            @Override
-                            public Cursor loadInBackground() {
-                                MatrixCursor cursor = new MatrixCursor(new String[]{"id","name"});
-                                cursor.addRow(new Object[]{1l, "Vasya"});
-                                return cursor;
-                            }
-                        };
+                    public Loader<Integer> onCreateLoader(int id, Bundle bundle) {
+                        Log.d("MainActivity", "запуск " );
+                        return new DataManager(MainActivity.this, URL, dataSource, processor);
                     }
 
                     @Override
-                    public void onLoadFinished(Loader<Cursor> objectLoader, Cursor cursor) {
-                        mCursor = cursor;
+                    public void onLoadFinished(Loader<Integer> integerLoader, Integer integer) {
+                        Log.d("MainActivity", "финиш " );
                     }
 
                     @Override
-                    public void onLoaderReset(Loader<Cursor> objectLoader) {
-                        mCursor = null;
+                    public void onLoaderReset(Loader<Integer> integerLoader) {
+
                     }
+
 
                 });
     }
@@ -133,6 +106,7 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onDone(List<Note> data) {
+        Log.d("MainActivety", "переход " );
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -189,73 +163,6 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
         errorView.setVisibility(View.VISIBLE);
         errorView.setText(errorView.getText() + "\n" + e.getMessage());
     }
-
-  /*  public void onAddClick(View view) throws Exception {
-
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            Log.d(LOG_TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
-            return;
-        }
-        // получаем путь к SD
-        File sdPath = Environment.getExternalStorageDirectory();
-        FileDataSource filedatasource = new FileDataSource();
-        FileProcessor fileprocessor = new FileProcessor();
-        SimpleCallback<String> callback = new SimpleCallback<String>() {
-
-            @Override
-            public void onDone(Object data) {
-                setContentView(R.layout.activity_main);
-                TextView textView1 = (TextView) findViewById(R.id.rez);
-                textView1.setVisibility(View.VISIBLE);
-                textView1.setText("Данные записаны в файл");
-                Log.d("MainActivity", "onDone " + data);
-
-            }
-
-        };
-        DataManager.setData(callback,sdPath.getAbsolutePath() + "/" + DIR_SD, filedatasource, fileprocessor);
-
-    }
-
-    public void onGetClick(View view) throws Exception {
-
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            Log.d(LOG_TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
-            return;
-        }
-        // получаем путь к SD
-        File sdPath = Environment.getExternalStorageDirectory();
-        FileDataSource filedatasource = new FileDataSource();
-        FileProcessor fileprocessor = new FileProcessor();
-        SimpleCallback<String> callback = new SimpleCallback<String>() {
-
-            @Override
-            public void onDone(Object data) {
-                setContentView(R.layout.activity_main);
-                TextView textView1 = (TextView) findViewById(R.id.rez);
-                textView1.setVisibility(View.VISIBLE);
-                textView1.setText(data.toString());
-                Log.d("MainActivity", "onDone " + data);
-
-            }
-
-        };
-        DataManager.loadData(callback,sdPath.getAbsolutePath() + "/" + DIR_SD, filedatasource, fileprocessor);
-        }
-
-    public void onGetingClick(View view) throws Exception {
-        InputStream input = getAssets().open("Proba.txt");
-        int size = input.available();
-        byte[] buffer = new byte[size];
-        input.read(buffer);
-        input.close();
-        String text = new String(buffer);
-        setContentView(R.layout.activity_main);
-        TextView textView1 = (TextView) findViewById(R.id.rez);
-        textView1.setText(new String(buffer));
-    }*/
 
 
 }
