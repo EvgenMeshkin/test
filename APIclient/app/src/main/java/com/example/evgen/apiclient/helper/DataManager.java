@@ -27,11 +27,11 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> extends Asy
 
     public static final int IS_ASYNC_TASK = 4;
     public static final int LOADER_ID = 1;
-    public static final  String LOADER_ST = "Peremen";
-    private Callback<ProcessingResult> callback;
-    private Params params;
-    private DataSource<DataSourceResult, Params> dataSource;
-    private Processor<ProcessingResult, DataSourceResult> processor;
+    private Callback<ProcessingResult> mcallback;
+    private Params mparams;
+    private DataSource<DataSourceResult, Params> mdataSource;
+    private Processor<ProcessingResult, DataSourceResult> mprocessor;
+    final Handler mhandler;
 
     public static interface Callback<Result> {
         void onDataLoadStart();
@@ -39,54 +39,43 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> extends Asy
         void onError(Exception e);
     }
 
-
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
          forceLoad();
-        Log.d("datamanager", "start " );
     }
 
-
-
-    public DataManager(Context context, Callback<ProcessingResult> call,  Params url, DataSource<DataSourceResult, Params> dataSource, Processor<ProcessingResult, DataSourceResult> processor) {
+    public DataManager(Context context, Callback<ProcessingResult> call,  Params url, final DataSource<DataSourceResult, Params> dataSource, final Processor<ProcessingResult, DataSourceResult> processor) {
         super(context);
-        this.callback = call;
-        this.params = url;
-        this.dataSource = dataSource;
-        this.processor = processor;
-        Log.d("datamanager", "запуск "  + LOADER_ST  );
-        callback.onDataLoadStart();
-        try {
-            final DataSourceResult result = dataSource.getResult(params);
-            final ProcessingResult processingResult = processor.process(result);
-
-            Log.d("Datamanager", "переход2 " );
-            callback.onDone(processingResult);
-
-        } catch (final Exception e) {
-
-            callback.onError(e);
-        }
+        this.mcallback = call;
+        this.mparams = url;
+        this.mdataSource = dataSource;
+        this.mprocessor = processor;
+        mhandler = new Handler();
     }
 
 
     @Override
     public Integer loadInBackground() {
-        Log.d("Datamanager", "переход " + LOADER_ST );
-        //   callback.onDataLoadStart();
-
-                try {
-                    final DataSourceResult result = dataSource.getResult(params);
-                    final ProcessingResult processingResult = processor.process(result);
-                            Log.d("Datamanager", "переход2 " );
-                            callback.onDone(processingResult);
-                  } catch (final Exception e) {
-
-                            callback.onError(e);
-                        }
-
-        return Log.d("Datamanager", "переход3 " );
+       mcallback.onDataLoadStart();
+               try {
+                    final DataSourceResult result = mdataSource.getResult(mparams);
+                    final ProcessingResult processingResult = mprocessor.process(result);
+                   mhandler.post(new Runnable() {
+                       @Override
+                       public void run() {
+                           mcallback.onDone(processingResult);
+                       }
+                   });
+               } catch (final Exception e) {
+                  mhandler.post(new Runnable() {
+                       @Override
+                       public void run() {
+                           mcallback.onError(e);
+                       }
+                   });
+               }
+       return Log.d("Datamanager", "переход" );
     }
 
     public static <ProcessingResult, DataSourceResult, Params> void
@@ -110,10 +99,8 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> extends Asy
                /* LoaderManager supportLoaderManager = getActivity(MainActivity).getSupportLoaderManager();
                 supportLoaderManager.restartLoader(LOADER_ID, new Bundle(), callback);*/
                 break;
-
         }
-
-    }
+   }
 
     private static <ProcessingResult, DataSourceResult, Params> void executeInAsyncTask(final Callback<ProcessingResult> callback, Params params, final DataSource<DataSourceResult, Params> dataSource) {
         new AsyncTask<Params, Void, ProcessingResult>() {

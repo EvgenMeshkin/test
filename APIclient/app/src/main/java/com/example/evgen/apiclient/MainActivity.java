@@ -88,8 +88,6 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
                     public void onLoaderReset(Loader<Integer> integerLoader) {
 
                     }
-
-
                 });
     }
 
@@ -156,7 +154,6 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
     @Override
     public void onError(Exception e) {
         e.printStackTrace();
-
         findViewById(android.R.id.progress).setVisibility(View.GONE);
         findViewById(android.R.id.empty).setVisibility(View.GONE);
         TextView errorView = (TextView) findViewById(R.id.error);
