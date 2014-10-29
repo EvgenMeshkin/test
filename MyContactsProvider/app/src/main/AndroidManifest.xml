@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.evgenmeshkin.mycontactsprovider">
+
+    <application android:allowBackup="true"
+        android:label="@string/app_name"
+        android:icon="@drawable/ic_launcher"
+        android:theme="@style/AppTheme">
+
+    </application>
+
+    <provider
+        android:authorities="ru.startandroid.providers.AdressBook"
+        android:name=".MyContactsProvider"
+        android:exported="true">
+    </provider>
+</manifest>

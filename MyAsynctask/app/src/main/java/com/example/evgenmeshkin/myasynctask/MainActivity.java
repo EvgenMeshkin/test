@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -20,17 +21,21 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
-import com.example.evgenmeshkin.myasynctask.MyAsyncTask.MyAsyncTask;
 
 import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends ActionBarActivity implements LoaderCallbacks<Cursor> {
 
-    private static final int CM_DELETE_ID = 1;
+    private static  int CM_DELETE_ID = 1;
     ListView lvData;
     DB db;
     SimpleCursorAdapter scAdapter;
+    final Uri CONTACT_URI = Uri
+            .parse("content://ru.startandroid.providers.AdressBook/contacts");
+
+    final String CONTACT_NAME = "name";
+    final String CONTACT_EMAIL = "email";
 
     /** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState) {
@@ -49,10 +54,21 @@ public class MainActivity extends ActionBarActivity implements LoaderCallbacks<C
         scAdapter = new SimpleCursorAdapter(this, R.layout.adapter_item, null, from, to, 0);
         lvData = (ListView) findViewById(R.id.lvData);
         lvData.setAdapter(scAdapter);
-
-
         // создаем лоадер для чтения данных
         getSupportLoaderManager().initLoader(0, null, this);
+
+
+    /*    Cursor cursor = getContentResolver().query(CONTACT_URI, null, null,
+                null, null);
+        startManagingCursor(cursor);
+
+        String from[] = { "name", "email" };
+        int to[] = { android.R.id.text1, android.R.id.text2 };
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+                R.layout.adapter_item, cursor, from, to);
+
+        ListView lvContact = (ListView) findViewById(R.id.lvData);
+        lvContact.setAdapter(adapter);*/
     }
 
     // обработка нажатия кнопки
@@ -64,7 +80,8 @@ public class MainActivity extends ActionBarActivity implements LoaderCallbacks<C
     }
 
     public void onDeleteClick(View view) {
-        db.delRec(2);
+        db.delRec(CM_DELETE_ID);
+        CM_DELETE_ID++;
         // получаем новый курсор с данными
         getSupportLoaderManager().getLoader(0).forceLoad();
     }
