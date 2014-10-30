@@ -68,7 +68,7 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
         });
         DataManager.loadData(MainActivity.this, URL, dataSource, processor);
 
-        LoaderManager supportLoaderManager = getSupportLoaderManager();
+     /*   LoaderManager supportLoaderManager = getSupportLoaderManager();
         supportLoaderManager.restartLoader(LOADER_ID,
                 new Bundle(),
                 new LoaderManager.LoaderCallbacks<Integer>() {
@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
                     public void onLoaderReset(Loader<Integer> integerLoader) {
 
                     }
-                });
+                });*/
     }
 
 

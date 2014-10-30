@@ -1,6 +1,8 @@
-package com.example.evgenmeshkin.task_manager;
+package com.example.evgen.apiclient;
 
-import android.annotation.TargetApi;
+/**
+ * Created by User on 30.10.2014.
+ */import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class VkActivity extends Activity {
+public class WikiActivity extends Activity {
     private ArrayList<HashMap<String, Object>> catList;
     private static final String TITLE = "catname"; // Верхний текст
     private static final String DESCRIPTION = "description"; // ниже главного
@@ -46,7 +48,7 @@ public class VkActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vk);
+        setContentView(R.layout.activity_wiki);
 
         myTitle =  getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
@@ -99,22 +101,21 @@ public class VkActivity extends Activity {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void displayView(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new VkfActivity();
+                fragment = new FragmentWiki();
 
 
 
                 break;
             case 1:
-             //   fragment = new SecondFragment();
+                //   fragment = new SecondFragment();
                 break;
             case 2:
-            //    fragment = new ThirdFragment();
+                //    fragment = new ThirdFragment();
                 break;
             default:
                 break;

@@ -23,15 +23,8 @@ import static android.app.PendingIntent.getActivity;
 /**
  * Created by evgen on 18.10.2014.
  */
-public class DataManager<ProcessingResult, DataSourceResult, Params> extends AsyncTaskLoader<Integer> {
+public class DataManager<ProcessingResult, DataSourceResult, Params> {
 
-    public static final int IS_ASYNC_TASK = 4;
-    public static final int LOADER_ID = 1;
-    private Callback<ProcessingResult> mcallback;
-    private Params mparams;
-    private DataSource<DataSourceResult, Params> mdataSource;
-    private Processor<ProcessingResult, DataSourceResult> mprocessor;
-    final Handler mhandler;
 
     public static interface Callback<Result> {
         void onDataLoadStart();
@@ -39,44 +32,6 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> extends Asy
         void onError(Exception e);
     }
 
-    @Override
-    protected void onStartLoading() {
-        super.onStartLoading();
-         forceLoad();
-    }
-
-    public DataManager(Context context, Callback<ProcessingResult> call,  Params url, final DataSource<DataSourceResult, Params> dataSource, final Processor<ProcessingResult, DataSourceResult> processor) {
-        super(context);
-        this.mcallback = call;
-        this.mparams = url;
-        this.mdataSource = dataSource;
-        this.mprocessor = processor;
-        mhandler = new Handler();
-    }
-
-
-    @Override
-    public Integer loadInBackground() {
-       mcallback.onDataLoadStart();
-               try {
-                    final DataSourceResult result = mdataSource.getResult(mparams);
-                    final ProcessingResult processingResult = mprocessor.process(result);
-                   mhandler.post(new Runnable() {
-                       @Override
-                       public void run() {
-                           mcallback.onDone(processingResult);
-                       }
-                   });
-               } catch (final Exception e) {
-                  mhandler.post(new Runnable() {
-                       @Override
-                       public void run() {
-                           mcallback.onError(e);
-                       }
-                   });
-               }
-       return Log.d("Datamanager", "переход" );
-    }
 
     public static <ProcessingResult, DataSourceResult, Params> void
     loadData(
@@ -87,22 +42,11 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> extends Asy
         if (callback == null) {
             throw new IllegalArgumentException("callback can't be null");
         }
+        executeInAsyncTask(callback, params, dataSource, processor);
 
-        switch(IS_ASYNC_TASK) {
-            case 1:
-                executeInAsyncTask(callback, params, dataSource);
-                break;
-            case 2:
-                executeInThread(callback, params, dataSource, processor);
-                break;
-            case 3:
-               /* LoaderManager supportLoaderManager = getActivity(MainActivity).getSupportLoaderManager();
-                supportLoaderManager.restartLoader(LOADER_ID, new Bundle(), callback);*/
-                break;
-        }
    }
 
-    private static <ProcessingResult, DataSourceResult, Params> void executeInAsyncTask(final Callback<ProcessingResult> callback, Params params, final DataSource<DataSourceResult, Params> dataSource) {
+    private static <ProcessingResult, DataSourceResult, Params> void executeInAsyncTask(final Callback<ProcessingResult> callback, Params params, final DataSource<DataSourceResult, Params> dataSource, final Processor<ProcessingResult, DataSourceResult> processor) {
         new AsyncTask<Params, Void, ProcessingResult>() {
 
             @Override
@@ -119,7 +63,8 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> extends Asy
 
             @Override
             protected ProcessingResult doInBackground(Params... params) throws Exception {
-                return (ProcessingResult) dataSource.getResult((Params) params);
+                DataSourceResult dataSourceResult = dataSource.getResult(params[0]);
+                return processor.process(dataSourceResult);
             }
 
             @Override
@@ -129,33 +74,5 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> extends Asy
 
         }.execute(params);
     }
-
-    private static <ProcessingResult, DataSourceResult, Params> void executeInThread(final Callback<ProcessingResult> callback, final Params params, final DataSource<DataSourceResult, Params> dataSource, final Processor<ProcessingResult, DataSourceResult> processor) {
-        final Handler handler = new Handler();
-        callback.onDataLoadStart();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final DataSourceResult result = dataSource.getResult(params);
-                    final ProcessingResult processingResult = processor.process(result);
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onDone(processingResult);
-                        }
-                    });
-                } catch (final Exception e) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onError(e);
-                        }
-                    });
-                }
-            }
-        }).start();
-    }
-
 
 }

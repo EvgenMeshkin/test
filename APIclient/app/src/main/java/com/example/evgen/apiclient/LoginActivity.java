@@ -1,4 +1,5 @@
 package com.example.evgen.apiclient;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
@@ -8,10 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.evgen.apiclient.utils.AuthUtils;
+
 /**
  * Created by User on 07.10.2014.
  */
-public class LoginActivity extends ActionBarActivity implements TextView.OnEditorActionListener {
+public class LoginActivity extends ActionBarActivity {
+
+    public static final int REQUEST_CODE_VK = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,38 +29,28 @@ public class LoginActivity extends ActionBarActivity implements TextView.OnEdito
                 finish();
             }
         });
-        EditText editGo = (EditText) findViewById(R.id.password);
-        editGo.setOnEditorActionListener(this);
-    }
-
-    public void onLoginFinish(View view) {
-        finish();
     }
 
     public void onLoginClick(View view) {
-        Authorized.setLogged(true);
+        setLoginSuccess();
+    }
+
+    private void setLoginSuccess() {
+        AuthUtils.setLogged(true);
         setResult(RESULT_OK);
         finish();
     }
 
-
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        //   if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-        // обрабатываем нажатие кнопки поиска
-        //   }
-        if (actionId == EditorInfo.IME_ACTION_GO) {
-            // обрабатываем нажание кнопки GO
-            Authorized.setLogged(true);
-            setResult(RESULT_OK);
-            finish();
-
-            return true;
-        }
-
-        return false;
-
+    public void onVkAuthClick(View view) {
+        Intent intent = new Intent(this, VkLoginActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_VK);
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_VK && resultCode == RESULT_OK)  {
+            setLoginSuccess();
+        }
+    }
 }
