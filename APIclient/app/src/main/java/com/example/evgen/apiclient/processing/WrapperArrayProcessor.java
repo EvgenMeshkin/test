@@ -17,7 +17,10 @@ public abstract class WrapperArrayProcessor <T extends JSONObjectWrapper> implem
     @Override
     public List<T> process(InputStream inputStream) throws Exception {
         String string = new StringProcessor().process(inputStream);
-        JSONArray array = new JSONArray(string);
+      //  char[] buf = new char[string.indexOf("[")-string.indexOf("]")];
+      //  string.getChars(string.indexOf("["), (string.indexOf("]")+1), buf, 0);
+
+        JSONArray array = new JSONArray(string.substring(string.indexOf("["), (string.indexOf("]")+1)));
         List<T> noteArray = new ArrayList<T>(array.length());
         for (int i = 0; i < array.length(); i++) {
             JSONObject jsonObject = array.getJSONObject(i);

@@ -32,6 +32,7 @@ public class StartActivity extends ActionBarActivity {
 
     private void startMainActivity() {
         startActivity(new Intent(this, WikiActivity.class));
+
         finish();
     }
 

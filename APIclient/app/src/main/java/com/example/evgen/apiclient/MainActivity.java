@@ -46,13 +46,6 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
     public static final String URL = "https://dl.dropboxusercontent.com/u/16403954/test.json";
     private List<Note> mData;
 
-    final String LOG_TAG = "myLogs";
-    final String FILENAME = "file";
-    final String DIR_SD = "MyFiles";
-    final String FILENAME_SD = "fileSD";
-
-    public static final int LOADER_ID = 1;
-    private Cursor mCursor;
     @Override
     protected void onCreate(Bundle pSavedInstanceState) {
         super.onCreate(pSavedInstanceState);
@@ -68,27 +61,6 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
         });
         DataManager.loadData(MainActivity.this, URL, dataSource, processor);
 
-     /*   LoaderManager supportLoaderManager = getSupportLoaderManager();
-        supportLoaderManager.restartLoader(LOADER_ID,
-                new Bundle(),
-                new LoaderManager.LoaderCallbacks<Integer>() {
-
-                    @Override
-                    public Loader<Integer> onCreateLoader(int id, Bundle bundle) {
-                        Log.d("MainActivity", "запуск " );
-                        return new DataManager(MainActivity.this, MainActivity.this, URL, dataSource, processor);
-                    }
-
-                    @Override
-                    public void onLoadFinished(Loader<Integer> integerLoader, Integer integer) {
-                        Log.d("MainActivity", "финиш " );
-                    }
-
-                    @Override
-                    public void onLoaderReset(Loader<Integer> integerLoader) {
-
-                    }
-                });*/
     }
 
 
