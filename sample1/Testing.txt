@@ -4,3 +4,5 @@ http://startandroid.ru/ru/uroki/vse-uroki-spiskom/116-urok-57-gridview-i-ego-atr
 http://4pda.ru/forum/index.php?showtopic=200537
 
 http://developer.alexanderklimov.ru/android/theory/fragments.php
+http://www.dimasokol.ru/drawerlayout-panel-from-google/
+http://habrahabr.ru/company/e-Legion/blog/206210/
