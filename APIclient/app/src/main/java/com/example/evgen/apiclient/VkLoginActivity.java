@@ -10,6 +10,13 @@ import android.webkit.WebViewClient;
 
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
+
 /**
  * Created by User on 30.10.2014.
  */
@@ -28,6 +35,8 @@ public class VkLoginActivity extends ActionBarActivity {
         mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         mWebView.setWebViewClient(new VkWebViewClient());
         mWebView.loadUrl(VkOAuthHelper.AUTORIZATION_URL);
+
+
     }
 
     private class VkWebViewClient extends WebViewClient {

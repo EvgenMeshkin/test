@@ -27,12 +27,20 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.helper.DataManager;
+import com.example.evgen.apiclient.os.AsyncTask;
 import com.example.evgen.apiclient.processing.NoteArrayProcessor;
 import com.example.evgen.apiclient.source.HttpDataSource;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,11 +66,19 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
     private SwipeRefreshLayout mSwipeRefreshLayout;
     public static final String URL = "https://en.wikipedia.org/w/api.php?action=query&prop=categories&format=json&titles=Albert%20Einstein";
     private List<Note> mData;
+    private static final String TAG = VkOAuthHelper.class.getSimpleName();
+    private HttpClient mClient;
+    private HttpPost mPost;
+
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wiki);
+
+
+
         myTitle =  getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
         // load slide menu items
@@ -154,8 +170,31 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(WikiActivity.this, DetailsActivity.class);
-                    Note item = (Note) mAdapter.getItem(position);
+                    final Note item = (Note) mAdapter.getItem(position);
                     NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getContent());
+                    new AsyncTask() {
+
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                            mClient = new DefaultHttpClient();
+                            mPost = new HttpPost("https://api.vk.com/method/notes.add?title=Wikipedia&text="+item.getTitle().replaceAll(" ","%20")+"&privacy=3&comment_privacy=3&v=5.26&access_token="+ VkOAuthHelper.mAccessToken);
+                        }
+
+                        @Override
+                        protected Object doInBackground(Object[] params) throws Exception {
+                            HttpResponse response = mClient.execute(mPost);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostException(Exception e) {
+                        }
+                    }.execute();
+
+
+
+
                     intent.putExtra("item", note);
                     startActivity(intent);
                 }

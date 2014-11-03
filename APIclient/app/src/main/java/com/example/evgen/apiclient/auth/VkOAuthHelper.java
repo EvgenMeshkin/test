@@ -5,8 +5,16 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Created by User on 30.10.2014.
@@ -29,11 +37,7 @@ public class VkOAuthHelper {
             mAccessToken = parsedFragment.getQueryParameter("access_token");
             if (!TextUtils.isEmpty(mAccessToken)) {
                 Log.d(TAG, "token " + mAccessToken);
-                try {
-                    URL url1 = new URL("https://api.vk.com/method/notes.add?title=Wikipedia&text=vhod&privacy=3&comment_privacy=3&v=5.26&access_token="+mAccessToken);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
+
                 return true;
             } else {
                 //TODO check access denied/finish
