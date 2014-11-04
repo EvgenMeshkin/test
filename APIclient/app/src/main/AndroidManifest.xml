@@ -55,6 +55,9 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/wiki_auth" />
         </service>
+        <activity
+            android:name=".account.AuthenticatorActivity"
+            android:label="@string/app_name"/>
 
 
     </application>

@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.evgen.apiclient.LoginActivity;
+import com.example.evgen.apiclient.VkLoginActivity;
 
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
                              String accountType, String authTokenType,
                              String[] requiredFeatures, Bundle options) {
         Log.v(TAG, "addAccount()");
-        final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+        final Intent intent = new Intent(mContext, VkLoginActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE,
                 response);
         final Bundle bundle = new Bundle();
