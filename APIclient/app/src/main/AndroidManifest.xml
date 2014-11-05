@@ -55,6 +55,17 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/wiki_auth" />
         </service>
+        <service
+            android:name=".account.SyncService"
+            android:exported="false"
+            android:process=":sync">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_adapter" />
+        </service>
         <activity
             android:name=".account.AuthenticatorActivity"
             android:label="@string/app_name"/>
