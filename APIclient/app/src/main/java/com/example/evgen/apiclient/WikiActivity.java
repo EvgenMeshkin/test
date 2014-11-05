@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,9 +77,6 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wiki);
-
-
-
         myTitle =  getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
         // load slide menu items
@@ -96,6 +94,7 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
         ){
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(myTitle);
+
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
@@ -106,6 +105,8 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
                 invalidateOptionsMenu();
             }
         };
+
+        myDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
         myDrawerLayout.setDrawerListener(myDrawerToggle);
         if (savedInstanceState == null) {
             // on first time display view for first nav item
@@ -231,11 +232,7 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
         Fragment fragment = null;
         switch (position) {
             case 0:
-           //     fragment = new FragmentWiki();
-
-
-
-                break;
+                 break;
             case 1:
                 //   fragment = new SecondFragment();
                 break;

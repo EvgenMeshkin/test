@@ -13,6 +13,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingLeft="16dip"
+        android:paddingRight="16dip"
         tools:context=".WikiActivity">
         <Button
             android:layout_alignParentTop="true"
