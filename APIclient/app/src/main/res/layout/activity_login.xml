@@ -39,9 +39,6 @@
         android:layout_height="36dip"
         android:text="Cancel"
         />
-
-
-
     <LinearLayout
         android:id="@+id/inputs"
         android:layout_width="match_parent"

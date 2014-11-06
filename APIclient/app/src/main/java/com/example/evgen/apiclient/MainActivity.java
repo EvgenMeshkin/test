@@ -45,7 +45,8 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
     private SwipeRefreshLayout mSwipeRefreshLayout;
     public static final String URL = "https://dl.dropboxusercontent.com/u/16403954/test.json";
     private List<Note> mData;
-
+    private TextView mTitle;
+    private TextView mContent;
     @Override
     protected void onCreate(Bundle pSavedInstanceState) {
         super.onCreate(pSavedInstanceState);
@@ -76,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onDone(List<Note> data) {
-        Log.d("MainActivety", "переход " );
+        Log.d("MainActivety", "transfer " );
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -95,10 +96,10 @@ public class MainActivity extends ActionBarActivity implements DataManager.Callb
                         convertView = View.inflate(MainActivity.this, R.layout.adapter_item, null);
                     }
                     Note item = getItem(position);
-                    TextView textView1 = (TextView) convertView.findViewById(android.R.id.text1);
-                    textView1.setText(item.getTitle());
-                    TextView textView2 = (TextView) convertView.findViewById(android.R.id.text2);
-                    textView2.setText(item.getContent());
+                    mTitle = (TextView) convertView.findViewById(android.R.id.text1);
+                    mTitle.setText(item.getTitle());
+                    mContent = (TextView) convertView.findViewById(android.R.id.text2);
+                    mContent.setText(item.getContent());
                     convertView.setTag(item.getId());
                     return convertView;
                 }

@@ -58,9 +58,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
 
 
-        /* (non-Javadoc)
-         * @see android.webkit.WebViewClient#shouldOverrideUrlLoading(android.webkit.WebView, java.lang.String)
-         */
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.d(TAG, "overr " + url);

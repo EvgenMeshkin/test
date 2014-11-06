@@ -1,5 +1,8 @@
 package com.example.evgen.apiclient;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -24,7 +27,11 @@ public class VkLoginActivity extends ActionBarActivity {
 
     private static final String TAG = VkLoginActivity.class.getSimpleName();
     private WebView mWebView;
+    public static final String ACCOUNT_TYPE = "com.example.evgen.apiclient.account";
 
+    public static final String AUTHORITY = "com.example.evgen.apiclient";
+
+    public static Account sAccount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +42,13 @@ public class VkLoginActivity extends ActionBarActivity {
         mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         mWebView.setWebViewClient(new VkWebViewClient());
         mWebView.loadUrl(VkOAuthHelper.AUTORIZATION_URL);
-
+//        final AccountManager am = AccountManager.get(this);
+//        if (sAccount == null) {
+//            sAccount = new Account(getString(R.string.news), ACCOUNT_TYPE);
+//        }
+//        if (am.addAccountExplicitly(sAccount, getPackageName(), new Bundle())) {
+//            ContentResolver.setSyncAutomatically(sAccount, AUTHORITY, true);
+//        }
 
     }
 

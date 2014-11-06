@@ -25,5 +25,6 @@
     <string name="auto_sync_summary">Синхронизация через определенные интервалы времени</string>
     <string name="auto_sync_interval">Интервал синхронизации</string>
     <string name="auto_sync_interval_summary">Промежуток времени выполнения синхронизации</string>
+    <string name="news">Новости</string>
 
 </resources>

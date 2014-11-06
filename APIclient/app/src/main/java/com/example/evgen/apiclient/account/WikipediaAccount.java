@@ -10,7 +10,7 @@ import android.util.Log;
  */
 public class WikipediaAccount extends Service {
 
-  //  private GitHubAuthenticator mAuthenticator;
+
   private Authenticator mAuthenticator;
 
     @Override

@@ -2,7 +2,12 @@ package com.example.evgen.apiclient;
 
 /**
  * Created by User on 30.10.2014.
- */import android.annotation.TargetApi;
+ */
+
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +34,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
+import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.helper.DataManager;
@@ -70,8 +76,13 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
     private static final String TAG = VkOAuthHelper.class.getSimpleName();
     private HttpClient mClient;
     private HttpPost mPost;
+    private TextView mTitle;
+    private TextView mContent;
+    public static final String ACCOUNT_TYPE = "com.example.evgen.apiclient.account";
 
-
+    public static final String AUTHORITY = "com.example.evgen.apiclient";
+    private AccountManager mAm;
+    public static Account sAccount;
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,11 +105,9 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
         ){
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(myTitle);
-
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
-
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(myDrawerTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
@@ -126,6 +135,18 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
         DataManager.loadData(WikiActivity.this, URL, dataSource, processor);
 
 
+         mAm = AccountManager.get(this);
+        if (sAccount == null) {
+            sAccount = new Account(getString(R.string.news), ACCOUNT_TYPE);
+        }
+        if (mAm.addAccountExplicitly(sAccount, getPackageName(), new Bundle())) {
+            ContentResolver.setSyncAutomatically(sAccount, AUTHORITY, true);
+        }
+        try {
+            mAm.setUserData(sAccount,"Token", EncrManager.encrypt(this, VkOAuthHelper.mAccessToken));
+        } catch (Exception e) {
+
+        }
     }
 
     @Override
@@ -157,10 +178,10 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
                         convertView = View.inflate(WikiActivity.this, R.layout.adapter_item, null);
                     }
                     Note item = getItem(position);
-                    TextView textView1 = (TextView) convertView.findViewById(android.R.id.text1);
-                    textView1.setText(item.getTitle());
-                    TextView textView2 = (TextView) convertView.findViewById(android.R.id.text2);
-                    textView2.setText(item.getContent());
+                    mTitle = (TextView) convertView.findViewById(android.R.id.text1);
+                    mTitle.setText(item.getTitle());
+                    mContent = (TextView) convertView.findViewById(android.R.id.text2);
+                    mContent.setText(item.getContent());
                     convertView.setTag(item.getId());
                     return convertView;
                 }
@@ -179,7 +200,11 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
                         protected void onPreExecute() {
                             super.onPreExecute();
                             mClient = new DefaultHttpClient();
-                            mPost = new HttpPost("https://api.vk.com/method/notes.add?title=Wikipedia&text="+item.getTitle().replaceAll(" ","%20")+"&privacy=3&comment_privacy=3&v=5.26&access_token="+ VkOAuthHelper.mAccessToken);
+                            try {
+                                mPost = new HttpPost("https://api.vk.com/method/notes.add?title=Wikipedia&text="+item.getTitle().replaceAll(" ","%20")+"&privacy=3&comment_privacy=3&v=5.26&access_token="+ EncrManager.decrypt(WikiActivity.this,mAm.getUserData(sAccount,"Token")));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
@@ -192,10 +217,6 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
                         protected void onPostException(Exception e) {
                         }
                     }.execute();
-
-
-
-
                     intent.putExtra("item", note);
                     startActivity(intent);
                 }

@@ -60,11 +60,19 @@ public class ListviewActivity extends ActionBarActivity implements DataManager.C
 
                 if (position%2==0) {
                     textView2.setVisibility(View.GONE);
-                    textView1.setText(item);
+                    try {
+                        textView1.setText(EncrManager.encrypt(ListviewActivity.this,item));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                  else {
                     textView2.setVisibility(View.VISIBLE);
-                    textView1.setText(item);
+                    try {
+                        textView1.setText(EncrManager.decrypt(ListviewActivity.this,item));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     textView2.setText(item);
                 }
                 return convertView;
