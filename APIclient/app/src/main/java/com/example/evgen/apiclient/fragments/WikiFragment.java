@@ -1,4 +1,4 @@
-package com.example.evgen.apiclient;
+package com.example.evgen.apiclient.fragments;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.evgen.apiclient.R;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.bo.Note;
@@ -38,7 +39,7 @@ import java.util.List;
  * Created by User on 30.10.2014.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class FragmentWiki extends Fragment implements DataManager.Callback<List<Note>> {
+public class WikiFragment extends Fragment implements DataManager.Callback<List<Note>> {
     private String[] viewsNames;
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -49,7 +50,9 @@ public class FragmentWiki extends Fragment implements DataManager.Callback<List<
     private HttpPost mPost;
     private TextView mTitle;
     private TextView mContent;
-    public static final String ACCOUNT_TYPE = "com.example.evgen.apiclient.account";
+    public static final String ACCOUNT_PAS = "https://api.vk.com/method/";
+    public static final String ACCOUNT_METHOD = "notes.add";
+    public static final String ACCOUNT_TITLE = "Wikipedia";
     Fragment frag1;
     public static final String AUTHORITY = "com.example.evgen.apiclient";
     private AccountManager mAm;
@@ -72,7 +75,7 @@ public class FragmentWiki extends Fragment implements DataManager.Callback<List<
         }
     }
 
-    public FragmentWiki() {
+    public WikiFragment() {
     }
 
 
@@ -142,7 +145,7 @@ public class FragmentWiki extends Fragment implements DataManager.Callback<List<
                         super.onPreExecute();
                         mClient = new DefaultHttpClient();
                         try {
-                            mPost = new HttpPost("https://api.vk.com/method/notes.add?title=Wikipedia&text=" + item.getTitle().replaceAll(" ", "%20") + "&privacy=3&comment_privacy=3&v=5.26&access_token=" + EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
+                            mPost = new HttpPost(ACCOUNT_PAS + ACCOUNT_METHOD + "?title=" + ACCOUNT_TITLE + "&text=" + item.getTitle().replaceAll(" ", "%20") + "&privacy=3&comment_privacy=3&v=5.26&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -156,10 +159,8 @@ public class FragmentWiki extends Fragment implements DataManager.Callback<List<
 
                     @Override
                     protected void onPostException(Exception e) {
-                    }
+                     }
                 }.execute();
-                //intent.putExtra("item", note);
-                //startActivity(intent);
                 someEventListener.someEvent(note);
             }
         });

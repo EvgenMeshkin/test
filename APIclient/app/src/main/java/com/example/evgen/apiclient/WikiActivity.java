@@ -8,9 +8,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -21,68 +19,49 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.app.ActionBar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
-import com.example.evgen.apiclient.helper.DataManager;
-import com.example.evgen.apiclient.os.AsyncTask;
-import com.example.evgen.apiclient.processing.NoteArrayProcessor;
-import com.example.evgen.apiclient.source.HttpDataSource;
+import com.example.evgen.apiclient.fragments.ChildFragment;
+import com.example.evgen.apiclient.fragments.DetailsFragment;
+import com.example.evgen.apiclient.fragments.WikiFragment;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class WikiActivity extends Activity implements FragmentWiki.onSomeEventListener {
-    private ArrayList<HashMap<String, Object>> catList;
-    private static final String TITLE = "catname"; // Верхний текст
-    private static final String DESCRIPTION = "description"; // ниже главного
-    private static final String ICON = "icon";  // будущая картинка
-
+public class WikiActivity extends Activity implements WikiFragment.onSomeEventListener {
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
     private ActionBarDrawerToggle myDrawerToggle;
-
     // navigation drawer title
     private CharSequence myDrawerTitle;
     // used to store app title
     private CharSequence myTitle;
-
     private String[] viewsNames;
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     public static final String URL = "https://en.wikipedia.org/w/api.php?action=query&prop=categories&format=json&titles=Albert%20Einstein";
-    private List<Note> mData;
     private static final String TAG = VkOAuthHelper.class.getSimpleName();
-    private HttpClient mClient;
-    private HttpPost mPost;
-    private TextView mTitle;
-    private TextView mContent;
     public static final String ACCOUNT_TYPE = "com.example.evgen.apiclient.account";
-    Fragment frag1;
-    Fragment frag2;
+    private Fragment mFrag1;
+    private Fragment mFrag2;
+    private Fragment mFrag3;
     public static final String AUTHORITY = "com.example.evgen.apiclient";
     private AccountManager mAm;
     public static Account sAccount;
@@ -93,14 +72,14 @@ public class WikiActivity extends Activity implements FragmentWiki.onSomeEventLi
         super.onCreate(savedInstanceState);
         getResources().getConfiguration().orientation = Configuration.ORIENTATION_PORTRAIT;
         setContentView(R.layout.activity_wiki);
-        frag2 = new DetailsActivity();
-        frag1 = new FragmentWiki();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.frgmCont, frag1)
-                .commit();
-
-
+        mFrag1 = new WikiFragment();
+        mFrag2 = new DetailsFragment();
+        if (savedInstanceState == null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.frgmCont, mFrag1)
+                    .commit();
+        }
         myTitle = getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
         // load slide menu items
@@ -136,7 +115,6 @@ public class WikiActivity extends Activity implements FragmentWiki.onSomeEventLi
             displayView(0);
         }
         myDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mAm = AccountManager.get(this);
         if (sAccount == null) {
@@ -155,29 +133,28 @@ public class WikiActivity extends Activity implements FragmentWiki.onSomeEventLi
     @Override
     public void someEvent(NoteGsonModel note) {
         FragmentManager fragmentManager = getFragmentManager();
-        Fragment fr2 = getFragmentManager().findFragmentById(R.id.frgmCont2);
-        Fragment fr1 = getFragmentManager().findFragmentById(R.id.frgmCont);
-//        Fragment fr3 = fr2.getChildFragmentManager().findFragmentById(R.id.frgmCont3);
+       //        Fragment fr3 = fr2.getChildFragmentManager().findFragmentById(R.id.frgmCont3);
         NoteGsonModel noteGsonModel = (NoteGsonModel) note;
         Bundle bundle = new Bundle();
         bundle.putParcelable("key", noteGsonModel);
-        frag2 = new DetailsActivity();
-        Fragment frag3 = new ChildFragment();
-        frag2.setArguments(bundle);
+        mFrag2 = new DetailsFragment();
+        mFrag3 = new ChildFragment();
+        mFrag2.setArguments(bundle);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
         fragmentManager.beginTransaction()
-                .hide(frag1)
-                .replace(R.id.frgmCont2, frag2)
-                .replace(R.id.frgmCont3, frag3)
+                .hide(mFrag1)
+                .addToBackStack(null)
+                .replace(R.id.frgmCont2, mFrag2)
+                .replace(R.id.frgmCont3, mFrag3)
                 .commit();
         }
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
         {
     fragmentManager.beginTransaction()
-    .replace(R.id.frgmCont, frag1)
-    .replace(R.id.frgmCont2, frag2)
-    .replace(R.id.frgmCont3, frag3)
+    .replace(R.id.frgmCont, mFrag1)
+    .replace(R.id.frgmCont2, mFrag2)
+    .replace(R.id.frgmCont3, mFrag3)
     .commit();
         }
      }
@@ -207,21 +184,6 @@ public class WikiActivity extends Activity implements FragmentWiki.onSomeEventLi
             default:
                 break;
         }
-
-//        if (fragment != null) {
-//            android.app.FragmentManager fragmentManager = getFragmentManager();
-//            fragmentManager.beginTransaction()
-//                    .replace(R.id.content_frame, fragment).commit();
-//
-//            // update selected item and title, then close the drawer
-//            myDrawerList.setItemChecked(position, true);
-//            myDrawerList.setSelection(position);
-//            setTitle(viewsNames[position]);
-//            myDrawerLayout.closeDrawer(myDrawerList);
-//        } else {
-//            // error in creating fragment
-//            Log.e("MainActivity", "Error in creating fragment");
-//        }
     }
 
     @Override
