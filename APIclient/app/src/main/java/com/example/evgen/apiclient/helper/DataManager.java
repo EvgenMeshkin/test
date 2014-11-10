@@ -9,7 +9,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-import com.example.evgen.apiclient.MainActivity;
+
 import com.example.evgen.apiclient.R;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.os.AsyncTask;

@@ -7,6 +7,8 @@ package com.example.evgen.apiclient;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Build;
@@ -53,7 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class WikiActivity extends Activity implements DataManager.Callback<List<Note>>{
+public class WikiActivity extends Activity implements FragmentWiki.onSomeEventListener {
     private ArrayList<HashMap<String, Object>> catList;
     private static final String TITLE = "catname"; // Верхний текст
     private static final String DESCRIPTION = "description"; // ниже главного
@@ -79,16 +81,27 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
     private TextView mTitle;
     private TextView mContent;
     public static final String ACCOUNT_TYPE = "com.example.evgen.apiclient.account";
-
+    Fragment frag1;
+    Fragment frag2;
     public static final String AUTHORITY = "com.example.evgen.apiclient";
     private AccountManager mAm;
     public static Account sAccount;
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getResources().getConfiguration().orientation = Configuration.ORIENTATION_PORTRAIT;
         setContentView(R.layout.activity_wiki);
-        myTitle =  getTitle();
+        frag2 = new DetailsActivity();
+        frag1 = new FragmentWiki();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(R.id.frgmCont, frag1)
+                .commit();
+
+
+        myTitle = getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
         // load slide menu items
         viewsNames = getResources().getStringArray(R.array.views_array);
@@ -102,12 +115,13 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
                 R.drawable.ic_drawer, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
-        ){
+        ) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(myTitle);
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
+
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(myDrawerTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
@@ -124,18 +138,7 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
         myDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        final HttpDataSource dataSource = HttpDataSource.get(WikiActivity.this);
-        final NoteArrayProcessor processor = new NoteArrayProcessor();
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                DataManager.loadData(WikiActivity.this, URL, dataSource, processor);
-            }
-        });
-        DataManager.loadData(WikiActivity.this, URL, dataSource, processor);
-
-
-         mAm = AccountManager.get(this);
+        mAm = AccountManager.get(this);
         if (sAccount == null) {
             sAccount = new Account(getString(R.string.news), ACCOUNT_TYPE);
         }
@@ -143,100 +146,41 @@ public class WikiActivity extends Activity implements DataManager.Callback<List<
             ContentResolver.setSyncAutomatically(sAccount, AUTHORITY, true);
         }
         try {
-            mAm.setUserData(sAccount,"Token", EncrManager.encrypt(this, VkOAuthHelper.mAccessToken));
+            mAm.setUserData(sAccount, "Token", EncrManager.encrypt(this, VkOAuthHelper.mAccessToken));
         } catch (Exception e) {
 
         }
     }
 
     @Override
-    public void onDataLoadStart() {
-        if (!mSwipeRefreshLayout.isRefreshing()) {
-            findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
+    public void someEvent(NoteGsonModel note) {
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment fr2 = getFragmentManager().findFragmentById(R.id.frgmCont2);
+        Fragment fr1 = getFragmentManager().findFragmentById(R.id.frgmCont);
+//        Fragment fr3 = fr2.getChildFragmentManager().findFragmentById(R.id.frgmCont3);
+        NoteGsonModel noteGsonModel = (NoteGsonModel) note;
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("key", noteGsonModel);
+        frag2 = new DetailsActivity();
+        Fragment frag3 = new ChildFragment();
+        frag2.setArguments(bundle);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+        fragmentManager.beginTransaction()
+                .hide(frag1)
+                .replace(R.id.frgmCont2, frag2)
+                .replace(R.id.frgmCont3, frag3)
+                .commit();
         }
-        findViewById(android.R.id.empty).setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onDone(List<Note> data) {
-        Log.d("MainActivety", "переход " );
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+    fragmentManager.beginTransaction()
+    .replace(R.id.frgmCont, frag1)
+    .replace(R.id.frgmCont2, frag2)
+    .replace(R.id.frgmCont3, frag3)
+    .commit();
         }
-        findViewById(android.R.id.progress).setVisibility(View.GONE);
-        if (data == null || data.isEmpty()) {
-            findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
-        }
-        AdapterView listView = (AbsListView) findViewById(android.R.id.list);
-        if (mAdapter == null) {
-            mData = data;
-            mAdapter = new ArrayAdapter<Note>(this, R.layout.adapter_item, android.R.id.text1, data) {
-
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    if (convertView == null) {
-                        convertView = View.inflate(WikiActivity.this, R.layout.adapter_item, null);
-                    }
-                    Note item = getItem(position);
-                    mTitle = (TextView) convertView.findViewById(android.R.id.text1);
-                    mTitle.setText(item.getTitle());
-                    mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                    mContent.setText(item.getContent());
-                    convertView.setTag(item.getId());
-                    return convertView;
-                }
-
-            };
-            listView.setAdapter(mAdapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(WikiActivity.this, DetailsActivity.class);
-                    final Note item = (Note) mAdapter.getItem(position);
-                    NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getContent());
-                    new AsyncTask() {
-
-                        @Override
-                        protected void onPreExecute() {
-                            super.onPreExecute();
-                            mClient = new DefaultHttpClient();
-                            try {
-                                mPost = new HttpPost("https://api.vk.com/method/notes.add?title=Wikipedia&text="+item.getTitle().replaceAll(" ","%20")+"&privacy=3&comment_privacy=3&v=5.26&access_token="+ EncrManager.decrypt(WikiActivity.this,mAm.getUserData(sAccount,"Token")));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        protected Object doInBackground(Object[] params) throws Exception {
-                            HttpResponse response = mClient.execute(mPost);
-                            return null;
-                        }
-
-                        @Override
-                        protected void onPostException(Exception e) {
-                        }
-                    }.execute();
-                    intent.putExtra("item", note);
-                    startActivity(intent);
-                }
-            });
-        } else {
-            mData.clear();
-            mData.addAll(data);
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-        findViewById(android.R.id.progress).setVisibility(View.GONE);
-        findViewById(android.R.id.empty).setVisibility(View.GONE);
-        TextView errorView = (TextView) findViewById(R.id.error);
-        errorView.setVisibility(View.VISIBLE);
-        errorView.setText(errorView.getText() + "\n" + e.getMessage());
-    }
+     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
