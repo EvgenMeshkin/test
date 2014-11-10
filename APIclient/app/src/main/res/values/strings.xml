@@ -26,5 +26,7 @@
     <string name="auto_sync_interval">Интервал синхронизации</string>
     <string name="auto_sync_interval_summary">Промежуток времени выполнения синхронизации</string>
     <string name="news">Новости</string>
+    <string name="lorem_ipsum">Новости</string>
+    <string name="title_template_step">Новости</string>
 
 </resources>

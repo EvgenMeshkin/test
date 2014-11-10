@@ -8,3 +8,4 @@ http://www.dimasokol.ru/drawerlayout-panel-from-google/
 http://habrahabr.ru/company/e-Legion/blog/206210/
 http://www.darkraha.com/rus/mobile/android/api/sync_api.php
 https://github.com/IstiN/android_xcore/tree/3580f427c42d307add8c6ac06e0f3cabd1afa1fa/xcore-library/xcore/src/main/java/by/istin/android/xcore/source/sync
+http://startandroid.ru/ru/uroki/vse-uroki-spiskom/228-urok-125-viewpager.html

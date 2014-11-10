@@ -6,20 +6,29 @@ package com.example.evgen.apiclient;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.annotation.TargetApi;
-import android.app.FragmentManager;
+
+
+
+
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.app.Activity;
-import android.app.Fragment;
+
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.app.ActionBar;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +44,8 @@ import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.fragments.ChildFragment;
 import com.example.evgen.apiclient.fragments.DetailsFragment;
+import com.example.evgen.apiclient.fragments.MyFragmentPagerAdapter;
+import com.example.evgen.apiclient.fragments.ScreenSlideActivity;
 import com.example.evgen.apiclient.fragments.WikiFragment;
 
 import org.apache.http.client.HttpClient;
@@ -45,7 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class WikiActivity extends Activity implements WikiFragment.onSomeEventListener {
+public class WikiActivity extends FragmentActivity implements WikiFragment.onSomeEventListener {
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
     private ActionBarDrawerToggle myDrawerToggle;
@@ -65,8 +76,10 @@ public class WikiActivity extends Activity implements WikiFragment.onSomeEventLi
     public static final String AUTHORITY = "com.example.evgen.apiclient";
     private AccountManager mAm;
     public static Account sAccount;
+    ViewPager pager;
+    PagerAdapter pagerAdapter;
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +88,8 @@ public class WikiActivity extends Activity implements WikiFragment.onSomeEventLi
         mFrag1 = new WikiFragment();
         mFrag2 = new DetailsFragment();
         if (savedInstanceState == null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
+           // FragmentManager fragmentManager = getFragmentManager();
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.frgmCont, mFrag1)
                     .commit();
         }
@@ -132,7 +145,7 @@ public class WikiActivity extends Activity implements WikiFragment.onSomeEventLi
 
     @Override
     public void someEvent(NoteGsonModel note) {
-        FragmentManager fragmentManager = getFragmentManager();
+       // FragmentManager fragmentManager = getFragmentManager();
        //        Fragment fr3 = fr2.getChildFragmentManager().findFragmentById(R.id.frgmCont3);
         NoteGsonModel noteGsonModel = (NoteGsonModel) note;
         Bundle bundle = new Bundle();
@@ -142,7 +155,7 @@ public class WikiActivity extends Activity implements WikiFragment.onSomeEventLi
         mFrag2.setArguments(bundle);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
-        fragmentManager.beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                 .hide(mFrag1)
                 .addToBackStack(null)
                 .replace(R.id.frgmCont2, mFrag2)
@@ -151,13 +164,15 @@ public class WikiActivity extends Activity implements WikiFragment.onSomeEventLi
         }
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
         {
-    fragmentManager.beginTransaction()
+    getSupportFragmentManager().beginTransaction()
     .replace(R.id.frgmCont, mFrag1)
     .replace(R.id.frgmCont2, mFrag2)
     .replace(R.id.frgmCont3, mFrag3)
     .commit();
         }
      }
+
+
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -176,7 +191,27 @@ public class WikiActivity extends Activity implements WikiFragment.onSomeEventLi
             case 0:
                  break;
             case 1:
-                //   fragment = new SecondFragment();
+                pager = (ViewPager) findViewById(R.id.pager);
+                pager.setVisibility(View.VISIBLE);
+                pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+                pager.setAdapter(pagerAdapter);
+
+                pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        Log.d(TAG, "onPageSelected, position = " + position);
+                    }
+
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset,
+                                               int positionOffsetPixels) {
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                    }
+                });
                 break;
             case 2:
                 //    fragment = new ThirdFragment();
