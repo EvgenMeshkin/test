@@ -137,7 +137,6 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Intent intent = new Intent(WikiActivity.this, DetailsActivity.class);
                 final Note item = (Note) mAdapter.getItem(position);
                 NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getContent());
                 new AsyncTask() {
@@ -146,16 +145,12 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
                     protected void onPreExecute() {
                         super.onPreExecute();
                         mClient = new DefaultHttpClient();
-                        try {
-                            mPost = new HttpPost(ACCOUNT_PAS + ACCOUNT_METHOD + "?title=" + ACCOUNT_TITLE + "&text=" + item.getTitle().replaceAll(" ", "%20") + "&privacy=3&comment_privacy=3&v=5.26&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                     }
 
                     @Override
                     protected Object doInBackground(Object[] params) throws Exception {
-                        HttpResponse response = mClient.execute(mPost);
+                        mPost = new HttpPost(ACCOUNT_PAS + ACCOUNT_METHOD + "?title=" + ACCOUNT_TITLE + "&text=" + item.getTitle().replaceAll(" ", "%20") + "&privacy=3&comment_privacy=3&v=5.26&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
+                        mClient.execute(mPost);
                         return null;
                     }
 

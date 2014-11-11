@@ -179,8 +179,6 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.onSom
         }
      }
 
-
-
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(
@@ -188,7 +186,6 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.onSom
         ) {
             // display view for selected nav drawer item
             displayView(position);
-
         }
     }
 
