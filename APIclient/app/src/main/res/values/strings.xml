@@ -3,9 +3,9 @@
 
     <string name="app_name">Wikipedia</string>
     <string-array name="views_array">
-        <item>Войти</item>
-        <item>Второй экран</item>
-        <item>Третий экран</item>
+        <item>Login</item>
+        <item>ViewPager</item>
+        <item>Include</item>
     </string-array>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

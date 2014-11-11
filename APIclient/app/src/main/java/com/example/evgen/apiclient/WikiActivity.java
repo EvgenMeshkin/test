@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,7 +46,6 @@ import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.fragments.ChildFragment;
 import com.example.evgen.apiclient.fragments.DetailsFragment;
 import com.example.evgen.apiclient.fragments.MyFragmentPagerAdapter;
-import com.example.evgen.apiclient.fragments.ScreenSlideActivity;
 import com.example.evgen.apiclient.fragments.WikiFragment;
 
 import org.apache.http.client.HttpClient;
@@ -76,8 +76,10 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.onSom
     public static final String AUTHORITY = "com.example.evgen.apiclient";
     private AccountManager mAm;
     public static Account sAccount;
-    ViewPager pager;
-    PagerAdapter pagerAdapter;
+    ViewPager mPager;
+    PagerAdapter mPagerAdapter;
+    FrameLayout mFrLayout1;
+    FrameLayout mFrLayout2;
 
 
     @Override
@@ -85,6 +87,11 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.onSom
         super.onCreate(savedInstanceState);
         getResources().getConfiguration().orientation = Configuration.ORIENTATION_PORTRAIT;
         setContentView(R.layout.activity_wiki);
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mFrLayout1 = (FrameLayout) findViewById(R.id.frgmCont);
+        mFrLayout2 = (FrameLayout) findViewById(R.id.frgmCont2);
         mFrag1 = new WikiFragment();
         mFrag2 = new DetailsFragment();
         if (savedInstanceState == null) {
@@ -181,6 +188,7 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.onSom
         ) {
             // display view for selected nav drawer item
             displayView(position);
+
         }
     }
 
@@ -189,29 +197,17 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.onSom
         Fragment fragment = null;
         switch (position) {
             case 0:
-                 break;
+                mFrLayout1.setVisibility(View.VISIBLE);
+                mFrLayout2.setVisibility(View.VISIBLE);
+                mPager.setVisibility(View.GONE);
+                myDrawerLayout.closeDrawer(myDrawerList);
+                break;
             case 1:
-                pager = (ViewPager) findViewById(R.id.pager);
-                pager.setVisibility(View.VISIBLE);
-                pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
-                pager.setAdapter(pagerAdapter);
-
-                pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-                    @Override
-                    public void onPageSelected(int position) {
-                        Log.d(TAG, "onPageSelected, position = " + position);
-                    }
-
-                    @Override
-                    public void onPageScrolled(int position, float positionOffset,
-                                               int positionOffsetPixels) {
-                    }
-
-                    @Override
-                    public void onPageScrollStateChanged(int state) {
-                    }
-                });
+                mFrLayout1.setVisibility(View.GONE);
+                mFrLayout2.setVisibility(View.GONE);
+                mPager.setVisibility(View.VISIBLE);
+                mPager.setOffscreenPageLimit(10);
+                myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 2:
                 //    fragment = new ThirdFragment();
