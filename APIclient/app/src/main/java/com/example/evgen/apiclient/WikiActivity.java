@@ -8,8 +8,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 
 
-
-
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -56,7 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class WikiActivity extends FragmentActivity implements WikiFragment.onSomeEventListener {
+public class WikiActivity extends FragmentActivity implements WikiFragment.Callbacks {
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
     private ActionBarDrawerToggle myDrawerToggle;
@@ -78,28 +77,18 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.onSom
     public static Account sAccount;
     ViewPager mPager;
     PagerAdapter mPagerAdapter;
-    FrameLayout mFrLayout1;
-    FrameLayout mFrLayout2;
+    boolean mDualPane;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getResources().getConfiguration().orientation = Configuration.ORIENTATION_PORTRAIT;
         setContentView(R.layout.activity_wiki);
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-        mFrLayout1 = (FrameLayout) findViewById(R.id.frgmCont);
-        mFrLayout2 = (FrameLayout) findViewById(R.id.frgmCont2);
-        mFrag1 = new WikiFragment();
-        mFrag2 = new DetailsFragment();
-        if (savedInstanceState == null) {
-           // FragmentManager fragmentManager = getFragmentManager();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frgmCont, mFrag1)
-                    .commit();
-        }
+        View detailsFrame = findViewById(R.id.frgmCont2);
+        mDualPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
         myTitle = getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
         // load slide menu items
@@ -151,33 +140,47 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.onSom
     }
 
     @Override
-    public void someEvent(NoteGsonModel note) {
-       // FragmentManager fragmentManager = getFragmentManager();
-       //        Fragment fr3 = fr2.getChildFragmentManager().findFragmentById(R.id.frgmCont3);
-        NoteGsonModel noteGsonModel = (NoteGsonModel) note;
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("key", noteGsonModel);
-        mFrag2 = new DetailsFragment();
-        mFrag3 = new ChildFragment();
-        mFrag2.setArguments(bundle);
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            getSupportFragmentManager().beginTransaction()
-                .hide(mFrag1)
-                .addToBackStack(null)
-                .replace(R.id.frgmCont2, mFrag2)
-                .replace(R.id.frgmCont3, mFrag3)
-                .commit();
+    public void onShowDetails(int index, NoteGsonModel note) {
+        if (mDualPane) {
+            // We can display everything in-place with fragments, so update
+            // the list to highlight the selected item and show the data.
+
+            // Check what fragment is currently shown, replace if needed.
+            DetailsFragment details = (DetailsFragment)
+                    getSupportFragmentManager().findFragmentById(R.id.frgmCont2);
+            if (details == null || details.getShownIndex() != index) {
+                // Make new fragment to show this selection.
+                details = DetailsFragment.newInstance(index);
+                NoteGsonModel noteGsonModel = (NoteGsonModel) note;
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("key", noteGsonModel);
+                details.setArguments(bundle);
+                // Execute a transaction, replacing any existing fragment
+                // with this one inside the frame.
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frgmCont2, details)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .commit();
+            }
+
+        } else {
+            // Otherwise we need to launch a new activity to display
+            // the dialog fragment with selected text.
+            NoteGsonModel noteGsonModel = (NoteGsonModel) note;
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("key", noteGsonModel);
+            Intent intent = new Intent();
+            intent.setClass(this, DetailsFragmentActivity.class);
+            intent.putExtra("key", bundle);
+            startActivity(intent);
         }
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-        {
-    getSupportFragmentManager().beginTransaction()
-    .replace(R.id.frgmCont, mFrag1)
-    .replace(R.id.frgmCont2, mFrag2)
-    .replace(R.id.frgmCont3, mFrag3)
-    .commit();
-        }
-     }
+    }
+
+
+    @Override
+    public boolean isDualPane() {
+        return false;
+    }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -194,17 +197,17 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.onSom
         Fragment fragment = null;
         switch (position) {
             case 0:
-                mFrLayout1.setVisibility(View.VISIBLE);
-                mFrLayout2.setVisibility(View.VISIBLE);
-                mPager.setVisibility(View.GONE);
-                myDrawerLayout.closeDrawer(myDrawerList);
+//                mFrLayout1.setVisibility(View.VISIBLE);
+//                mFrLayout2.setVisibility(View.VISIBLE);
+//                mPager.setVisibility(View.GONE);
+//                myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 1:
-                mFrLayout1.setVisibility(View.GONE);
-                mFrLayout2.setVisibility(View.GONE);
-                mPager.setVisibility(View.VISIBLE);
-                mPager.setOffscreenPageLimit(10);
-                myDrawerLayout.closeDrawer(myDrawerList);
+//                mFrLayout1.setVisibility(View.GONE);
+//                mFrLayout2.setVisibility(View.GONE);
+//                mPager.setVisibility(View.VISIBLE);
+//                mPager.setOffscreenPageLimit(10);
+//                myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 2:
                 //    fragment = new ThirdFragment();

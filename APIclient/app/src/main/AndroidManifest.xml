@@ -65,7 +65,9 @@
         <activity
             android:name=".account.AuthenticatorActivity"
             android:label="@string/app_name"/>
-
+        <activity
+            android:name=".DetailsFragmentActivity"
+            android:label="@string/app_name"/>
 
     </application>
 

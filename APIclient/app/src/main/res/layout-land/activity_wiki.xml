@@ -12,12 +12,10 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <FrameLayout
-        android:id="@+id/frgmCont"
-        android:layout_weight="1"
-        android:layout_width="0px"
-        android:layout_height="match_parent">
-        </FrameLayout>
+        <fragment class="com.example.evgen.apiclient.fragments.WikiFragment"
+            android:id="@+id/titles" android:layout_weight="1"
+            android:layout_width="0px"
+            android:layout_height="match_parent" />
         <FrameLayout
         android:id="@+id/frgmCont2"
         android:layout_weight="1"
