@@ -16,16 +16,13 @@
         android:paddingLeft="16dip"
         android:paddingRight="16dip"
         tools:context=".WikiActivity">
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="match_parent">
               <fragment class="com.example.evgen.apiclient.fragments.WikiFragment"
                 android:id="@+id/titles"
                 android:layout_width="match_parent"
-<<<<<<< HEAD
-                android:layout_height="match_parent">
-             </FrameLayout>
-=======
-                android:layout_height="match_parent" />
-
->>>>>>> a0c74fe3859b08e6c7dbf00e40e2c4d988be2536
+                android:layout_height="match_parent"/>
+        </FrameLayout>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"

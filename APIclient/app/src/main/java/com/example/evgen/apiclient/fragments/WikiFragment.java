@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.evgen.apiclient.R;
+import com.example.evgen.apiclient.WikiActivity;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.bo.Note;
@@ -104,17 +105,29 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final HttpDataSource dataSource = new HttpDataSource();//get(g)tActivity().this);
-        final NoteArrayProcessor processor = new NoteArrayProcessor();
-        DataManager.loadData(this, URL, dataSource, processor);
+//        final HttpDataSource dataSource = new HttpDataSource();//get(g)tActivity().this);
+//        final NoteArrayProcessor processor = new NoteArrayProcessor();
+//        DataManager.loadData(this, URL, dataSource, processor);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+     //   super.onCreate(savedInstanceState);
         content = inflater.inflate(R.layout.fragment_wiki, null);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) content.findViewById(R.id.swipe_container);
+        final HttpDataSource dataSource = HttpDataSource.get(getActivity());
+        final NoteArrayProcessor processor = new NoteArrayProcessor();
         empty = (TextView) content.findViewById(android.R.id.empty);
         empty.setVisibility(View.GONE);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                DataManager.loadData(WikiFragment.this, URL, dataSource, processor);
+            }
+        });
+        DataManager.loadData(this, URL, dataSource, processor);
+        //empty.setVisibility(View.GONE);
         return content;
     }
 
@@ -136,75 +149,81 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
 
     @Override
     public void onDataLoadStart() {
-   //          empty.setVisibility(View.GONE);
+        if (!mSwipeRefreshLayout.isRefreshing()) {
+            content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
+        }
+           // empty.setVisibility(View.GONE);
     }
 
     @Override
     public void onDone(List<Note> data) {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
         content.findViewById(android.R.id.progress).setVisibility(View.GONE);
+        //data = null;
         if (data == null || data.isEmpty()) {
             content.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
-        }
-        AdapterView listView = (AbsListView) content.findViewById(android.R.id.list);
-        if (mAdapter == null) {
-            mData = data;
-            mAdapter = new ArrayAdapter<Note>(getActivity(), R.layout.adapter_item, android.R.id.text1, data) {
-
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    if (convertView == null) {
-                        convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
-                    }
-                    Note item = getItem(position);
-                    mTitle = (TextView) convertView.findViewById(android.R.id.text1);
-                    mTitle.setText(item.getTitle());
-                    mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                    mContent.setText(item.getContent());
-                    convertView.setTag(item.getId());
-                    return convertView;
-                }
-
-            };
-            listView.setAdapter(mAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Note item = (Note) mAdapter.getItem(position);
-                NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getContent());
-                new AsyncTask() {
+        }else {
+            AdapterView listView = (AbsListView) content.findViewById(android.R.id.list);
+            if (mAdapter == null) {
+                mData = data;
+                mAdapter = new ArrayAdapter<Note>(getActivity(), R.layout.adapter_item, android.R.id.text1, data) {
 
                     @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-                        mClient = new DefaultHttpClient();
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        if (convertView == null) {
+                            convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
+                        }
+                        Note item = getItem(position);
+                        mTitle = (TextView) convertView.findViewById(android.R.id.text1);
+                        mTitle.setText(item.getTitle());
+                        mContent = (TextView) convertView.findViewById(android.R.id.text2);
+                        mContent.setText(item.getContent());
+                        convertView.setTag(item.getId());
+                        return convertView;
                     }
 
+                };
+                listView.setAdapter(mAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    protected Object doInBackground(Object[] params) throws Exception {
-                        mPost = new HttpPost(ACCOUNT_PAS + ACCOUNT_METHOD + "?title=" + ACCOUNT_TITLE + "&text=" + item.getTitle().replaceAll(" ", "%20") + "&privacy=3&comment_privacy=3&v=5.26&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
-                        mClient.execute(mPost);
-                        return null;
-                    }
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        final Note item = (Note) mAdapter.getItem(position);
+                        NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getContent());
+                        new AsyncTask() {
 
-                    @Override
-                    protected void onPostException(Exception e) {
-                     onError(e);
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                                mClient = new DefaultHttpClient();
+                            }
+
+                            @Override
+                            protected Object doInBackground(Object[] params) throws Exception {
+                                mPost = new HttpPost(ACCOUNT_PAS + ACCOUNT_METHOD + "?title=" + ACCOUNT_TITLE + "&text=" + item.getTitle().replaceAll(" ", "%20") + "&privacy=3&comment_privacy=3&v=5.26&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
+                                mClient.execute(mPost);
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostException(Exception e) {
+                                onError(e);
+                            }
+                        }.execute();
+                        showDetails(position, note);
                     }
-                }.execute();
-                showDetails(position, note);
+                });
+            } else {
+                mData.clear();
+                mData.addAll(data);
+                mAdapter.notifyDataSetChanged();
             }
-        });
-    }
-    else {
-        mData.clear();
-        mData.addAll(data);
-        mAdapter.notifyDataSetChanged();
-    }
+        }
 }
     @Override
     public void onError(Exception e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
             content.findViewById(android.R.id.progress).setVisibility(View.GONE);
             content.findViewById(android.R.id.empty).setVisibility(View.GONE);
             TextView errorView = (TextView) content.findViewById(R.id.error);
