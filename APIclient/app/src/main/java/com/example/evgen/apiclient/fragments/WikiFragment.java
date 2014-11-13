@@ -10,7 +10,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.evgen.apiclient.R;
@@ -41,7 +45,7 @@ import java.util.List;
  * Created by User on 30.10.2014.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class WikiFragment extends Fragment implements DataManager.Callback<List<Note>> {
+public class WikiFragment extends ListFragment implements DataManager.Callback<List<Note>> {
     private String[] viewsNames;
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -55,36 +59,51 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
     public static final String ACCOUNT_PAS = "https://api.vk.com/method/";
     public static final String ACCOUNT_METHOD = "notes.add";
     public static final String ACCOUNT_TITLE = "Wikipedia";
-    Fragment frag1;
     public static final String AUTHORITY = "com.example.evgen.apiclient";
-    private AccountManager mAm;
-    public static Account sAccount;
-    View content;
-    TextView empty;
+    private View content;
+    private TextView empty;
+    int mCurCheckPosition = 0;
 
-    public interface onSomeEventListener {
-        public void someEvent(NoteGsonModel note);
-    }
-    onSomeEventListener someEventListener;
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            someEventListener = (onSomeEventListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
+    public static <T> T findFirstResponderFor(Fragment fragment, Class<T> clazz) {
+        FragmentActivity activity = fragment.getActivity();
+        if (activity == null)
+            return null;
+        if (clazz.isInstance(activity)) {
+            return clazz.cast(activity);
         }
+        Fragment parentFragment = fragment.getParentFragment();
+        while (parentFragment != null) {
+            if (clazz.isInstance(parentFragment)) {
+                return clazz.cast(parentFragment);
+            }
+            parentFragment = parentFragment.getParentFragment();
+        }
+        return null;
     }
 
-    public WikiFragment() {
+    public interface Callbacks {
+      //  public void someEvent(NoteGsonModel note);
+        void onShowDetails(int index, NoteGsonModel note);
+        boolean isDualPane();
     }
 
+    void showDetails(int index, NoteGsonModel note) {
+        mCurCheckPosition = index;
+        Callbacks callbacks = getCallbacks();
+        if (callbacks.isDualPane()) {
+            getListView().setItemChecked(index, true);
+        }
+        callbacks.onShowDetails(index, note);
+
+    }
+
+    private Callbacks getCallbacks() {
+        return findFirstResponderFor(this, Callbacks.class);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         final HttpDataSource dataSource = new HttpDataSource();//get(g)tActivity().this);
         final NoteArrayProcessor processor = new NoteArrayProcessor();
         DataManager.loadData(this, URL, dataSource, processor);
@@ -93,17 +112,31 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         content = inflater.inflate(R.layout.fragment_wiki, null);
         empty = (TextView) content.findViewById(android.R.id.empty);
         empty.setVisibility(View.GONE);
-
         return content;
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+         super.onActivityCreated(savedInstanceState);
+        // Populate list with our static array of titles.
+        if (savedInstanceState != null) {
+            // Restore last state for checked position.
+            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
+        }
+        if (getCallbacks().isDualPane()) {
+            // In dual-pane mode, the list view highlights the selected item.
+            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            // Make sure our UI is in the correct state.
+          //  showDetails(mCurCheckPosition, note);
+        }
+    }
+
+    @Override
     public void onDataLoadStart() {
-        //       empty.setVisibility(View.GONE);
+   //          empty.setVisibility(View.GONE);
     }
 
     @Override
@@ -156,21 +189,18 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
 
                     @Override
                     protected void onPostException(Exception e) {
-                     }
+                     onError(e);
+                    }
                 }.execute();
-                someEventListener.someEvent(note);
+                showDetails(position, note);
             }
         });
     }
-
-    else
-
-    {
+    else {
         mData.clear();
         mData.addAll(data);
         mAdapter.notifyDataSetChanged();
     }
-
 }
     @Override
     public void onError(Exception e) {
