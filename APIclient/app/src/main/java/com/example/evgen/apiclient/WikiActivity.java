@@ -9,6 +9,7 @@ import android.accounts.AccountManager;
 
 
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -42,6 +43,7 @@ import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
+import com.example.evgen.apiclient.dialogs.ErrorDialog;
 import com.example.evgen.apiclient.fragments.ChildFragment;
 import com.example.evgen.apiclient.fragments.DetailsFragment;
 import com.example.evgen.apiclient.fragments.MyFragmentPagerAdapter;
@@ -75,10 +77,10 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
     public static final String AUTHORITY = "com.example.evgen.apiclient";
     private AccountManager mAm;
     public static Account sAccount;
-    ViewPager mPager;
-    PagerAdapter mPagerAdapter;
+    private ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
     boolean mDualPane;
-
+    private View  mDetailsFrame;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,8 +89,8 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-        View detailsFrame = findViewById(R.id.frgmCont2);
-        mDualPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
+        mDetailsFrame = findViewById(R.id.frgmCont2);
+        mDualPane = mDetailsFrame != null && mDetailsFrame.getVisibility() == View.VISIBLE;
         myTitle = getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
         // load slide menu items
@@ -116,7 +118,6 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
                 invalidateOptionsMenu();
             }
         };
-
         myDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
         myDrawerLayout.setDrawerListener(myDrawerToggle);
         if (savedInstanceState == null) {
@@ -135,7 +136,8 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
         try {
             mAm.setUserData(sAccount, "Token", EncrManager.encrypt(this, VkOAuthHelper.mAccessToken));
         } catch (Exception e) {
-
+            DialogFragment newFragment = ErrorDialog.newInstance(e.getMessage());
+            newFragment.show(getSupportFragmentManager(), "Account");
         }
     }
 
@@ -144,7 +146,6 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
         if (mDualPane) {
             // We can display everything in-place with fragments, so update
             // the list to highlight the selected item and show the data.
-
             // Check what fragment is currently shown, replace if needed.
             DetailsFragment details = (DetailsFragment)
                     getSupportFragmentManager().findFragmentById(R.id.frgmCont2);
@@ -182,6 +183,12 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
         return false;
     }
 
+    @Override
+    public void onErrorA(Exception e) {
+        DialogFragment newFragment = ErrorDialog.newInstance(e.getMessage());
+        newFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(
@@ -197,17 +204,23 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
         Fragment fragment = null;
         switch (position) {
             case 0:
-//                mFrLayout1.setVisibility(View.VISIBLE);
-//                mFrLayout2.setVisibility(View.VISIBLE);
-//                mPager.setVisibility(View.GONE);
-//                myDrawerLayout.closeDrawer(myDrawerList);
+                mDetailsFrame = findViewById(R.id.frgmCont2);
+                if (mDualPane = mDetailsFrame != null){
+                    mDetailsFrame.setVisibility(View.VISIBLE);
+                }
+                findViewById(R.id.titles).setVisibility(View.VISIBLE);
+                mPager.setVisibility(View.GONE);
+                myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 1:
-//                mFrLayout1.setVisibility(View.GONE);
-//                mFrLayout2.setVisibility(View.GONE);
-//                mPager.setVisibility(View.VISIBLE);
-//                mPager.setOffscreenPageLimit(10);
-//                myDrawerLayout.closeDrawer(myDrawerList);
+                mDetailsFrame = findViewById(R.id.frgmCont2);
+                if (mDualPane = mDetailsFrame != null){
+                   mDetailsFrame.setVisibility(View.GONE);
+                }
+                findViewById(R.id.titles).setVisibility(View.GONE);
+                mPager.setVisibility(View.VISIBLE);
+                mPager.setOffscreenPageLimit(10);
+                myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 2:
                 //    fragment = new ThirdFragment();

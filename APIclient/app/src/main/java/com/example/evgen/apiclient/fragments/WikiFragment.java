@@ -11,10 +11,12 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
+import com.example.evgen.apiclient.dialogs.ErrorDialog;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.os.AsyncTask;
 import com.example.evgen.apiclient.processing.NoteArrayProcessor;
@@ -64,6 +67,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     private View content;
     private TextView empty;
     int mCurCheckPosition = 0;
+    final static String LOG_TAG = "WikiFragment";
 
     public static <T> T findFirstResponderFor(Fragment fragment, Class<T> clazz) {
         FragmentActivity activity = fragment.getActivity();
@@ -83,9 +87,9 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     }
 
     public interface Callbacks {
-      //  public void someEvent(NoteGsonModel note);
         void onShowDetails(int index, NoteGsonModel note);
         boolean isDualPane();
+        void onErrorA(Exception e);
     }
 
     void showDetails(int index, NoteGsonModel note) {
@@ -95,7 +99,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
             getListView().setItemChecked(index, true);
         }
         callbacks.onShowDetails(index, note);
-
     }
 
     private Callbacks getCallbacks() {
@@ -105,9 +108,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        final HttpDataSource dataSource = new HttpDataSource();//get(g)tActivity().this);
-//        final NoteArrayProcessor processor = new NoteArrayProcessor();
-//        DataManager.loadData(this, URL, dataSource, processor);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         if (!mSwipeRefreshLayout.isRefreshing()) {
             content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
         }
-           // empty.setVisibility(View.GONE);
+            empty.setVisibility(View.GONE);
     }
 
     @Override
@@ -164,12 +164,12 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         //data = null;
         if (data == null || data.isEmpty()) {
             content.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+            onError(new NullPointerException("No data"));
         }else {
             AdapterView listView = (AbsListView) content.findViewById(android.R.id.list);
             if (mAdapter == null) {
                 mData = data;
                 mAdapter = new ArrayAdapter<Note>(getActivity(), R.layout.adapter_item, android.R.id.text1, data) {
-
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         if (convertView == null) {
@@ -183,7 +183,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         convertView.setTag(item.getId());
                         return convertView;
                     }
-
                 };
                 listView.setAdapter(mAdapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -191,24 +190,29 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         final Note item = (Note) mAdapter.getItem(position);
                         NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getContent());
+                        content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
                         new AsyncTask() {
-
+                            @Override
+                            protected void onPostExecute(Object processingResult) {
+                                super.onPostExecute(processingResult);
+                                content.findViewById(android.R.id.progress).setVisibility(View.GONE);
+                            }
                             @Override
                             protected void onPreExecute() {
                                 super.onPreExecute();
+                                content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
                                 mClient = new DefaultHttpClient();
                             }
-
                             @Override
                             protected Object doInBackground(Object[] params) throws Exception {
                                 mPost = new HttpPost(ACCOUNT_PAS + ACCOUNT_METHOD + "?title=" + ACCOUNT_TITLE + "&text=" + item.getTitle().replaceAll(" ", "%20") + "&privacy=3&comment_privacy=3&v=5.26&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
                                 mClient.execute(mPost);
+                              //  content.findViewById(android.R.id.progress).setVisibility(View.GONE);
                                 return null;
                             }
-
                             @Override
                             protected void onPostException(Exception e) {
-                                onError(e);
+                              onError(e);
                             }
                         }.execute();
                         showDetails(position, note);
@@ -223,11 +227,13 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
 }
     @Override
     public void onError(Exception e) {
-          //  e.printStackTrace();
-            content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-            content.findViewById(android.R.id.empty).setVisibility(View.GONE);
-            TextView errorView = (TextView) content.findViewById(R.id.error);
-            errorView.setVisibility(View.VISIBLE);
-            errorView.setText(errorView.getText() + "\n" + e.getMessage());
+        Log.d(LOG_TAG, "onError");
+        content.findViewById(android.R.id.progress).setVisibility(View.GONE);
+        content.findViewById(android.R.id.empty).setVisibility(View.GONE);
+        TextView errorView = (TextView) content.findViewById(R.id.error);
+        errorView.setVisibility(View.VISIBLE);
+        errorView.setText(errorView.getText() + "\n" + e.getMessage());
+        Callbacks callbacks = getCallbacks();
+        callbacks.onErrorA(e);
     }
 }
