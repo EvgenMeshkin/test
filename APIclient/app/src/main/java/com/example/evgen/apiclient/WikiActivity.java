@@ -68,7 +68,7 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
     private String[] viewsNames;
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    public static final String URL = "https://en.wikipedia.org/w/api.php?action=query&prop=categories&format=json&titles=Albert%20Einstein";
+   // public static final String URL = "https://en.wikipedia.org/w/api.php?action=query&prop=categories&format=json&titles=Albert%20Einstein";
     private static final String TAG = VkOAuthHelper.class.getSimpleName();
     public static final String ACCOUNT_TYPE = "com.example.evgen.apiclient.account";
     private Fragment mFrag1;

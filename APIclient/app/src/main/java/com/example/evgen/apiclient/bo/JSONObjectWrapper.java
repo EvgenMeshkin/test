@@ -21,6 +21,10 @@ public class JSONObjectWrapper implements Parcelable {
         }
     }
 
+    protected JSONObjectWrapper(Parcel in) {
+        readFromParcel(in);
+    }
+
     public JSONObjectWrapper(JSONObject jsonObject) {
         mJO = jsonObject;
     }
@@ -29,8 +33,20 @@ public class JSONObjectWrapper implements Parcelable {
         return mJO.optString(key);
     }
 
+    protected Boolean getBoolean(String key) {
+        return mJO.optBoolean(key);
+    }
+
     protected Long getLong(String id) {
         return mJO.optLong(id);
+    }
+
+    protected void set(String key, String value) {
+        try {
+            mJO.put(key, value);
+        } catch (JSONException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     @Override
@@ -59,25 +75,7 @@ public class JSONObjectWrapper implements Parcelable {
         try {
             mJO = new JSONObject(string);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException("invalid parcel");
         }
     }
-
-    public static final Parcelable.Creator<JSONObjectWrapper> CREATOR = new Creator<JSONObjectWrapper>() {
-
-        @Override
-        public JSONObjectWrapper createFromParcel(Parcel source) {
-            return new JSONObjectWrapper(source);
-        }
-
-        @Override
-        public JSONObjectWrapper[] newArray(int size) {
-            return new JSONObjectWrapper[size];
-        }
-    };
-
-    public JSONObjectWrapper(Parcel source) {
-        this(source.readString());
-    }
-
 }

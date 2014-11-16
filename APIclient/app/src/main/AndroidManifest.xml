@@ -36,11 +36,7 @@
         <activity
             android:name=".WikiActivity"
             android:label="@string/app_name"/>
-        <activity
-            android:name=".fragments.DetailsFragment"
-            android:label="@string/app_name"
 
-            />
         <service
             android:name=".account.WikipediaAccount"
             android:exported="false">
