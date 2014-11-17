@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.example.evgen.apiclient.source.HttpDataSource;
+import com.example.evgen.apiclient.source.VkDataSource;
 
 /**
  * Created by evgen on 18.10.2014.
@@ -11,11 +12,13 @@ import com.example.evgen.apiclient.source.HttpDataSource;
 public class CoreApplication extends Application {
 
     private HttpDataSource mHttpDataSource;
+    private VkDataSource mVkDataSource;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mHttpDataSource = new HttpDataSource();
+        mVkDataSource = new VkDataSource();
     }
 
     @Override
@@ -26,6 +29,13 @@ public class CoreApplication extends Application {
                 mHttpDataSource = new HttpDataSource();
             }
             return mHttpDataSource;
+        }
+        if (VkDataSource.KEY.equals(name)) {
+            //for android kitkat +
+            if (mVkDataSource == null) {
+                mVkDataSource = new VkDataSource();
+            }
+            return mVkDataSource;
         }
         return super.getSystemService(name);
     }

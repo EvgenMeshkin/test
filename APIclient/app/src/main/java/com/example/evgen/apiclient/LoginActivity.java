@@ -8,7 +8,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.utils.AuthUtils;
 
 /**
@@ -31,14 +33,35 @@ public class LoginActivity extends ActionBarActivity {
         });
     }
 
-    public void onLoginClick(View view) {
-        setLoginSuccess();
+     public void onLoginClick(View view) {
+        Toast.makeText(this, "implement me", Toast.LENGTH_SHORT).show();
     }
 
-    private void setLoginSuccess() {
-        AuthUtils.setLogged(true);
-        setResult(RESULT_OK);
-        finish();
+    public void onFragmentsClick(View view) {
+        startActivity(new Intent(this, WikiActivity.class));
+    }
+
+    private String mSomeSecureString;
+
+    public void onEncrDecrClick(View view) {
+        if (mSomeSecureString == null) {
+            EditText editText = (EditText) findViewById(R.id.password);
+            try {
+                mSomeSecureString = EncrManager.encrypt(this, editText.getText().toString());
+            } catch (Exception e) {
+                //TODO
+            }
+            Toast.makeText(this, mSomeSecureString, Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                mSomeSecureString = EncrManager.decrypt(this, mSomeSecureString);
+            } catch (Exception e) {
+                //TODO
+            }
+            Toast.makeText(this, mSomeSecureString, Toast.LENGTH_SHORT).show();
+            mSomeSecureString = null;
+        }
+
     }
 
     public void onVkAuthClick(View view) {
@@ -50,7 +73,8 @@ public class LoginActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_VK && resultCode == RESULT_OK)  {
-            setLoginSuccess();
+            setResult(RESULT_OK);
+            finish();
         }
     }
 }

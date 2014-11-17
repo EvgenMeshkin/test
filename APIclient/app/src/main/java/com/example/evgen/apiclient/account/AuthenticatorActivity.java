@@ -61,18 +61,18 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.d(TAG, "overr " + url);
-            if (!VkOAuthHelper.proceedRedirectURL(AuthenticatorActivity.this, url)) {
-                //view.loadUrl(url);
-                return false;
-            } else {
-                Log.d(TAG, "overr redr");
-                view.setVisibility(View.INVISIBLE);
-                Log.d(TAG, "Parsing url" + url);
-                setResult(RESULT_OK);
-                finish();
-                return true;
-            }
+             Log.d(TAG, "overr 123" + url);
+//            if (!VkOAuthHelper.proceedRedirectURL(AuthenticatorActivity.this, url, AuthenticatorActivity.this)) {
+//                //view.loadUrl(url);
+//                return false;
+//            } else {
+//                Log.d(TAG, "overr redr");
+//                view.setVisibility(View.INVISIBLE);
+//                Log.d(TAG, "Parsing url" + url);
+//                setResult(RESULT_OK);
+//                finish();
+              return true;
+//            }
         }
 
         @Override
