@@ -2,7 +2,7 @@ http://git-scm.com/book/ru
 http://developer.alexanderklimov.ru/android/views/listview.php
 http://startandroid.ru/ru/uroki/vse-uroki-spiskom/116-urok-57-gridview-i-ego-atributy
 http://4pda.ru/forum/index.php?showtopic=200537
-
+678
 http://developer.alexanderklimov.ru/android/theory/fragments.php
 http://www.dimasokol.ru/drawerlayout-panel-from-google/
 http://habrahabr.ru/company/e-Legion/blog/206210/
