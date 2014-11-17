@@ -1,6 +1,8 @@
 package com.example.evgen.apiclient.processing;
 
+import com.example.evgen.apiclient.bo.Category;
 import com.example.evgen.apiclient.bo.Friend;
+import com.example.evgen.apiclient.bo.User;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,21 +14,10 @@ import java.util.List;
 /**
  * Created by evgen on 15.11.2014.
  */
-public class CategoryArrayProcessor implements Processor<List<Friend>,InputStream>{
+public class CategoryArrayProcessor extends WrapperArrayProcessor<Category> {
 
     @Override
-    public List<Friend> process(InputStream inputStream) throws Exception {
-        String string = new StringProcessor().process(inputStream);
-        JSONArray array = new JSONObject(string).getJSONObject("response").getJSONArray("items");
-        //TODO wrapper for array
-        List<Friend> noteArray = new ArrayList<Friend>(array.length());
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject jsonObject = array.getJSONObject(i);
-            Friend friend = new Friend(jsonObject);
-            friend.initName();
-            noteArray.add(friend);
-        }
-        return noteArray;
+    protected Category createObject(JSONObject jsonObject) {
+        return new Category(jsonObject);
     }
-
 }
