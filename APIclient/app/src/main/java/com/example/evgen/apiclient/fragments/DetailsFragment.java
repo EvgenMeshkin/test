@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -84,7 +85,7 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
             return null;
         }
 
-        final View content = inflater.inflate(R.layout.fragment_details, container, false);
+       content = inflater.inflate(R.layout.fragment_details, container, false);
         if(getArguments() != null) {
             obj = (NoteGsonModel) getArguments().getParcelable("key");
             ((TextView)content.findViewById(android.R.id.text1)).setText(obj.getTitle());
@@ -105,10 +106,12 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     }
 
     private void update(HttpDataSource dataSource, ViewArrayProcessor processor) {
+        Log.d(LOG_TAG,getUrl() + obj.getTitle().replaceAll(" ", "%20"));
         DataManager.loadData(this,
-                getUrl() + obj.getTitle(),
+                getUrl() + obj.getTitle().replaceAll(" ", "%20"),
                 dataSource,
                 processor);
+
     }
 
     private String getUrl() {
@@ -127,10 +130,12 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
             onError(new NullPointerException("No data"));
         }else {
             WebView mWebView = (WebView) content.findViewById(R.id.webView);
-            mWebView.getSettings().setJavaScriptEnabled(true);
-            mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-            mWebView.loadUrl(data.toString());
-            Log.d(LOG_TAG, data.toString());
+            mWebView.setWebViewClient(new HelloWebViewClient());
+//            mWebView.getSettings().setJavaScriptEnabled(true);
+//            mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+           // Category item = getUrl();
+            mWebView.loadUrl(data.get(0).getURL());
+            Log.d(LOG_TAG, data.get(0).getURL());
 //            final Category item = (Category) mAdapter.getItem(position);
 //            NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTITLE(), item.getNS());
 //            AdapterView listView = (AbsListView) content.findViewById(android.R.id.list);
@@ -171,4 +176,15 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
 //        Callbacks callbacks = getCallbacks();
 //        callbacks.onErrorA(e);
     }
+
+    private class HelloWebViewClient extends WebViewClient
+    {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url)
+        {
+            view.loadUrl(url);
+            return true;
+        }
+    }
+
 }

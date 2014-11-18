@@ -216,10 +216,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         final Category item = (Category) mAdapter.getItem(position);
                         NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTITLE(), item.getNS());
-                        DataManager.loadData(WikiFragment.this,
-                                Api.URLVIEW_GET + note.getTitle(),
-                                getHttpDataSource(),
-                                new ViewArrayProcessor());
                         new AsyncTask() {
                             @Override
                             protected void onPostExecute(Object processingResult) {

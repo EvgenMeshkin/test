@@ -18,14 +18,28 @@ public class ViewArrayProcessor implements Processor<List<Category>,InputStream>
     final static String LOG_TAG = "ViewArrayProcessor";
     @Override
     public List<Category> process(InputStream inputStream) throws Exception {
+        Log.d(LOG_TAG, "Run");
         String string = new StringProcessor().process(inputStream);
-        JSONObject jsonObject = new JSONObject("query").getJSONObject("pages").getJSONObject("-1").getJSONObject("fullurl");
+        Log.d(LOG_TAG, "Run1");
+        JSONObject jsonObject = new JSONObject(string);
+        Log.d(LOG_TAG, "Run2");
+        JSONObject jsonObjectquery = jsonObject.getJSONObject("query");
+        String strid = jsonObjectquery.getString("pages").substring(jsonObjectquery.getString("pages").indexOf("{")+2,jsonObjectquery.getString("pages").indexOf(":")-1);
+        Log.d(LOG_TAG, strid);
+        JSONObject jsonObjectquerypages = jsonObjectquery.getJSONObject("pages");
+        Log.d(LOG_TAG, "Run4");
+         JSONObject jsonObjectquerypages1 = jsonObjectquerypages.getJSONObject(strid);
+        Log.d(LOG_TAG, "Run5");
+       // JSONObject jsonObjectquerypages1fullurl = jsonObjectquerypages1.getJSONObject("fullurl");
         //TODO wrapper for array
-        List<Category> noteArray = new ArrayList<Category>(jsonObject.length());
+        Log.d(LOG_TAG, "Run6");
+        List<Category> noteArray = new ArrayList<Category>(jsonObjectquerypages1.length());
 //        for (int i = 0; i < array.length(); i++) {
 //            JSONObject jsonObject = array.getJSONObject(i);
-            Category category = new Category(jsonObject);
-            category.initUrl();
+        Log.d(LOG_TAG, "Run7");
+            Category category = new Category(jsonObjectquerypages1);
+            category.getURL();
+        Log.d(LOG_TAG, category.toString());
             noteArray.add(category);
         Log.d(LOG_TAG, "Good");
    //     }
