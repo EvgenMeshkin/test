@@ -9,7 +9,7 @@ import org.json.JSONObject;
  * Created by User on 17.11.2014.
  */
 public class Category extends JSONObjectWrapper {
-    public static final String URL = "https://en.wikipedia.org/w/api.php?action=query&prop=categories&format=json&titles=Albert%20Einstein";
+    public static final String URL = "fullurl";
     private static final String ACTION = "action";
     private static final String PROP = "prop";
     private static final String FORMAT = "format";
@@ -63,9 +63,15 @@ public class Category extends JSONObjectWrapper {
     public String getTITLE () {
         return getString(TITLE );
     }
+    public String getURL() {
+        return getString(URL);
+    }
 
     public void initName() {
         set(NAME, getTITLE());
+    }
+    public void initUrl() {
+        set(NAME, getURL());
     }
 //
 //    public String getName() {

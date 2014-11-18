@@ -40,6 +40,7 @@ import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.os.AsyncTask;
 import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
 import com.example.evgen.apiclient.processing.NoteArrayProcessor;
+import com.example.evgen.apiclient.processing.ViewArrayProcessor;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
 
@@ -119,11 +120,8 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-     //   super.onCreate(savedInstanceState);
         content = inflater.inflate(R.layout.fragment_wiki, null);
         mSwipeRefreshLayout = (SwipeRefreshLayout) content.findViewById(R.id.swipe_container);
-//        final HttpDataSource dataSource = HttpDataSource.get(getActivity());
-//        final NoteArrayProcessor processor = new NoteArrayProcessor();
         final HttpDataSource dataSource = getHttpDataSource();
         final CategoryArrayProcessor processor = getProcessor();
         empty = (TextView) content.findViewById(android.R.id.empty);
@@ -131,12 +129,9 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //DataManager.loadData(WikiFragment.this, URL, dataSource, processor);
                 update(dataSource, processor);
             }
         });
-       // DataManager.loadData(this, URL, dataSource, processor);
-        //empty.setVisibility(View.GONE);
         update(dataSource, processor);
         return content;
     }
@@ -157,7 +152,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     }
 
     private String getUrl() {
-        return Api.FRIENDS_GET;
+        return Api.GEOSEARCH_GET;
     }
 
 
@@ -221,6 +216,10 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         final Category item = (Category) mAdapter.getItem(position);
                         NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTITLE(), item.getNS());
+                        DataManager.loadData(WikiFragment.this,
+                                Api.URLVIEW_GET + note.getTitle(),
+                                getHttpDataSource(),
+                                new ViewArrayProcessor());
                         new AsyncTask() {
                             @Override
                             protected void onPostExecute(Object processingResult) {
