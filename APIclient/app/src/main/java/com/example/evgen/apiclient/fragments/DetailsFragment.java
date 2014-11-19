@@ -74,8 +74,8 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
        content = inflater.inflate(R.layout.fragment_details, container, false);
         if(getArguments() != null) {
             obj = (NoteGsonModel) getArguments().getParcelable("key");
-            ((TextView)content.findViewById(android.R.id.text1)).setText(obj.getTitle());
-            ((TextView)content.findViewById(android.R.id.text2)).setText(obj.getContent());
+//            ((TextView)content.findViewById(android.R.id.text1)).setText(obj.getTitle());
+//            ((TextView)content.findViewById(android.R.id.text2)).setText(obj.getContent());
         }
         final HttpDataSource dataSource = getHttpDataSource();
         final ViewArrayProcessor processor = getProcessor();
@@ -116,8 +116,8 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
         }else {
             WebView mWebView = (WebView) content.findViewById(R.id.webView);
             mWebView.setWebViewClient(new HelloWebViewClient());
-            mWebView.loadUrl(data.get(0).getURL());
-            Log.d(LOG_TAG, data.get(0).getURL());
+            mWebView.loadUrl(data.get(0).getURL().replace("en.","en.m."));
+            Log.d(LOG_TAG, data.get(0).getURL().replace("en.","en.m."));
         }
 
     }
