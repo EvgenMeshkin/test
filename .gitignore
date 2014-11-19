@@ -28,3 +28,5 @@ proguard/
 task_manager/.idea/
 .metadata/
 *.iml
+apiclient/.idea/
+MyContactsProvider/.idea/

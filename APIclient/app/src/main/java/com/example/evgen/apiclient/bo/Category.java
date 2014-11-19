@@ -10,6 +10,7 @@ import org.json.JSONObject;
  */
 public class Category extends JSONObjectWrapper {
     public static final String URL = "fullurl";
+    public static final String URLIMAGE = "source";
     private static final String ACTION = "action";
     private static final String PROP = "prop";
     private static final String FORMAT = "format";
@@ -17,6 +18,7 @@ public class Category extends JSONObjectWrapper {
     private static final String TITLE = "title";
 //    private static final String ONLINE = "online";
     private static final String ID = "id";
+    private static final String DIST = "dist";
 
     //INTERNAL
     private static final String NAME = "NAME";
@@ -65,6 +67,12 @@ public class Category extends JSONObjectWrapper {
     }
     public String getURL() {
         return getString(URL);
+    }
+    public String getURLIMAGE() {
+        return getString(URLIMAGE);
+    }
+    public String getDIST() {
+        return getString(DIST);
     }
 
     public void initName() {

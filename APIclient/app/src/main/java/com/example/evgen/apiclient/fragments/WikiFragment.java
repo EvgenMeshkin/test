@@ -7,6 +7,7 @@ import android.app.Activity;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -16,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,7 +41,9 @@ import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.dialogs.ErrorDialog;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.os.AsyncTask;
+import com.example.evgen.apiclient.processing.BitmapProcessor;
 import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
+import com.example.evgen.apiclient.processing.ImageUrlProcessor;
 import com.example.evgen.apiclient.processing.NoteArrayProcessor;
 import com.example.evgen.apiclient.processing.ViewArrayProcessor;
 import com.example.evgen.apiclient.source.HttpDataSource;
@@ -56,24 +61,17 @@ import java.util.List;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WikiFragment extends ListFragment implements DataManager.Callback<List<Category>> {
-    private String[] viewsNames;
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    public static final String URL = "https://en.wikipedia.org/w/api.php?action=query&prop=categories&format=json&titles=Albert%20Einstein";
     private List<Category> mData;
-    private static final String TAG = VkOAuthHelper.class.getSimpleName();
     private HttpClient mClient;
     private HttpPost mPost;
     private TextView mTitle;
     private TextView mContent;
-    public static final String ACCOUNT_PAS = "https://api.vk.com/method/";
-    public static final String ACCOUNT_METHOD = "notes.add";
-    public static final String ACCOUNT_TITLE = "Wikipedia";
-    public static final String AUTHORITY = "com.example.evgen.apiclient";
     private View content;
     private TextView empty;
     int mCurCheckPosition = 0;
-    final static String LOG_TAG = "WikiFragment";
+    final static String LOG_TAG = VkOAuthHelper.class.getSimpleName();
     private CategoryArrayProcessor mCategoryArrayProcessor = new CategoryArrayProcessor();
 
     public static <T> T findFirstResponderFor(Fragment fragment, Class<T> clazz) {
@@ -205,8 +203,57 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);
                         mTitle.setText(item.getTITLE());
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                        mContent.setText(item.getNS());
+                        mContent.setText(item.getDIST() + " м.");
+                        String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
                         convertView.setTag(item.getId());
+
+                        final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
+                        final String[] url = new String[1];
+                        imageView.setImageBitmap(null);
+                        DataManager.loadData(new DataManager.Callback<List<Category>>() {
+                            @Override
+                            public void onDataLoadStart() {
+                            }
+
+                            @Override
+                            public void onDone(List<Category> data) {
+                                url[0] = data.get(0).getURLIMAGE().replaceAll("50px","100px");
+                                Log.d(LOG_TAG, url[0]);
+                                imageView.setTag(url[0]);
+                                if (!TextUtils.isEmpty(url[0])) {
+                                    //TODO add delay and cancel old request or create limited queue
+                                    //TODO create sync Map to check existing request and existing callbacks
+                                    //TODO create separate thread pool for manager
+                                    DataManager.loadData(new DataManager.Callback<Bitmap>() {
+                                        @Override
+                                        public void onDataLoadStart() {
+                                        }
+
+                                        @Override
+                                        public void onDone(Bitmap bitmap) {
+                                            if (url[0].equals(imageView.getTag())) {
+                                                imageView.setImageBitmap(bitmap);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Exception e) {
+
+                                        }
+
+                                    }, url[0], HttpDataSource.get(getActivity()), new BitmapProcessor());
+                                }
+
+
+
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+
+                            }
+
+                        }, urlImage, VkDataSource.get(getActivity()), new ImageUrlProcessor());
                         return convertView;
                     }
                 };
@@ -230,7 +277,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                             }
                             @Override
                             protected Object doInBackground(Object[] params) throws Exception {
-                                mPost = new HttpPost(ACCOUNT_PAS + ACCOUNT_METHOD + "?title=" + ACCOUNT_TITLE + "&text=" + item.getTITLE().replaceAll(" ", "%20") + "&privacy=3&comment_privacy=3&v=5.26&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
+                                mPost = new HttpPost(Api.VKNOTES_GET + item.getTITLE().replaceAll(" ", "%20") +"&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
                                 mClient.execute(mPost);
                               //  content.findViewById(android.R.id.progress).setVisibility(View.GONE);
                                 return null;

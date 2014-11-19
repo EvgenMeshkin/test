@@ -36,26 +36,12 @@ import java.util.List;
  * Created by User on 22.10.2014.
  */
 public class DetailsFragment extends Fragment implements DataManager.Callback<List<Category>>{
-    private String[] viewsNames;
-    private ArrayAdapter mAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    public static final String URL = "https://en.wikipedia.org/w/api.php?action=query&prop=categories&format=json&titles=Albert%20Einstein";
-    private List<Category> mData;
-    private static final String TAG = VkOAuthHelper.class.getSimpleName();
-    private HttpClient mClient;
-    private HttpPost mPost;
-    private TextView mTitle;
-    private TextView mContent;
-    public static final String ACCOUNT_PAS = "https://api.vk.com/method/";
-    public static final String ACCOUNT_METHOD = "notes.add";
-    public static final String ACCOUNT_TITLE = "Wikipedia";
-    public static final String AUTHORITY = "com.example.evgen.apiclient";
+
     private View content;
-    private TextView empty;
-    int mCurCheckPosition = 0;
     final static String LOG_TAG = "DetailsFragment";
     private ViewArrayProcessor mViewArrayProcessor = new ViewArrayProcessor();
-    NoteGsonModel obj;
+    private NoteGsonModel obj;
+
     public DetailsFragment(){}
 
     public static DetailsFragment newInstance(int index) {
@@ -126,41 +112,12 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     @Override
     public void onDone(List<Category> data) {
         if (data == null || data.isEmpty()) {
-         //   content.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
             onError(new NullPointerException("No data"));
         }else {
             WebView mWebView = (WebView) content.findViewById(R.id.webView);
             mWebView.setWebViewClient(new HelloWebViewClient());
-//            mWebView.getSettings().setJavaScriptEnabled(true);
-//            mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-           // Category item = getUrl();
             mWebView.loadUrl(data.get(0).getURL());
             Log.d(LOG_TAG, data.get(0).getURL());
-//            final Category item = (Category) mAdapter.getItem(position);
-//            NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTITLE(), item.getNS());
-//            AdapterView listView = (AbsListView) content.findViewById(android.R.id.list);
-//            if (mAdapter == null) {
-//                mData = data;
-//                mAdapter = new ArrayAdapter<Category>(getActivity(), R.layout.adapter_item, android.R.id.text1, data) {
-//                    @Override
-//                    public View getView(int position, View convertView, ViewGroup parent) {
-//                        if (convertView == null) {
-//                            convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
-//                        }
-//                        Category item = getItem(position);
-//                        mTitle = (TextView) convertView.findViewById(android.R.id.text1);
-//                        mTitle.setText(item.getTITLE());
-//                        mContent = (TextView) convertView.findViewById(android.R.id.text2);
-//                        mContent.setText(item.getNS());
-//                        convertView.setTag(item.getId());
-//                        return convertView;
-//                    }
-//                };
-//            } else {
-//                mData.clear();
-//                mData.addAll(data);
-//                mAdapter.notifyDataSetChanged();
-//            }
         }
 
     }
