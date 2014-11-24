@@ -2,6 +2,9 @@ package com.example.evgen.apiclient.fragments;
 
 
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +17,7 @@ import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.evgen.apiclient.Api;
@@ -41,8 +45,17 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     final static String LOG_TAG = "DetailsFragment";
     private ViewArrayProcessor mViewArrayProcessor = new ViewArrayProcessor();
     private NoteGsonModel obj;
-
+    private ProgressBar mProgress;
     public DetailsFragment(){}
+    ProgressDialog pd;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        pd = new ProgressDialog(getActivity());
+        pd.setMessage("Please wait Loading...");
+        pd.show();
+    }
+
 
     public static DetailsFragment newInstance(int index) {
         DetailsFragment f = new DetailsFragment();
@@ -77,6 +90,9 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
 //            ((TextView)content.findViewById(android.R.id.text1)).setText(obj.getTitle());
 //            ((TextView)content.findViewById(android.R.id.text2)).setText(obj.getContent());
         }
+     //   mProgress = (ProgressBar) content.findViewById(android.R.id.progress);
+        content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
+        Log.d(LOG_TAG,"1");
         final HttpDataSource dataSource = getHttpDataSource();
         final ViewArrayProcessor processor = getProcessor();
         update(dataSource, processor);
@@ -106,7 +122,8 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
 
     @Override
     public void onDataLoadStart() {
-
+   // mProgress.setVisibility(View.VISIBLE);
+        content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -119,12 +136,14 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
             mWebView.loadUrl(data.get(0).getURL().replace("en.","en.m."));
             Log.d(LOG_TAG, data.get(0).getURL().replace("en.","en.m."));
         }
-
+        Log.d(LOG_TAG,"2");
+    //    content.findViewById(android.R.id.progress).setVisibility(View.GONE);
     }
 
     @Override
     public void onError(Exception e) {
         Log.d(LOG_TAG, "onError");
+        mProgress.setVisibility(View.GONE);
 //        content.findViewById(android.R.id.progress).setVisibility(View.GONE);
 //        content.findViewById(android.R.id.empty).setVisibility(View.GONE);
 //        TextView errorView = (TextView) content.findViewById(R.id.error);
@@ -140,7 +159,23 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
         public boolean shouldOverrideUrlLoading(WebView view, String url)
         {
             view.loadUrl(url);
+            content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
             return true;
+        }
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+
+            super.onPageStarted(view, url, favicon);
+            content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+
+            content.findViewById(android.R.id.progress).setVisibility(View.GONE);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
         }
     }
 

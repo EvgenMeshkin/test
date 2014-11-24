@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.evgen.apiclient.Api;
@@ -70,6 +71,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     private TextView mContent;
     private View content;
     private TextView empty;
+  //  private ProgressBar mProgress;
     int mCurCheckPosition = 0;
     final static String LOG_TAG = VkOAuthHelper.class.getSimpleName();
     private CategoryArrayProcessor mCategoryArrayProcessor = new CategoryArrayProcessor();
@@ -208,15 +210,18 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         convertView.setTag(item.getId());
 
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
+                        final ProgressBar mProgress = (ProgressBar) convertView.findViewById(android.R.id.progress);
                         final String[] url = new String[1];
                         imageView.setImageBitmap(null);
                         DataManager.loadData(new DataManager.Callback<List<Category>>() {
                             @Override
                             public void onDataLoadStart() {
+                                mProgress.setVisibility(View.VISIBLE);
                             }
 
                             @Override
                             public void onDone(List<Category> data) {
+                                if (data.get(0).getURLIMAGE() == null)  mProgress.setVisibility(View.GONE);
                                 url[0] = data.get(0).getURLIMAGE().replaceAll("50px","100px");
                                 Log.d(LOG_TAG, url[0]);
                                 imageView.setTag(url[0]);
@@ -243,14 +248,11 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
 
                                     }, url[0], HttpDataSource.get(getActivity()), new BitmapProcessor());
                                 }
-
-
-
+                             mProgress.setVisibility(View.GONE);
                             }
 
                             @Override
                             public void onError(Exception e) {
-
                             }
 
                         }, urlImage, VkDataSource.get(getActivity()), new ImageUrlProcessor());
@@ -300,6 +302,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     @Override
     public void onError(Exception e) {
         Log.d(LOG_TAG, "onError");
+       // mProgress.setVisibility(View.GONE);
         content.findViewById(android.R.id.progress).setVisibility(View.GONE);
         content.findViewById(android.R.id.empty).setVisibility(View.GONE);
         TextView errorView = (TextView) content.findViewById(R.id.error);
