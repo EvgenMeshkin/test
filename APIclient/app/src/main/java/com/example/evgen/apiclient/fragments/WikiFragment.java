@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.LocationManager;
@@ -74,6 +75,8 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     private View content;
     private TextView empty;
     private static String mKor;
+    private HttpDataSource dataSource;
+    private CategoryArrayProcessor processor;
   //  private ProgressBar mProgress;
     int mCurCheckPosition = 0;
     final static String LOG_TAG = VkOAuthHelper.class.getSimpleName();
@@ -97,9 +100,10 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     }
 
     @Override
-    public void onShowKor(double latitude, double longitude) {
-        mKor = Api.GEOSEARCH_GET + latitude+"|"+longitude;
-        Log.d(LOG_TAG, "mKor1="+mKor);
+    public void onShowKor(String latitude) {
+        mKor = latitude;
+        Log.d(LOG_TAG, "latitude="+mKor);
+        update(dataSource, processor);
     }
 
     public interface Callbacks {
@@ -131,19 +135,19 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                              Bundle savedInstanceState) {
         content = inflater.inflate(R.layout.fragment_wiki, null);
         mSwipeRefreshLayout = (SwipeRefreshLayout) content.findViewById(R.id.swipe_container);
-        final HttpDataSource dataSource = getHttpDataSource();
-        final CategoryArrayProcessor processor = getProcessor();
+        dataSource = getHttpDataSource();
+        processor = getProcessor();
         empty = (TextView) content.findViewById(android.R.id.empty);
         empty.setVisibility(View.GONE);
+        GpsLocation gpsLocation = new GpsLocation();
+        gpsLocation.getloc(this,getActivity());
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 update(dataSource, processor);
             }
         });
-     //   LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        //GpsLocation gpsLocation = new GpsLocation();
-        update(dataSource, processor);
+     //   update(dataSource, processor);
         return content;
     }
 
@@ -163,6 +167,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     }
 
     private String getUrl() {
+        mKor = Api.GEOSEARCH_GET + mKor;
         Log.d(LOG_TAG, "mKor="+mKor);
         return mKor;
     }

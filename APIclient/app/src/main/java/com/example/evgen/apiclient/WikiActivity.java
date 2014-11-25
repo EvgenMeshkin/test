@@ -93,7 +93,6 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
         mDualPane = mDetailsFrame != null && mDetailsFrame.getVisibility() == View.VISIBLE;
         myTitle = getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
-        // load slide menu items
         viewsNames = getResources().getStringArray(R.array.views_array);
         myDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         myDrawerList = (ListView) findViewById(R.id.left_drawer);

@@ -15,44 +15,56 @@ import com.example.evgen.apiclient.bo.NoteGsonModel;
  * Created by User on 25.11.2014.
  */
 public class GpsLocation implements LocationListener {
+    public GpsLocation() {}
+    LocationManager lm;
+    static String mLatitude;
 
-    GpsLocation() {}
-
-    public static interface Callbacks {
-        void onShowKor (double latitude,  double longitude);
+    public interface Callbacks {
+        void onShowKor (String latitude);
     }
+
     Callbacks callbacks;
-//    public void getloc (Context сontext){
-//        LocationManager lm = (LocationManager) сontext.getSystemService(Context.LOCATION_SERVICE);
-//        location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//        Latitude=location.getLatitude();}
+    public void getloc (Callbacks callbacks, Context сontext){
+        lm = (LocationManager) сontext.getSystemService(Context.LOCATION_SERVICE);
+        if (lm.getAllProviders().contains(LocationManager.NETWORK_PROVIDER))
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        this.callbacks = callbacks;
+        if (lm.getAllProviders().contains(LocationManager.GPS_PROVIDER))
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+    }
+
     @Override
     public void onLocationChanged(Location location) {
-        // TODO Auto-generated method stub
- //       Callbacks callbacks = getCallbacks();
-        callbacks.onShowKor(location.getLatitude(),location.getLongitude());
+        showLocation(location);
         Log.d("id", "Координаты изменены");
     }
 
-//    private Callbacks getCallbacks() {
-//        return findFirstResponderFor(null, Callbacks.class);
-//    }
-
     @Override
     public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-        Log.d("id", "Модуль отключен");
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-        Log.d("id", "Модуль включен");
+        showLocation(lm.getLastKnownLocation(provider));
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-        Log.d("id", "Статус модуля изменен");
+    }
+
+    private void showLocation(Location location) {
+        if (location == null)
+            return;
+        if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
+            mLatitude = location.getLatitude()+"|"+location.getLongitude();
+        } else if (location.getProvider().equals(
+                LocationManager.NETWORK_PROVIDER)) {
+            mLatitude = location.getLatitude()+"|"+location.getLongitude();
+        }
+        if (mLatitude != null) {
+            lm.removeUpdates(this);
+            callbacks.onShowKor(mLatitude);
+        }
+        Log.d("id", mLatitude);
     }
 }
