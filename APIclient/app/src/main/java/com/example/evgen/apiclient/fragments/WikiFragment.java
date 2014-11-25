@@ -8,6 +8,7 @@ import android.app.Activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -47,6 +48,7 @@ import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
 import com.example.evgen.apiclient.processing.ImageUrlProcessor;
 import com.example.evgen.apiclient.processing.NoteArrayProcessor;
 import com.example.evgen.apiclient.processing.ViewArrayProcessor;
+import com.example.evgen.apiclient.service.GpsLocation;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
 
@@ -61,7 +63,7 @@ import java.util.List;
  * Created by User on 30.10.2014.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class WikiFragment extends ListFragment implements DataManager.Callback<List<Category>> {
+public class WikiFragment extends ListFragment implements DataManager.Callback<List<Category>>, GpsLocation.Callbacks {
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Category> mData;
@@ -71,6 +73,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     private TextView mContent;
     private View content;
     private TextView empty;
+    private static String mKor;
   //  private ProgressBar mProgress;
     int mCurCheckPosition = 0;
     final static String LOG_TAG = VkOAuthHelper.class.getSimpleName();
@@ -91,6 +94,12 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
             parentFragment = parentFragment.getParentFragment();
         }
         return null;
+    }
+
+    @Override
+    public void onShowKor(double latitude, double longitude) {
+        mKor = Api.GEOSEARCH_GET + latitude+"|"+longitude;
+        Log.d(LOG_TAG, "mKor1="+mKor);
     }
 
     public interface Callbacks {
@@ -132,6 +141,8 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                 update(dataSource, processor);
             }
         });
+     //   LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        //GpsLocation gpsLocation = new GpsLocation();
         update(dataSource, processor);
         return content;
     }
@@ -152,7 +163,8 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     }
 
     private String getUrl() {
-        return Api.GEOSEARCH_GET;
+        Log.d(LOG_TAG, "mKor="+mKor);
+        return mKor;
     }
 
 

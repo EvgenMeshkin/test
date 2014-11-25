@@ -9,6 +9,10 @@ http://habrahabr.ru/company/e-Legion/blog/206210/
 http://www.darkraha.com/rus/mobile/android/api/sync_api.php
 https://github.com/IstiN/android_xcore/tree/3580f427c42d307add8c6ac06e0f3cabd1afa1fa/xcore-library/xcore/src/main/java/by/istin/android/xcore/source/sync
 http://startandroid.ru/ru/uroki/vse-uroki-spiskom/228-urok-125-viewpager.html
+GPS
+http://www.cyberforum.ru/android-dev/thread770048.html
+http://hashcode.ru/questions/74344/java-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D1%82%D0%B5%D0%BA%D1%83%D1%89%D0%B8%D1%85-gps-%D0%BA%D0%BE%D0%BE%D1%80%D0%B4%D0%B8%D0%BD%D0%B0%D1%82
+http://startandroid.ru/ru/uroki/vse-uroki-spiskom/291-urok-1-opredelenie-mestopolozhenija-gps-koordinaty.html
 
 API
 
