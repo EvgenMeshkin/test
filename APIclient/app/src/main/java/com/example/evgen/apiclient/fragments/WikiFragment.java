@@ -43,6 +43,7 @@ import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.dialogs.ErrorDialog;
 import com.example.evgen.apiclient.helper.DataManager;
+import com.example.evgen.apiclient.loader.ImageLoader;
 import com.example.evgen.apiclient.os.AsyncTask;
 import com.example.evgen.apiclient.processing.BitmapProcessor;
 import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
@@ -77,6 +78,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     private static String mKor;
     private HttpDataSource dataSource;
     private CategoryArrayProcessor processor;
+    private ImageLoader imageLoader;
   //  private ProgressBar mProgress;
     int mCurCheckPosition = 0;
     final static String LOG_TAG = VkOAuthHelper.class.getSimpleName();
@@ -141,6 +143,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         empty.setVisibility(View.GONE);
         GpsLocation gpsLocation = new GpsLocation();
         gpsLocation.getloc(this,getActivity());
+        imageLoader=new ImageLoader(getActivity());
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -225,7 +228,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         mContent.setText(item.getDIST() + " м.");
                         String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
                         convertView.setTag(item.getId());
-
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
                         final ProgressBar mProgress = (ProgressBar) convertView.findViewById(android.R.id.progress);
                         final String[] url = new String[1];
@@ -243,27 +245,29 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                                 Log.d(LOG_TAG, url[0]);
                                 imageView.setTag(url[0]);
                                 if (!TextUtils.isEmpty(url[0])) {
+
+                                    imageLoader.DisplayImage(url[0], imageView);
                                     //TODO add delay and cancel old request or create limited queue
                                     //TODO create sync Map to check existing request and existing callbacks
                                     //TODO create separate thread pool for manager
-                                    DataManager.loadData(new DataManager.Callback<Bitmap>() {
-                                        @Override
-                                        public void onDataLoadStart() {
-                                        }
-
-                                        @Override
-                                        public void onDone(Bitmap bitmap) {
-                                            if (url[0].equals(imageView.getTag())) {
-                                                imageView.setImageBitmap(bitmap);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onError(Exception e) {
-
-                                        }
-
-                                    }, url[0], HttpDataSource.get(getActivity()), new BitmapProcessor());
+//                                    DataManager.loadData(new DataManager.Callback<Bitmap>() {
+//                                        @Override
+//                                        public void onDataLoadStart() {
+//                                        }
+//
+//                                        @Override
+//                                        public void onDone(Bitmap bitmap) {
+//                                            if (url[0].equals(imageView.getTag())) {
+//                                                imageView.setImageBitmap(bitmap);
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onError(Exception e) {
+//
+//                                        }
+//
+//                                    }, url[0], HttpDataSource.get(getActivity()), new BitmapProcessor());
                                 }
                              mProgress.setVisibility(View.GONE);
                             }
