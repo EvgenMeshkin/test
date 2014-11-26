@@ -246,7 +246,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                                 imageView.setTag(url[0]);
                                 if (!TextUtils.isEmpty(url[0])) {
 
-                                    imageLoader.DisplayImage(url[0], imageView);
+                                    imageLoader.DisplayImage(url[0], imageView, HttpDataSource.get(getActivity()), new BitmapProcessor());
                                     //TODO add delay and cancel old request or create limited queue
                                     //TODO create sync Map to check existing request and existing callbacks
                                     //TODO create separate thread pool for manager

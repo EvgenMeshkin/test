@@ -25,10 +25,10 @@ public class GpsLocation implements LocationListener {
 
     Callbacks callbacks;
     public void getloc (Callbacks callbacks, Context сontext){
+        this.callbacks = callbacks;
         lm = (LocationManager) сontext.getSystemService(Context.LOCATION_SERVICE);
         if (lm.getAllProviders().contains(LocationManager.NETWORK_PROVIDER))
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-        this.callbacks = callbacks;
         if (lm.getAllProviders().contains(LocationManager.GPS_PROVIDER))
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
@@ -45,7 +45,7 @@ public class GpsLocation implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
-        showLocation(lm.getLastKnownLocation(provider));
+ //       showLocation(lm.getLastKnownLocation(provider));
     }
 
     @Override
