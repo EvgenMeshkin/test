@@ -15,28 +15,29 @@ import com.example.evgen.apiclient.bo.NoteGsonModel;
  * Created by User on 25.11.2014.
  */
 public class GpsLocation implements LocationListener {
-    public GpsLocation() {}
-    LocationManager lm;
-    static String mLatitude;
+    private LocationManager lm;
+    private static String mLatitude;
+    private Callbacks callbacks;
 
     public interface Callbacks {
         void onShowKor (String latitude);
     }
 
-    Callbacks callbacks;
-    public void getloc (Callbacks callbacks, Context сontext){
+    public void getloc (Callbacks callbacks, Context сontext) {
         this.callbacks = callbacks;
         lm = (LocationManager) сontext.getSystemService(Context.LOCATION_SERVICE);
         if (lm.getAllProviders().contains(LocationManager.NETWORK_PROVIDER))
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-        if (lm.getAllProviders().contains(LocationManager.GPS_PROVIDER))
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        else {
+            if (lm.getAllProviders().contains(LocationManager.GPS_PROVIDER))
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
     }
 
     @Override
     public void onLocationChanged(Location location) {
         showLocation(location);
-        Log.d("id", "Координаты изменены");
+        Log.d("id", "Coordinates changed");
     }
 
     @Override
@@ -45,7 +46,7 @@ public class GpsLocation implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
- //       showLocation(lm.getLastKnownLocation(provider));
+       showLocation(lm.getLastKnownLocation(provider));
     }
 
     @Override

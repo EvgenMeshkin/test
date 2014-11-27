@@ -65,12 +65,15 @@ public class Category extends JSONObjectWrapper {
     public String getTITLE () {
         return getString(TITLE );
     }
+
     public String getURL() {
         return getString(URL);
     }
+
     public String getURLIMAGE() {
         return getString(URLIMAGE);
     }
+
     public String getDIST() {
         return getString(DIST);
     }
@@ -78,22 +81,11 @@ public class Category extends JSONObjectWrapper {
     public void initName() {
         set(NAME, getTITLE());
     }
+
     public void initUrl() {
         set(NAME, getURL());
     }
-//
-//    public String getName() {
-//        return getString(NAME);
-//    }
-//
-//    public boolean isOnline() {
-//        Boolean isOnline = getBoolean(ONLINE);
-//        if (isOnline == null) {
-//            return false;
-//        }
-//        return isOnline;
-//    }
-//
+
     public Long getId() {
         return getLong(ID);
     }

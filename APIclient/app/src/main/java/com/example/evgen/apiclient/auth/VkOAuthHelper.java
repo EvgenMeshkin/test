@@ -42,10 +42,7 @@ public class VkOAuthHelper {
     }
 
     public static boolean proceedRedirectURL(Activity activity, String url, Callbacks callbacks) {
-        //https://oauth.vk.com/blank.html#
-        //fragment: access_token=token&expires_in=0&user_id=308327
-        //https://oauth.vk.com/blank.html#error=
-        if (url.startsWith(REDIRECT_URL)) {
+         if (url.startsWith(REDIRECT_URL)) {
             Uri uri = Uri.parse(url);
             String fragment = uri.getFragment();
             Uri parsedFragment = Uri.parse("http://temp.com?" + fragment);

@@ -25,9 +25,6 @@ public class DetailsFragmentActivity extends FragmentActivity {
         }
 
         if (savedInstanceState == null) {
-            // During initial setup, plug in the details fragment.
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelable("key", noteGsonModel);
             DetailsFragment details = new DetailsFragment();
             details.setArguments(getIntent().<Bundle>getParcelableExtra("key"));
             getSupportFragmentManager().beginTransaction().add(

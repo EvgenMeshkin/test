@@ -47,7 +47,7 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     private NoteGsonModel obj;
     private ProgressBar mProgress;
     public DetailsFragment(){}
-    ProgressDialog pd;
+    private ProgressDialog pd;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,31 +74,19 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
             if (container == null) {
-            // We have different layouts, and in one of them this
-            // fragment's containing frame doesn't exist.  The fragment
-            // may still be created from its saved state, but there is
-            // no reason to try to create its view hierarchy because it
-            // won't be displayed.  Note this is not needed -- we could
-            // just run the code below, where we would create and return
-            // the view hierarchy; it would just never be used.
             return null;
         }
-
        content = inflater.inflate(R.layout.fragment_details, container, false);
         if(getArguments() != null) {
             obj = (NoteGsonModel) getArguments().getParcelable("key");
-//            ((TextView)content.findViewById(android.R.id.text1)).setText(obj.getTitle());
-//            ((TextView)content.findViewById(android.R.id.text2)).setText(obj.getContent());
         }
-     //   mProgress = (ProgressBar) content.findViewById(android.R.id.progress);
         content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
-        Log.d(LOG_TAG,"1");
         final HttpDataSource dataSource = getHttpDataSource();
         final ViewArrayProcessor processor = getProcessor();
         update(dataSource, processor);
-
         return content;
     }
+
     private ViewArrayProcessor getProcessor() {
         return mViewArrayProcessor;
     }
@@ -113,7 +101,6 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
                 getUrl() + obj.getTitle().replaceAll(" ", "%20"),
                 dataSource,
                 processor);
-
     }
 
     private String getUrl() {
@@ -122,7 +109,6 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
 
     @Override
     public void onDataLoadStart() {
-   // mProgress.setVisibility(View.VISIBLE);
         content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
     }
 
@@ -136,42 +122,29 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
             mWebView.loadUrl(data.get(0).getURL().replace("en.","en.m."));
             Log.d(LOG_TAG, data.get(0).getURL().replace("en.","en.m."));
         }
-        Log.d(LOG_TAG,"2");
-    //    content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-    }
+     }
 
     @Override
     public void onError(Exception e) {
         Log.d(LOG_TAG, "onError");
         mProgress.setVisibility(View.GONE);
-//        content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-//        content.findViewById(android.R.id.empty).setVisibility(View.GONE);
-//        TextView errorView = (TextView) content.findViewById(R.id.error);
-//        errorView.setVisibility(View.VISIBLE);
-//        errorView.setText(errorView.getText() + "\n" + e.getMessage());
-//        Callbacks callbacks = getCallbacks();
-//        callbacks.onErrorA(e);
     }
 
-    private class HelloWebViewClient extends WebViewClient
-    {
+    private class HelloWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url)
-        {
+        public boolean shouldOverrideUrlLoading(WebView view, String url){
             view.loadUrl(url);
             content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
             return true;
         }
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-
             super.onPageStarted(view, url, favicon);
             content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-
             content.findViewById(android.R.id.progress).setVisibility(View.GONE);
             if (pd.isShowing()) {
                 pd.dismiss();

@@ -38,7 +38,6 @@ import com.example.evgen.apiclient.WikiActivity;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.bo.Category;
-import com.example.evgen.apiclient.bo.Friend;
 import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.dialogs.ErrorDialog;
@@ -188,8 +187,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         if (getCallbacks().isDualPane()) {
             // In dual-pane mode, the list view highlights the selected item.
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            // Make sure our UI is in the correct state.
-          //  showDetails(mCurCheckPosition, note);
         }
     }
 
@@ -245,29 +242,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                                 Log.d(LOG_TAG, url[0]);
                                 imageView.setTag(url[0]);
                                 if (!TextUtils.isEmpty(url[0])) {
-
-                                    imageLoader.DisplayImage(url[0], imageView, HttpDataSource.get(getActivity()), new BitmapProcessor());
-                                    //TODO add delay and cancel old request or create limited queue
-                                    //TODO create sync Map to check existing request and existing callbacks
-                                    //TODO create separate thread pool for manager
-//                                    DataManager.loadData(new DataManager.Callback<Bitmap>() {
-//                                        @Override
-//                                        public void onDataLoadStart() {
-//                                        }
-//
-//                                        @Override
-//                                        public void onDone(Bitmap bitmap) {
-//                                            if (url[0].equals(imageView.getTag())) {
-//                                                imageView.setImageBitmap(bitmap);
-//                                            }
-//                                        }
-//
-//                                        @Override
-//                                        public void onError(Exception e) {
-//
-//                                        }
-//
-//                                    }, url[0], HttpDataSource.get(getActivity()), new BitmapProcessor());
+                                imageLoader.DisplayImage(url[0], imageView, HttpDataSource.get(getActivity()), new BitmapProcessor());
                                 }
                              mProgress.setVisibility(View.GONE);
                             }
