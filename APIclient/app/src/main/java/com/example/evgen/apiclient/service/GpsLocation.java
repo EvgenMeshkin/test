@@ -46,7 +46,7 @@ public class GpsLocation implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
-       showLocation(lm.getLastKnownLocation(provider));
+     //  showLocation(lm.getLastKnownLocation(provider));
     }
 
     @Override
@@ -56,10 +56,10 @@ public class GpsLocation implements LocationListener {
     private void showLocation(Location location) {
         if (location == null)
             return;
-        if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
+        if (location.getProvider().equals(LocationManager.NETWORK_PROVIDER)) {
             mLatitude = location.getLatitude()+"|"+location.getLongitude();
         } else if (location.getProvider().equals(
-                LocationManager.NETWORK_PROVIDER)) {
+                LocationManager.GPS_PROVIDER)) {
             mLatitude = location.getLatitude()+"|"+location.getLongitude();
         }
         if (mLatitude != null) {
