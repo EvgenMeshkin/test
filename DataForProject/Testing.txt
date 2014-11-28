@@ -32,6 +32,11 @@ https://en.wikipedia.org/w/api.php?action=query&list=prefixsearch&pssearch=meani
 https://en.wikipedia.org/w/api.php?action=parse&page=Project:Sandbox
 53.677226|23.8489383
 
+ContentProvider
+http://startandroid.ru/ru/uroki/vse-uroki-spiskom/166-urok-101-sozdaem-svoj-contentprovider.html
+http://developer.alexanderklimov.ru/android/theory/contentprovider.php
+http://habrahabr.ru/post/132720/
+
 ImageLoader
 http://habrahabr.ru/post/133239/
 http://www.cyberforum.ru/android-dev/thread1243061.html

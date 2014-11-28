@@ -7,6 +7,9 @@
 /build
 /json_sample
 .idea
+.navigation
+/.navigation
+/.navigation/raw
 gradlew
 gradlew.bat
 
