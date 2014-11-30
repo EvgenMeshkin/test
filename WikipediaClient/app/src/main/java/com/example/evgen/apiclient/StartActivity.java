@@ -16,7 +16,7 @@ public class StartActivity extends ActionBarActivity {
         if (Authorized.isLogged()) {
             startMainActivity();
         } else {
-            startActivityForResult(new Intent(this, LoginActivity.class), requestL);
+            startActivityForResult(new Intent(this, VkLoginActivity.class), requestL);
         }
     }
 

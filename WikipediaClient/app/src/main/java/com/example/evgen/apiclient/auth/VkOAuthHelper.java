@@ -25,7 +25,7 @@ public class VkOAuthHelper {
     private static String sToken;
 
     public static final String REDIRECT_URL = "https://oauth.vk.com/blank.html";
-    public static final String AUTORIZATION_URL = "https://oauth.vk.com/authorize?client_id=4613222&scope=offline,wall,photos,status,messages,notes&redirect_uri=" + REDIRECT_URL + "&display=touch&response_type=token";
+    public static final String AUTORIZATION_URL = "https://oauth.vk.com/authorize?client_id=4613222&scope=offline,wall,photos,status,messages,notes&redirect_uri=" + REDIRECT_URL + "&display=mobile&response_type=token";
     private static final String TAG = VkOAuthHelper.class.getSimpleName();
     public static String mAccessToken;
 
