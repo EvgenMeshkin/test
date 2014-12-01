@@ -6,10 +6,14 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 
 
+import android.app.DownloadManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,6 +22,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -78,6 +83,12 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     private HttpDataSource dataSource;
     private CategoryArrayProcessor processor;
     private ImageLoader imageLoader;
+
+    final Uri CONTACT_URI = Uri
+            .parse("content://ru.startandroid.providers.AdressBook/contacts");
+
+    final String CONTACT_NAME = "name";
+    final String CONTACT_EMAIL = "email";
   //  private ProgressBar mProgress;
     int mCurCheckPosition = 0;
     final static String LOG_TAG = VkOAuthHelper.class.getSimpleName();
@@ -106,6 +117,8 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         Log.d(LOG_TAG, "latitude="+mKor);
         update(dataSource, processor);
     }
+
+
 
     public interface Callbacks {
         void onShowDetails(int index, NoteGsonModel note);
@@ -149,6 +162,18 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                 update(dataSource, processor);
             }
         });
+
+        Cursor cursor = getActivity().getContentResolver().query(CONTACT_URI, null, null,
+                null, null);
+        getActivity().startManagingCursor(cursor);
+        String from[] = { "name", "email" };
+        int to[] = { android.R.id.text1, android.R.id.text2 };
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+                android.R.layout.simple_list_item_2, cursor, from, to);
+
+        ListView lvContact = (ListView) content.findViewById(android.R.id.list);
+        lvContact.setAdapter(adapter);
+
      //   update(dataSource, processor);
         return content;
     }
@@ -219,10 +244,18 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                             convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
                         }
                         Category item = getItem(position);
-                        mTitle = (TextView) convertView.findViewById(android.R.id.text1);
-                        mTitle.setText(item.getTITLE());
-                        mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                        mContent.setText(item.getDIST() + " м.");
+
+
+                        ContentValues cv = new ContentValues();
+                        cv.put(CONTACT_NAME, item.getTITLE());
+                        cv.put(CONTACT_EMAIL, item.getDIST());
+                        Uri newUri = getActivity().getContentResolver().insert(CONTACT_URI, cv);
+                        Log.d(LOG_TAG, "insert, result Uri : " + newUri.toString());
+
+//                        mTitle = (TextView) convertView.findViewById(android.R.id.text1);
+//                        mTitle.setText(item.getTITLE());
+//                        mContent = (TextView) convertView.findViewById(android.R.id.text2);
+//                        mContent.setText(item.getDIST() + " м.");
                         String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
                         convertView.setTag(item.getId());
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);

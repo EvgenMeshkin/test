@@ -36,6 +36,12 @@ ContentProvider
 http://startandroid.ru/ru/uroki/vse-uroki-spiskom/166-urok-101-sozdaem-svoj-contentprovider.html
 http://developer.alexanderklimov.ru/android/theory/contentprovider.php
 http://habrahabr.ru/post/132720/
+ÑursorLoader
+http://startandroid.ru/ru/uroki/vse-uroki-spiskom/278-urok-136-cursorloader.html
+http://www.nerdgrl.org/ru/programming/sqlite-contentprovider-1/
+http://adroid-resources.blogspot.com/2013/11/simple-cursor-loader.html
+https://www.youtube.com/watch?v=M-njNGMhPCU
+http://habrahabr.ru/company/e-Legion/blog/216857/
 
 ImageLoader
 http://habrahabr.ru/post/133239/
