@@ -30,6 +30,7 @@ https://en.wikipedia.org/w/api.php?action=opensearch&search=Te
 https://en.wikipedia.org/w/api.php?action=query&prop=pageprops&titles=Category:American%20Zionists
 https://en.wikipedia.org/w/api.php?action=query&list=prefixsearch&pssearch=meaning
 https://en.wikipedia.org/w/api.php?action=parse&page=Project:Sandbox
+http://habrahabr.ru/post/154931/
 53.677226|23.8489383
 
 ContentProvider
@@ -42,6 +43,7 @@ http://www.nerdgrl.org/ru/programming/sqlite-contentprovider-1/
 http://adroid-resources.blogspot.com/2013/11/simple-cursor-loader.html
 https://www.youtube.com/watch?v=M-njNGMhPCU
 http://habrahabr.ru/company/e-Legion/blog/216857/
+https://github.com/elegion/newsfeed
 
 ImageLoader
 http://habrahabr.ru/post/133239/

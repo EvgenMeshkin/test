@@ -165,8 +165,8 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
             }
         });
 
-        mCursor = getActivity().getContentResolver().query(CONTACT_URI, null, null,
-                null, null);
+//        mCursor = getActivity().getContentResolver().query(CONTACT_URI, null, null,
+//                null, null);
        // getActivity().startManagingCursor(mCursor);
 
 //        String from[] = { "name", "email" };
@@ -176,7 +176,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
 
 //        ListView lvContact = (ListView) content.findViewById(android.R.id.list);
 //        lvContact.setAdapter(adapter);
-        mCursor.moveToFirst();
+       // mCursor.moveToFirst();
      //   update(dataSource, processor);
         return content;
     }
@@ -253,11 +253,14 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         Uri newUri = getActivity().getContentResolver().insert(CONTACT_URI, cv);
                        // long cnt  = getActivity().getContentResolver().insert(CONTACT_URI, cv);
                         Log.d(LOG_TAG, "update, count : " + newUri.toString());
-                        mCursor.moveToPosition(position);
+                        mCursor = getActivity().getContentResolver().query(newUri, null, null,
+                                null, null);
+                        mCursor.moveToFirst();
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);
                         mTitle.setText(mCursor.getString(mCursor.getColumnIndex("name")));
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);
                         mContent.setText(mCursor.getString(mCursor.getColumnIndex("email")) + " м.");
+                        mCursor.close();
                         String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
                         convertView.setTag(item.getId());
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
