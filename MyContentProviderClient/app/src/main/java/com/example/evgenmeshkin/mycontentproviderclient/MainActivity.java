@@ -34,43 +34,46 @@ public class MainActivity extends FragmentActivity  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        LoaderManager supportLoaderManager = getSupportLoaderManager();
-        supportLoaderManager.restartLoader(0,
-                new Bundle(),
-                new LoaderManager.LoaderCallbacks<Cursor>() {
-
-                    @Override
-                    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-                        return new CursorLoader(MainActivity.this){
-
-                            @Override
-                            public Cursor loadInBackground() {
-                                Cursor cursor = getContentResolver().query(CONTACT_URI, null, null, null, null);
-                                //cursor.addRow(new Object[]{1l, "Vasya"});
-                                return cursor;
-                            }
-                        };
-                    }
-
-                    @Override
-                    public void onLoadFinished(Loader<Cursor> objectLoader, Cursor cursor) {
-                        mCursor = cursor;
-                        String from[] = { "name", "email" };
-                        int to[] = { android.R.id.text1, android.R.id.text2 };
-                        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getApplicationContext(),
-                                android.R.layout.simple_list_item_2, cursor, from, to);
-                        ListView lvContact = (ListView) findViewById(R.id.lvContact);
-                        lvContact.setAdapter(adapter);
-
-                    }
-
-                    @Override
-                    public void onLoaderReset(Loader<Cursor> objectLoader) {
-                        mCursor = null;
-                    }
-
-                });
+        Cursor cursor = getContentResolver().query(CONTACT_URI, null, null, null, null);
+        startManagingCursor(mCursor);
+        String from[] = { "name", "email" };
+        int to[] = { android.R.id.text1, android.R.id.text2 };
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getApplicationContext(),
+                android.R.layout.simple_list_item_2, cursor, from, to);
+        ListView lvContact = (ListView) findViewById(R.id.lvContact);
+        lvContact.setAdapter(adapter);
+//        LoaderManager supportLoaderManager = getSupportLoaderManager();
+//        supportLoaderManager.restartLoader(0,
+//                new Bundle(),
+//                new LoaderManager.LoaderCallbacks<Cursor>() {
+//
+//                    @Override
+//                    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+//                        return new CursorLoader(MainActivity.this){
+//
+//                            @Override
+//                            public Cursor loadInBackground() {
+//                                //cursor.addRow(new Object[]{1l, "Vasya"});
+//                                return cursor;
+//                            }
+//                        };
+//                    }
+//
+//                    @Override
+//                    public void onLoadFinished(Loader<Cursor> objectLoader, Cursor cursor) {
+//                        mCursor = cursor;
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onLoaderReset(Loader<Cursor> objectLoader) {
+//                        mCursor = null;
+//                    }
+//
+//                });
+//
+//
     }
 
 
@@ -94,7 +97,7 @@ public class MainActivity extends FragmentActivity  {
 
     public void onClickDelete(View v) {
         Uri uri = ContentUris.withAppendedId(CONTACT_URI, 3);
-        int cnt = getContentResolver().delete(uri, null, null);
+        int cnt = getContentResolver().delete(CONTACT_URI, null, null);
         Log.d(LOG_TAG, "delete, count = " + cnt);
     }
 

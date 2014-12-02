@@ -7,6 +7,7 @@ import android.app.Activity;
 
 
 import android.app.DownloadManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -250,8 +251,9 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         cv.put(CONTACT_NAME, item.getTITLE());
                         cv.put(CONTACT_EMAIL, item.getDIST());
                         Uri newUri = getActivity().getContentResolver().insert(CONTACT_URI, cv);
-                        Log.d(LOG_TAG, "insert, result Uri : " + newUri.toString());
-                        mCursor.move(position+1);
+                       // long cnt  = getActivity().getContentResolver().insert(CONTACT_URI, cv);
+                        Log.d(LOG_TAG, "update, count : " + newUri.toString());
+                        mCursor.moveToPosition(position);
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);
                         mTitle.setText(mCursor.getString(mCursor.getColumnIndex("name")));
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);

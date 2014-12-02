@@ -199,11 +199,11 @@ public class MyContactsProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DB_CREATE);
             ContentValues cv = new ContentValues();
-            for (int i = 1; i <= 3; i++) {
-                cv.put(CONTACT_NAME, "name " + i);
-                cv.put(CONTACT_EMAIL, "email " + i);
-                db.insert(CONTACT_TABLE, null, cv);
-            }
+//            for (int i = 1; i <= 3; i++) {
+//                cv.put(CONTACT_NAME, "name " + i);
+//                cv.put(CONTACT_EMAIL, "email " + i);
+//                db.insert(CONTACT_TABLE, null, cv);
+//            }
         }
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
