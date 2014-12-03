@@ -38,7 +38,7 @@ public class MyContactsProvider extends ContentProvider {
 
     // // Uri
     // authority
-    static final String AUTHORITY = "ru.startandroid.providers.AdressBook";
+    static final String AUTHORITY = "com.example.evgenmeshkin.AdressBook";
 
     // path
     static final String CONTACT_PATH = "contacts";

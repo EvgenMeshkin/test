@@ -87,11 +87,10 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     Cursor mCursor;
 
     final Uri CONTACT_URI = Uri
-            .parse("content://ru.startandroid.providers.AdressBook/contacts");
+            .parse("content://com.example.evgenmeshkin.AdressBook/contacts");
 
     final String CONTACT_NAME = "name";
     final String CONTACT_EMAIL = "email";
-  //  private ProgressBar mProgress;
     int mCurCheckPosition = 0;
     final static String LOG_TAG = VkOAuthHelper.class.getSimpleName();
     private CategoryArrayProcessor mCategoryArrayProcessor = new CategoryArrayProcessor();
@@ -119,8 +118,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         Log.d(LOG_TAG, "latitude="+mKor);
         update(dataSource, processor);
     }
-
-
 
     public interface Callbacks {
         void onShowDetails(int index, NoteGsonModel note);
@@ -164,20 +161,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                 update(dataSource, processor);
             }
         });
-
-//        mCursor = getActivity().getContentResolver().query(CONTACT_URI, null, null,
-//                null, null);
-       // getActivity().startManagingCursor(mCursor);
-
-//        String from[] = { "name", "email" };
-//        int to[] = { android.R.id.text1, android.R.id.text2 };
-//        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
-//                R.layout.adapter_item, mCursor, from, to);
-
-//        ListView lvContact = (ListView) content.findViewById(android.R.id.list);
-//        lvContact.setAdapter(adapter);
-       // mCursor.moveToFirst();
-     //   update(dataSource, processor);
         return content;
     }
 
@@ -201,8 +184,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         Log.d(LOG_TAG, "mKor="+mKor);
         return mKor;
     }
-
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -250,9 +231,10 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         ContentValues cv = new ContentValues();
                         cv.put(CONTACT_NAME, item.getTITLE());
                         cv.put(CONTACT_EMAIL, item.getDIST());
+//                        Uri newUri = ContentUris.withAppendedId(CONTACT_URI, position);
+//                        int cnt = getActivity().getContentResolver().update(newUri, cv, null, null);
                         Uri newUri = getActivity().getContentResolver().insert(CONTACT_URI, cv);
-                       // long cnt  = getActivity().getContentResolver().insert(CONTACT_URI, cv);
-                        Log.d(LOG_TAG, "update, count : " + newUri.toString());
+                        Log.d(LOG_TAG, "insert, count : " + newUri.toString());
                         mCursor = getActivity().getContentResolver().query(newUri, null, null,
                                 null, null);
                         mCursor.moveToFirst();

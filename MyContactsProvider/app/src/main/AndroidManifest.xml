@@ -9,7 +9,7 @@
 
 
     <provider
-        android:authorities="ru.startandroid.providers.AdressBook"
+        android:authorities="com.example.evgenmeshkin.AdressBook"
         android:name=".MyContactsProvider"
         android:multiprocess="true"
         android:exported="true">

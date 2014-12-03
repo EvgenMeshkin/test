@@ -24,7 +24,7 @@ public class MainActivity extends FragmentActivity  {
     final String LOG_TAG = "myLogs";
 
     final Uri CONTACT_URI = Uri
-            .parse("content://ru.startandroid.providers.AdressBook/contacts");
+            .parse("content://com.example.evgenmeshkin.AdressBook/contacts");
 
     final String CONTACT_NAME = "name";
     final String CONTACT_EMAIL = "email";
@@ -102,7 +102,7 @@ public class MainActivity extends FragmentActivity  {
     }
 
     public void onClickError(View v) {
-        Uri uri = Uri.parse("content://ru.startandroid.providers.AdressBook/phones");
+        Uri uri = Uri.parse("content://com.example.evgenmeshkin.AdressBook/phones");
         try {
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         } catch (Exception ex) {
