@@ -1,8 +1,10 @@
 package com.example.evgen.apiclient.source;
 import android.content.Context;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.example.evgen.apiclient.CoreApplication;
+import com.example.evgen.apiclient.os.AsyncTask;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +14,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
+
 /**
  * Created by User on 04.12.2014.
  */
@@ -19,7 +25,11 @@ public class CachedHttpDataSource extends HttpDataSource {
 
     public static final String KEY = "CachedHttpDataSource";
     public static final String TAG = "cache_http_data_source";
-
+    private CachedHttpDataSource mDiskLruCache;
+    private final Object mDiskCacheLock = new Object();
+    private boolean mDiskCacheStarting = true;
+    private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
+    private Map<File, String> mLruCache= Collections.synchronizedMap(new WeakHashMap<File, String>());
     private Context mContext;
 
     public CachedHttpDataSource(Context context) {
@@ -38,6 +48,8 @@ public class CachedHttpDataSource extends HttpDataSource {
         file.mkdirs();
         String path = file.getPath() + File.separator + generateFileName(p);
         File cacheFile = new File(path);
+        mLruCache.put(cacheFile, path);
+
         if (cacheFile.exists()) {
             Log.d(TAG, "from file");
             return new FileInputStream(cacheFile);
@@ -108,4 +120,6 @@ public class CachedHttpDataSource extends HttpDataSource {
         }
         return "";
     }
-}
+
+
+ }
