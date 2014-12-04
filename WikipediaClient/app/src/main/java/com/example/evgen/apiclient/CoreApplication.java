@@ -3,6 +3,7 @@ package com.example.evgen.apiclient;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.evgen.apiclient.source.CachedHttpDataSource;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
 
@@ -13,12 +14,14 @@ public class CoreApplication extends Application {
 
     private HttpDataSource mHttpDataSource;
     private VkDataSource mVkDataSource;
+    private CachedHttpDataSource mCachedHttpDataSource;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mHttpDataSource = new HttpDataSource();
         mVkDataSource = new VkDataSource();
+        mCachedHttpDataSource = new CachedHttpDataSource(this);
     }
 
     @Override
@@ -29,6 +32,13 @@ public class CoreApplication extends Application {
                 mHttpDataSource = new HttpDataSource();
             }
             return mHttpDataSource;
+        }
+        if (CachedHttpDataSource.KEY.equals(name)) {
+            //for android kitkat +
+            if (mCachedHttpDataSource == null) {
+                mCachedHttpDataSource = new CachedHttpDataSource(this);
+            }
+            return mCachedHttpDataSource;
         }
         if (VkDataSource.KEY.equals(name)) {
             //for android kitkat +

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -20,9 +21,9 @@ public class ImageUrlProcessor implements Processor<List<Category>,InputStream>{
         String string = new StringProcessor().process(inputStream);
         JSONObject jsonObject = new JSONObject(string);
         JSONObject jsonObjectquery = jsonObject.getJSONObject("query");
-        String strid = jsonObjectquery.getString("pages").substring(jsonObjectquery.getString("pages").indexOf("{")+2,jsonObjectquery.getString("pages").indexOf(":")-1);
-        JSONObject jsonObjectquerypages = jsonObjectquery.getJSONObject("pages");
-        JSONObject jsonObjectquerypages1 = jsonObjectquerypages.getJSONObject(strid);
+         JSONObject jsonObjectquerypages = jsonObjectquery.getJSONObject("pages");
+        Iterator<?> i = jsonObjectquerypages.keys();
+        JSONObject jsonObjectquerypages1 = jsonObjectquerypages.getJSONObject(i.next().toString());
         JSONObject jsonObjectquerypages1fullurl = jsonObjectquerypages1.getJSONObject("thumbnail");
         List<Category> noteArray = new ArrayList<Category>(jsonObjectquerypages1fullurl.length());
         Category category = new Category(jsonObjectquerypages1fullurl);

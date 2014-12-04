@@ -49,6 +49,7 @@ import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.dialogs.ErrorDialog;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.loader.ImageLoader;
+import com.example.evgen.apiclient.loader.ImageLoaderStream;
 import com.example.evgen.apiclient.os.AsyncTask;
 import com.example.evgen.apiclient.processing.BitmapProcessor;
 import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
@@ -56,6 +57,7 @@ import com.example.evgen.apiclient.processing.ImageUrlProcessor;
 import com.example.evgen.apiclient.processing.NoteArrayProcessor;
 import com.example.evgen.apiclient.processing.ViewArrayProcessor;
 import com.example.evgen.apiclient.service.GpsLocation;
+import com.example.evgen.apiclient.source.CachedHttpDataSource;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
 
@@ -83,7 +85,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     private static String mKor;
     private HttpDataSource dataSource;
     private CategoryArrayProcessor processor;
-    private ImageLoader imageLoader;
+    private ImageLoaderStream imageLoader;
     Cursor mCursor;
 
     final Uri CONTACT_URI = Uri
@@ -154,7 +156,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         empty.setVisibility(View.GONE);
         GpsLocation gpsLocation = new GpsLocation();
         gpsLocation.getloc(this,getActivity());
-        imageLoader=new ImageLoader(getActivity());
+        imageLoader=new ImageLoaderStream(getActivity());
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -258,11 +260,13 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                             @Override
                             public void onDone(List<Category> data) {
                                 if (data.get(0).getURLIMAGE() == null)  mProgress.setVisibility(View.GONE);
-                                url[0] = data.get(0).getURLIMAGE().replaceAll("50px","100px");
+                                String str = data.get(0).getURLIMAGE();
+                                str = str.substring(str.indexOf("px")-2, str.indexOf("px")+2);
+                                url[0] = data.get(0).getURLIMAGE().replaceAll(str,"100px");
                                 Log.d(LOG_TAG, url[0]);
                                 imageView.setTag(url[0]);
                                 if (!TextUtils.isEmpty(url[0])) {
-                                imageLoader.DisplayImage(url[0], imageView, HttpDataSource.get(getActivity()), new BitmapProcessor());
+                                imageLoader.DisplayImage(url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor());
                                 }
                              mProgress.setVisibility(View.GONE);
                             }
