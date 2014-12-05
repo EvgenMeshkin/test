@@ -1,5 +1,6 @@
 package com.example.evgen.apiclient.source;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -14,7 +15,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -22,16 +26,13 @@ import java.util.WeakHashMap;
  * Created by User on 04.12.2014.
  */
 public class CachedHttpDataSource extends HttpDataSource {
-
     public static final String KEY = "CachedHttpDataSource";
     public static final String TAG = "cache_http_data_source";
-    private CachedHttpDataSource mDiskLruCache;
-    private final Object mDiskCacheLock = new Object();
-    private boolean mDiskCacheStarting = true;
-    private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
-    private Map<File, String> mLruCache= Collections.synchronizedMap(new WeakHashMap<File, String>());
+    private Map<String, File> mLruCache= Collections.synchronizedMap(new LinkedHashMap<String, File>());
     private Context mContext;
-
+    private File mCacheFile;
+    private long mSize=0;
+    private long limit=30000;
     public CachedHttpDataSource(Context context) {
         mContext = context;
     }
@@ -42,29 +43,57 @@ public class CachedHttpDataSource extends HttpDataSource {
 
     @Override
     public InputStream getResult(String p) throws Exception {
-        Log.d(TAG, "getResult");
         File cacheDir = mContext.getCacheDir();
         File file = new File(cacheDir, "__cache");
         file.mkdirs();
+        String[] list = file.list();
+        Log.d(TAG, "directory cache:  " + Arrays.toString(list));
         String path = file.getPath() + File.separator + generateFileName(p);
-        File cacheFile = new File(path);
-        mLruCache.put(cacheFile, path);
-
-        if (cacheFile.exists()) {
-            Log.d(TAG, "from file");
-            return new FileInputStream(cacheFile);
+        mCacheFile = new File(path);
+        if ((mCacheFile.exists()) && (!mLruCache.containsKey(path))){
+            mLruCache.put(path, mCacheFile);
+            mSize+=mCacheFile.length();
+            checkSize();
         }
-        InputStream inputStream = super.getResult(p);
-        try {
-            Log.d(TAG, "copy stream");
-            copy(inputStream, cacheFile);
-        } catch (Exception e) {
-            cacheFile.delete();
-            throw e;
+        if(mLruCache.containsKey(path)) {
+            Log.d(TAG, "load from file");
+            mCacheFile = mLruCache.get(path);
+            return new FileInputStream(mCacheFile);
+        } else{
+            mCacheFile = new File(path);
+            InputStream inputStream = super.getResult(p);
+            try {
+                Log.d(TAG, "copy stream");
+                copy(inputStream, mCacheFile);
+            } catch (Exception e) {
+                mCacheFile.delete();
+                throw e;
+            }
+            mLruCache.put(path, mCacheFile);
+            mSize+=mCacheFile.length();
+            checkSize();
+            Log.d(TAG, "copy stream success get from file");
+            return new FileInputStream(mCacheFile);
         }
-        Log.d(TAG, "copy stream success get from file");
-        return new FileInputStream(cacheFile);
     }
+
+    private void checkSize() {
+        Log.i(TAG, "cache size="+mSize+" length="+mLruCache.size());
+        if(mSize>limit){
+            Iterator<Map.Entry<String, File>> iter=mLruCache.entrySet().iterator();
+            while(iter.hasNext()){
+                Map.Entry<String, File> entry=iter.next();
+                mSize-=entry.getValue().length();
+                entry.getValue().delete();
+                Log.d(TAG, "delete file:   " + entry.getKey());
+                iter.remove();
+                if(mSize<=limit)
+                    break;
+            }
+            Log.i(TAG, "Clean cache. New size "+mLruCache.size());
+        }
+    }
+
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
