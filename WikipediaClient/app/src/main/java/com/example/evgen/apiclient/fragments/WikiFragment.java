@@ -85,7 +85,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     private static String mKor;
     private HttpDataSource dataSource;
     private CategoryArrayProcessor processor;
-    private ImageLoaderStream imageLoader;
+    private ImageLoader imageLoader;
     Cursor mCursor;
 
     final Uri CONTACT_URI = Uri
@@ -156,7 +156,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         empty.setVisibility(View.GONE);
         GpsLocation gpsLocation = new GpsLocation();
         gpsLocation.getloc(this,getActivity());
-        imageLoader=new ImageLoaderStream(getActivity());
+        imageLoader=new ImageLoader(getActivity());
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

@@ -58,3 +58,13 @@ http://nostra13android.blogspot.com/2012/03/6-universal-image-loader-part-3-usag
 LruCache
 http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html#disk-cache
 http://habrahabr.ru/post/136758/
+
+http://developer.android.com/reference/android/util/LruCache.html
+http://www.dre.vanderbilt.edu/~schmidt/cs282/PDFs/Concurrency-and-Synchronization-parts6-and-7.pdf
+http://habrahabr.ru/company/luxoft/blog/157273/
+http://startandroid.ru/ru/uroki/vse-uroki-spiskom/143-urok-80-handler-nemnogo-teorii-nagljadnyj-primer-ispolzovanija
+http://startandroid.ru/ru/uroki/vse-uroki-spiskom/145-urok-82-handler-primer-s-bolee-soderzhatelnymi-soobschenijami
+http://findevelop.blogspot.com/2014/01/handler-android.html
+
+http://tutorials.jenkov.com/java-util-concurrent/executorservice.html
+http://habrahabr.ru/post/116363/

@@ -29,15 +29,13 @@ public class ImageLoaderStream {
         executorService= Executors.newFixedThreadPool(5);
     }
 
-    public void DisplayImage(String url, ImageView imageView, HttpDataSource dataSource, Processor processor)
-    {
+    public void DisplayImage(String url, ImageView imageView, HttpDataSource dataSource, Processor processor){
         imageViews.put(imageView, url);
         PhotoToLoad p=new PhotoToLoad(url, imageView, dataSource, processor);
         executorService.submit(new PhotosLoader(p));
     }
 
-     private class PhotoToLoad
-    {
+     private class PhotoToLoad {
         public String url;
         public ImageView imageView;
         public HttpDataSource dataSource;

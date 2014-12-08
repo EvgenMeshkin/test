@@ -42,30 +42,25 @@ public class ImageLoader {
         executorService=Executors.newFixedThreadPool(5);
     }
 
-   public void DisplayImage(String url, ImageView imageView, HttpDataSource dataSource, Processor processor)
-    {
+   public void DisplayImage(String url, ImageView imageView, HttpDataSource dataSource, Processor processor){
         imageViews.put(imageView, url);
         Bitmap bitmap=memoryCache.get(url);
         if(bitmap!=null) {
             imageView.setImageBitmap(bitmap);
             Log.i(TAG, "FromTheCache");
-        }
-        else
-        {
+        }   else {
             Log.i(TAG, "Not FromTheCache");
             queuePhoto(url, imageView, dataSource, processor);
         }
     }
 
-    private void queuePhoto(String url, ImageView imageView, HttpDataSource dataSource, Processor processor)
-    {
+    private void queuePhoto(String url, ImageView imageView, HttpDataSource dataSource, Processor processor){
         PhotoToLoad p=new PhotoToLoad(url, imageView, dataSource, processor);
         executorService.submit(new PhotosLoader(p));
     }
 
     //Task for the queue
-    private class PhotoToLoad
-    {
+    private class PhotoToLoad {
         public String url;
         public ImageView imageView;
         public HttpDataSource dataSource;
@@ -86,6 +81,7 @@ public class ImageLoader {
 
         @Override
         public void run() {
+
             try{
                 if(imageViewReused(photoToLoad))
                     return;
