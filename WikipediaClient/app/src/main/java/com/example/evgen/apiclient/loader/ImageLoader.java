@@ -11,14 +11,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -45,6 +51,10 @@ public class ImageLoader {
     private Map<ImageView, String> imageViews=Collections.synchronizedMap(new ConcurrentHashMap<ImageView, String>());
     private ExecutorService executorService;
     private Handler handler=new Handler();//handler to display images in UI thread
+    List<BitmapDisplayer> mArray = new CopyOnWriteArrayList<BitmapDisplayer>();
+    Integer mPos;
+    private final Object mPauseWorkLock = new Object();
+    protected boolean mPauseWork = false;
 
     public ImageLoader(Context context){
 //        fileCache=new FileCache(context);
@@ -52,17 +62,29 @@ public class ImageLoader {
     }
 
     public static interface Callback<Result,Result2> {
-        void onResult(Bitmap bitmap, String url);
+        void onResult(Bitmap bitmap, Integer url);
      }
     Callback callback;
-    public void DisplayImage(final Callback callback, String url, ImageView imageView, HttpDataSource dataSource, Processor processor){
+
+    public void setPauseWork(boolean pauseWork) {
+        synchronized (mPauseWorkLock) {
+            mPauseWork = pauseWork;
+            if (!mPauseWork) {
+                mPauseWorkLock.notifyAll();
+            }
+        }
+    }
+
+
+    public void DisplayImage(final Callback callback,final String url,final ImageView imageView,final HttpDataSource dataSource,final Processor processor, final Integer position){
         imageViews.put(imageView, url);
         this.callback = callback;
         Bitmap bitmap=memoryCache.get(url);
+        mPos = position;
         if(bitmap!=null) {
           //  imageView.setImageBitmap(bitmap);
             Log.i(TAG, "FromTheCache");
-            callback.onResult(bitmap, imageViews.get(imageView));
+            callback.onResult(bitmap, mPos);
         }   else {
             Log.i(TAG, "Not FromTheCache");
             queuePhoto(url, imageView, dataSource, processor);
@@ -76,10 +98,10 @@ public class ImageLoader {
 
     //Task for the queue
     private class PhotoToLoad {
-        public String url;
-        public ImageView imageView;
-        public HttpDataSource dataSource;
-        public Processor processor;
+        public final String url;
+        public final ImageView imageView;
+        public final HttpDataSource dataSource;
+        public final Processor processor;
         public PhotoToLoad(String u, ImageView i, HttpDataSource dataSource, Processor processor){
             url=u;
             imageView=i;
@@ -105,9 +127,23 @@ public class ImageLoader {
                 Bitmap bmp= (Bitmap) processingResult;
                 if(imageViewReused(photoToLoad))
                     return;
+
+                synchronized (mPauseWorkLock) {
+                    while (mPauseWork) {
+                        try {
+                            mPauseWorkLock.wait();
+                        } catch (InterruptedException e) {}
+                    }
+                }
+
                 memoryCache.put(photoToLoad.url, bmp);
+                //if (imageViewReused(photoToLoad))
                 BitmapDisplayer bd=new BitmapDisplayer(bmp, photoToLoad);
-                handler.post(bd);
+               // List<BitmapDisplayer> mArray = new CopyOnWriteArrayList<BitmapDisplayer>();
+                if (!mArray.contains(bd)) {
+                    mArray.add(bd);
+                    handler.post(bd);
+                }
             }catch(Throwable th){
                 th.printStackTrace();
             }
@@ -131,7 +167,8 @@ public class ImageLoader {
                 return;
             if(bitmap!=null)
                 //photoToLoad.imageView.setImageBitmap(bitmap);
-            callback.onResult(bitmap, imageViews.get(photoToLoad.imageView));
+            callback.onResult(bitmap, mPos);
+            imageViews.remove(photoToLoad.imageView);
         }
     }
 
@@ -139,5 +176,24 @@ public class ImageLoader {
         memoryCache.clear();
         fileCache.clear();
     }
+
+
+//    private static class AsyncDrawable extends BitmapDrawable {
+//        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+//
+//        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+//            super(res, bitmap);
+//            bitmapWorkerTaskReference =
+//                    new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+//        }
+//
+//        public BitmapWorkerTask getBitmapWorkerTask() {
+//            return bitmapWorkerTaskReference.get();
+//        }
+//    }
+
+
+
+
 
 }
