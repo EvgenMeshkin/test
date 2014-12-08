@@ -68,3 +68,6 @@ http://findevelop.blogspot.com/2014/01/handler-android.html
 
 http://tutorials.jenkov.com/java-util-concurrent/executorservice.html
 http://habrahabr.ru/post/116363/
+
+Потоки
+http://developer.alexanderklimov.ru/android/java/thread.php

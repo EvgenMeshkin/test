@@ -49,7 +49,7 @@ import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.dialogs.ErrorDialog;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.loader.ImageLoader;
-import com.example.evgen.apiclient.loader.ImageLoaderStream;
+
 import com.example.evgen.apiclient.os.AsyncTask;
 import com.example.evgen.apiclient.processing.BitmapProcessor;
 import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
@@ -266,7 +266,13 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                                 Log.d(LOG_TAG, url[0]);
                                 imageView.setTag(url[0]);
                                 if (!TextUtils.isEmpty(url[0])) {
-                                imageLoader.DisplayImage(url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor());
+                                    imageLoader.DisplayImage(new ImageLoader.Callback<Bitmap,String>() {
+                                        @Override
+                                        public void onResult(Bitmap bitmap, String oldUrl) {
+                                            if (oldUrl.equals(imageView.getTag()))
+                                                imageView.setImageBitmap(bitmap);
+                                        }
+                                    }, url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor());
                                 }
                              mProgress.setVisibility(View.GONE);
                             }
