@@ -4,11 +4,7 @@ package com.example.evgen.apiclient.loader;
  * Created by User on 26.11.2014.
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
@@ -22,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
@@ -34,6 +31,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.evgen.apiclient.Api;
+import com.example.evgen.apiclient.CoreApplication;
 import com.example.evgen.apiclient.R;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.os.AsyncTask;
@@ -50,41 +48,43 @@ public class ImageLoader {
     Bitmap bitmap;
     private Map<ImageView, String> imageViews=Collections.synchronizedMap(new ConcurrentHashMap<ImageView, String>());
     private ExecutorService executorService;
-    private Handler handler=new Handler();//handler to display images in UI thread
+   // private Handler handler=new Handler();//handler to display images in UI thread
     List<BitmapDisplayer> mArray = new CopyOnWriteArrayList<BitmapDisplayer>();
     Integer mPos;
     private final Object mPauseWorkLock = new Object();
     protected boolean mPauseWork = false;
-
+    public ImageView imageView;
+    public String pUrl;
+    public static final String KEY = "ImageLoader";
     public ImageLoader(Context context){
 //        fileCache=new FileCache(context);
        executorService=Executors.newFixedThreadPool(5);
     }
-
-    public static interface Callback<Result,Result2> {
-        void onResult(Bitmap bitmap, Integer url);
-     }
-    Callback callback;
+    public static ImageLoader get(Context context) {
+        return CoreApplication.get(context, KEY);
+    }
 
     public void setPauseWork(boolean pauseWork) {
-        synchronized (mPauseWorkLock) {
-            mPauseWork = pauseWork;
-            if (!mPauseWork) {
-                mPauseWorkLock.notifyAll();
-            }
-        }
+//        synchronized (mPauseWorkLock) {
+//            mPauseWork = pauseWork;
+//            if (!mPauseWork) {
+//                mPauseWorkLock.notifyAll();
+//            }
+//        }
     }
 
 
-    public void DisplayImage(final Callback callback,final String url,final ImageView imageView,final HttpDataSource dataSource,final Processor processor, final Integer position){
+    public void DisplayImage(final String url,final ImageView imageView,final HttpDataSource dataSource,final Processor processor, final Integer position){
         imageViews.put(imageView, url);
-        this.callback = callback;
+        this.imageView = imageView;
+
         Bitmap bitmap=memoryCache.get(url);
         mPos = position;
-        if(bitmap!=null) {
-          //  imageView.setImageBitmap(bitmap);
+        if((bitmap!=null) && (imageView.getTag()==url) && (pUrl==url)) {
             Log.i(TAG, "FromTheCache");
-            callback.onResult(bitmap, mPos);
+ //           new BitmapDisplayer(bitmap, new PhotoToLoad(url, imageView, dataSource, processor));
+            imageView.setImageBitmap(bitmap);
+//            imageViews.remove(url);
         }   else {
             Log.i(TAG, "Not FromTheCache");
             queuePhoto(url, imageView, dataSource, processor);
@@ -93,7 +93,9 @@ public class ImageLoader {
 
     private void queuePhoto(String url, ImageView imageView, HttpDataSource dataSource, Processor processor){
         PhotoToLoad p=new PhotoToLoad(url, imageView, dataSource, processor);
-        executorService.submit(new PhotosLoader(p));
+
+        Future fut = executorService.submit(new PhotosLoader(p));
+      //  fut.isCancelled();
     }
 
     //Task for the queue
@@ -112,6 +114,9 @@ public class ImageLoader {
 
     private class PhotosLoader implements Runnable {
         private PhotoToLoad photoToLoad;
+        BitmapDisplayer bd;
+        private Handler handler=new Handler();
+//        private final WeakReference<ImageView> imageViewReference =  new WeakReference<ImageView>(photoToLoad.imageView);;
         private PhotosLoader(PhotoToLoad photoToLoad){
             this.photoToLoad=photoToLoad;
         }
@@ -120,13 +125,13 @@ public class ImageLoader {
         public void run() {
 
             try{
-                if(imageViewReused(photoToLoad))
-                    return;
+//                if(imageViewReused(photoToLoad))
+//                    return;
                 InputStream dataSource = photoToLoad.dataSource.getResult(photoToLoad.url);
                 Object processingResult = photoToLoad.processor.process(dataSource);
                 Bitmap bmp= (Bitmap) processingResult;
-                if(imageViewReused(photoToLoad))
-                    return;
+//                if(imageViewReused(photoToLoad))
+//                    return;
 
                 synchronized (mPauseWorkLock) {
                     while (mPauseWork) {
@@ -137,13 +142,16 @@ public class ImageLoader {
                 }
 
                 memoryCache.put(photoToLoad.url, bmp);
-                //if (imageViewReused(photoToLoad))
-                BitmapDisplayer bd=new BitmapDisplayer(bmp, photoToLoad);
-               // List<BitmapDisplayer> mArray = new CopyOnWriteArrayList<BitmapDisplayer>();
-                if (!mArray.contains(bd)) {
-                    mArray.add(bd);
+ //               if(imageViewReused(photoToLoad)) {
+//                if(imageViewReused(photoToLoad))
+//                return;
+                    BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad);
+                    // List<BitmapDisplayer> mArray = new CopyOnWriteArrayList<BitmapDisplayer>();
+//                if (!mArray.contains(bd)&& !imageViewReused(photoToLoad)) {
+//                    mArray.add(bd);
                     handler.post(bd);
-                }
+ //               }
+//                }
             }catch(Throwable th){
                 th.printStackTrace();
             }
@@ -166,9 +174,10 @@ public class ImageLoader {
             if(imageViewReused(photoToLoad))
                 return;
             if(bitmap!=null)
-                //photoToLoad.imageView.setImageBitmap(bitmap);
-            callback.onResult(bitmap, mPos);
-            imageViews.remove(photoToLoad.imageView);
+            photoToLoad.imageView.setImageBitmap(bitmap);
+ //           imageViews.remove(photoToLoad.imageView);
+            //callback.onResult(bitmap, mPos);
+//            memoryCache.clear();
         }
     }
 
@@ -178,22 +187,6 @@ public class ImageLoader {
     }
 
 
-//    private static class AsyncDrawable extends BitmapDrawable {
-//        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
-//
-//        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-//            super(res, bitmap);
-//            bitmapWorkerTaskReference =
-//                    new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
-//        }
-//
-//        public BitmapWorkerTask getBitmapWorkerTask() {
-//            return bitmapWorkerTaskReference.get();
-//        }
-//    }
 
 
-
-
-
-}
+        }

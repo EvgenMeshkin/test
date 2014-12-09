@@ -3,6 +3,7 @@ package com.example.evgen.apiclient;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.evgen.apiclient.loader.ImageLoader;
 import com.example.evgen.apiclient.source.CachedHttpDataSource;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
@@ -15,6 +16,7 @@ public class CoreApplication extends Application {
     private HttpDataSource mHttpDataSource;
     private VkDataSource mVkDataSource;
     private CachedHttpDataSource mCachedHttpDataSource;
+    private ImageLoader mImageLoader;
 
     @Override
     public void onCreate() {
@@ -22,6 +24,7 @@ public class CoreApplication extends Application {
         mHttpDataSource = new HttpDataSource();
         mVkDataSource = new VkDataSource();
         mCachedHttpDataSource = new CachedHttpDataSource(this);
+        mImageLoader  = new ImageLoader(this);
     }
 
     @Override
@@ -39,6 +42,13 @@ public class CoreApplication extends Application {
                 mCachedHttpDataSource = new CachedHttpDataSource(this);
             }
             return mCachedHttpDataSource;
+        }
+        if (ImageLoader.KEY.equals(name)) {
+            //for android kitkat +
+            if (mImageLoader == null) {
+                mImageLoader = new ImageLoader(this);
+            }
+            return mImageLoader;
         }
         if (VkDataSource.KEY.equals(name)) {
             //for android kitkat +

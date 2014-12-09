@@ -159,25 +159,25 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         gpsLocation.getloc(this,getActivity());
         imageLoader=new ImageLoader(getActivity());
         ListView listView = (ListView) content.findViewById(android.R.id.list);
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                // Pause fetcher to ensure smoother scrolling when flinging
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-                    // Before Honeycomb pause image loading on scroll to help with performance
-                 //   if (!Utils.hasHoneycomb()) {
-                        imageLoader.setPauseWork(true);
-                //    }
-                } else {
-                    imageLoader.setPauseWork(false);
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-            }
-        });
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+//                // Pause fetcher to ensure smoother scrolling when flinging
+//                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+//                    // Before Honeycomb pause image loading on scroll to help with performance
+//                 //   if (!Utils.hasHoneycomb()) {
+//                        imageLoader.setPauseWork(true);
+//                //    }
+//                } else {
+//                    imageLoader.setPauseWork(false);
+//                }
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView absListView, int firstVisibleItem,
+//                                 int visibleItemCount, int totalItemCount) {
+//            }
+//        });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -287,13 +287,8 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                                 Log.d(LOG_TAG, url[0]);
                                 imageView.setTag(url[0]);
                                 if (!TextUtils.isEmpty(url[0])) {
-                                    imageLoader.DisplayImage(new ImageLoader.Callback<Bitmap,Integer>() {
-                                        @Override
-                                        public void onResult(Bitmap bitmap, Integer oldUrl) {
-                                            if (oldUrl.equals(position))
-                                                imageView.setImageBitmap(bitmap);
-                                        }
-                                    }, url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor(),position);
+                                    imageLoader.pUrl = String.valueOf(imageView.getTag());
+                                    imageLoader.DisplayImage(url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor(),position);
                                 }
                              mProgress.setVisibility(View.GONE);
                             }
