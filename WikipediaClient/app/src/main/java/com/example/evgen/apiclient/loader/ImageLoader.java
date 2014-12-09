@@ -46,9 +46,9 @@ public class ImageLoader {
     private MemoryCache memoryCache=new MemoryCache();
     private FileCache fileCache;
     Bitmap bitmap;
-    private Map<ImageView, String> imageViews=Collections.synchronizedMap(new ConcurrentHashMap<ImageView, String>());
+    private Map<Integer, String> imageViews=Collections.synchronizedMap(new ConcurrentHashMap<Integer, String>());
     private ExecutorService executorService;
-   // private Handler handler=new Handler();//handler to display images in UI thread
+    private Handler handler=new Handler();//handler to display images in UI thread
     List<BitmapDisplayer> mArray = new CopyOnWriteArrayList<BitmapDisplayer>();
     Integer mPos;
     private final Object mPauseWorkLock = new Object();
@@ -75,27 +75,33 @@ public class ImageLoader {
 
 
     public void DisplayImage(final String url,final ImageView imageView,final HttpDataSource dataSource,final Processor processor, final Integer position){
-        imageViews.put(imageView, url);
-        this.imageView = imageView;
+        if (imageViews.containsKey(position)&& url != imageViews.get(position)){
+            imageViews.remove(url);
+        }
+        Log.i(TAG, "Map URL" + imageViews.get(position)+"Map Imagewiev"+imageViews.get(url));
+            imageViews.put(position, url);
 
+        this.imageView = imageView;
+        Log.i(TAG, "Image tag" + imageView.getTag());
         Bitmap bitmap=memoryCache.get(url);
         mPos = position;
         if((bitmap!=null) && (imageView.getTag()==url) && (pUrl==url)) {
             Log.i(TAG, "FromTheCache");
- //           new BitmapDisplayer(bitmap, new PhotoToLoad(url, imageView, dataSource, processor));
             imageView.setImageBitmap(bitmap);
-//            imageViews.remove(url);
         }   else {
             Log.i(TAG, "Not FromTheCache");
-            queuePhoto(url, imageView, dataSource, processor);
+            queuePhoto(url, imageView, dataSource, processor, position);
         }
     }
 
-    private void queuePhoto(String url, ImageView imageView, HttpDataSource dataSource, Processor processor){
-        PhotoToLoad p=new PhotoToLoad(url, imageView, dataSource, processor);
+    private void queuePhoto(String url, ImageView imageView, HttpDataSource dataSource, Processor processor, Integer position){
+        PhotoToLoad p=new PhotoToLoad(url, imageView, dataSource, processor, position);
+      //  PhotoToLoad r=new PhotoToLoad(url, imageView, dataSource, processor);
+
 
         Future fut = executorService.submit(new PhotosLoader(p));
-      //  fut.isCancelled();
+        Log.i(TAG, "Future" + fut + p.toString());
+   //     fut.cancel(true);
     }
 
     //Task for the queue
@@ -104,18 +110,21 @@ public class ImageLoader {
         public final ImageView imageView;
         public final HttpDataSource dataSource;
         public final Processor processor;
-        public PhotoToLoad(String u, ImageView i, HttpDataSource dataSource, Processor processor){
+        public final Integer position;
+        public PhotoToLoad(String u, ImageView i, HttpDataSource dataSource, Processor processor, Integer position){
             url=u;
             imageView=i;
             this.dataSource = dataSource;
             this.processor = processor;
+            this.position = position;
+
         }
     }
 
     private class PhotosLoader implements Runnable {
-        private PhotoToLoad photoToLoad;
+        private final PhotoToLoad photoToLoad;
         BitmapDisplayer bd;
-        private Handler handler=new Handler();
+//        private Handler handler=new Handler();
 //        private final WeakReference<ImageView> imageViewReference =  new WeakReference<ImageView>(photoToLoad.imageView);;
         private PhotosLoader(PhotoToLoad photoToLoad){
             this.photoToLoad=photoToLoad;
@@ -125,26 +134,27 @@ public class ImageLoader {
         public void run() {
 
             try{
-//                if(imageViewReused(photoToLoad))
-//                    return;
+               if(imageViewReused(photoToLoad))
+                    return;
                 InputStream dataSource = photoToLoad.dataSource.getResult(photoToLoad.url);
                 Object processingResult = photoToLoad.processor.process(dataSource);
                 Bitmap bmp= (Bitmap) processingResult;
-//                if(imageViewReused(photoToLoad))
-//                    return;
+                if(imageViewReused(photoToLoad))
+                    return;
 
-                synchronized (mPauseWorkLock) {
-                    while (mPauseWork) {
-                        try {
-                            mPauseWorkLock.wait();
-                        } catch (InterruptedException e) {}
-                    }
-                }
+//                synchronized (mPauseWorkLock) {
+//                    while (mPauseWork) {
+//                        try {
+//                            mPauseWorkLock.wait();
+//                        } catch (InterruptedException e) {}
+//                    }
+//                }
 
                 memoryCache.put(photoToLoad.url, bmp);
  //               if(imageViewReused(photoToLoad)) {
-//                if(imageViewReused(photoToLoad))
-//                return;
+                if(imageViewReused(photoToLoad))
+                return;
+                Log.i(TAG, "Proverka false");
                     BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad);
                     // List<BitmapDisplayer> mArray = new CopyOnWriteArrayList<BitmapDisplayer>();
 //                if (!mArray.contains(bd)&& !imageViewReused(photoToLoad)) {
@@ -159,7 +169,8 @@ public class ImageLoader {
     }
 
     boolean imageViewReused(PhotoToLoad photoToLoad){
-        String tag=imageViews.get(photoToLoad.imageView);
+        String tag=imageViews.get(photoToLoad.position);
+        Log.i(TAG, "Proverka ");
         if(tag==null || !tag.equals(photoToLoad.url))
             return true;
         return false;
@@ -175,9 +186,6 @@ public class ImageLoader {
                 return;
             if(bitmap!=null)
             photoToLoad.imageView.setImageBitmap(bitmap);
- //           imageViews.remove(photoToLoad.imageView);
-            //callback.onResult(bitmap, mPos);
-//            memoryCache.clear();
         }
     }
 
