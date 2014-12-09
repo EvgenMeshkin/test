@@ -71,3 +71,5 @@ http://habrahabr.ru/post/116363/
 
 Потоки
 http://developer.alexanderklimov.ru/android/java/thread.php
+
+http://cybern.ru/urok-18-vzaimodejstvie-mezhdu-potokami-metod-wait-i-notifyall.html
