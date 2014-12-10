@@ -49,8 +49,6 @@ import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.dialogs.ErrorDialog;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.loader.ImageLoader;
-
-import com.example.evgen.apiclient.loader.Utils;
 import com.example.evgen.apiclient.os.AsyncTask;
 import com.example.evgen.apiclient.processing.BitmapProcessor;
 import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
@@ -162,13 +160,9 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                // Pause fetcher to ensure smoother scrolling when flinging
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-                    // Before Honeycomb pause image loading on scroll to help with performance
-                 //   if (!Utils.hasHoneycomb()) {
                     Log.d(LOG_TAG, "listView Scrool");
-                        imageLoader.setPauseWork(true);
-                //    }
+                    imageLoader.setPauseWork(true);
                 } else {
                     imageLoader.setPauseWork(false);
                 }
@@ -255,8 +249,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         ContentValues cv = new ContentValues();
                         cv.put(CONTACT_NAME, item.getTITLE());
                         cv.put(CONTACT_EMAIL, item.getDIST());
-//                        Uri newUri = ContentUris.withAppendedId(CONTACT_URI, position);
-//                        int cnt = getActivity().getContentResolver().update(newUri, cv, null, null);
                         Uri newUri = getActivity().getContentResolver().insert(CONTACT_URI, cv);
                         Log.d(LOG_TAG, "insert, count : " + newUri.toString());
                         mCursor = getActivity().getContentResolver().query(newUri, null, null,
@@ -290,7 +282,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                                 if (!TextUtils.isEmpty(url[0])) {
                                   //  imageLoader.pUrl = String.valueOf(imageView.getTag());
                                   //  Log.i(LOG_TAG, "ImageTag" + imageView.getTag());
-                                    imageLoader.DisplayImage(url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor(),position);
+                                    imageLoader.displayImage(url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor(),position);
                                 }
                              mProgress.setVisibility(View.GONE);
                             }
