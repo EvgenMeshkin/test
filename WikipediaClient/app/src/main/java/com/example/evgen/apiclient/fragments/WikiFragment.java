@@ -259,12 +259,14 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);
                         mContent.setText(mCursor.getString(mCursor.getColumnIndex("email")) + " м.");
                         mCursor.close();
-                        String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
+                        final String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
                         convertView.setTag(item.getId());
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
                         final ProgressBar mProgress = (ProgressBar) convertView.findViewById(android.R.id.progress);
                         final String[] url = new String[1];
                         imageView.setImageBitmap(null);
+                        imageView.setTag(urlImage);
+
                         DataManager.loadData(new DataManager.Callback<List<Category>>() {
                             @Override
                             public void onDataLoadStart() {
@@ -278,8 +280,8 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                                 str = str.substring(str.indexOf("px")-2, str.indexOf("px")+2);
                                 url[0] = data.get(0).getURLIMAGE().replaceAll(str,"100px");
                                 Log.d(LOG_TAG, url[0]);
-                                imageView.setTag(url[0]);
-                                if (!TextUtils.isEmpty(url[0])) {
+                                //imageView.setTag(url[0]);
+                                if (imageView.getTag().equals(urlImage)) {
                                   //  imageLoader.pUrl = String.valueOf(imageView.getTag());
                                   //  Log.i(LOG_TAG, "ImageTag" + imageView.getTag());
                                     imageLoader.displayImage(url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor(),position);
