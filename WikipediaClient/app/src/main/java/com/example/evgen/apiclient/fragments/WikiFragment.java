@@ -155,7 +155,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         empty.setVisibility(View.GONE);
         GpsLocation gpsLocation = new GpsLocation();
         gpsLocation.getloc(this,getActivity());
-        imageLoader=new ImageLoader(getActivity());
+        imageLoader = ImageLoader.get(getActivity());
         ListView listView = (ListView) content.findViewById(android.R.id.list);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -279,12 +279,8 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                                 String str = data.get(0).getURLIMAGE();
                                 str = str.substring(str.indexOf("px")-2, str.indexOf("px")+2);
                                 url[0] = data.get(0).getURLIMAGE().replaceAll(str,"100px");
-                                Log.d(LOG_TAG, url[0]);
-                                //imageView.setTag(url[0]);
                                 if (imageView.getTag().equals(urlImage)) {
-                                  //  imageLoader.pUrl = String.valueOf(imageView.getTag());
-                                  //  Log.i(LOG_TAG, "ImageTag" + imageView.getTag());
-                                    imageLoader.displayImage(url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor(),position);
+                                    imageLoader.displayImage(url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor());
                                 }
                              mProgress.setVisibility(View.GONE);
                             }
