@@ -1,6 +1,7 @@
 package com.example.evgen.apiclient.source;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -50,21 +51,21 @@ public class CachedHttpDataSource extends HttpDataSource {
         Log.d(TAG, "directory cache:  " + Arrays.toString(list));
         String path = file.getPath() + File.separator + generateFileName(p);
         mCacheFile = new File(path);
-        if ((mCacheFile.exists()) && (!mLruCache.containsKey(path))){
+        if (mCacheFile.exists() && !mLruCache.containsKey(path)){
             mLruCache.put(path, mCacheFile);
             mSize+=mCacheFile.length();
             checkSize();
         }
-        if(mLruCache.containsKey(path)) {
+        if (mLruCache.containsKey(path)) {
             Log.d(TAG, "load from file");
             mCacheFile = mLruCache.get(path);
             return new FileInputStream(mCacheFile);
         } else{
+            Log.d(TAG, "Do not load load from file");
             mCacheFile = new File(path);
             InputStream inputStream = super.getResult(p);
             try {
-                Log.d(TAG, "copy stream");
-                copy(inputStream, mCacheFile);
+              copy(inputStream, mCacheFile);
             } catch (Exception e) {
                 mCacheFile.delete();
                 throw e;
@@ -78,12 +79,12 @@ public class CachedHttpDataSource extends HttpDataSource {
     }
 
     private void checkSize() {
-        Log.i(TAG, "cache size="+mSize+" length="+mLruCache.size());
-        if(mSize>limit){
-            Iterator<Map.Entry<String, File>> iter=mLruCache.entrySet().iterator();
+        Log.i(TAG, "cache size = "+mSize+" length = "+mLruCache.size());
+        if(mSize > limit){
+            Iterator<Map.Entry<String, File>> iter = mLruCache.entrySet().iterator();
             while(iter.hasNext()){
-                Map.Entry<String, File> entry=iter.next();
-                mSize-=entry.getValue().length();
+                Map.Entry<String, File> entry = iter.next();
+                mSize -= entry.getValue().length();
                 entry.getValue().delete();
                 Log.d(TAG, "delete file:   " + entry.getKey());
                 iter.remove();
@@ -151,4 +152,4 @@ public class CachedHttpDataSource extends HttpDataSource {
     }
 
 
- }
+}

@@ -6,35 +6,48 @@ package com.example.evgen.apiclient.loader;
 
 
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.os.Handler;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.example.evgen.apiclient.CoreApplication;
+import com.example.evgen.apiclient.bo.Category;
+import com.example.evgen.apiclient.fragments.WikiFragment;
 import com.example.evgen.apiclient.os.assist.LIFOLinkedBlockingDeque;
+import com.example.evgen.apiclient.processing.BitmapProcessor;
+import com.example.evgen.apiclient.processing.ImageUrlProcessor;
 import com.example.evgen.apiclient.processing.Processor;
+import com.example.evgen.apiclient.source.CachedHttpDataSource;
 import com.example.evgen.apiclient.source.HttpDataSource;
+import com.example.evgen.apiclient.source.VkDataSource;
 
 public class ImageLoader {
     private static final String TAG = "ImageLoader";
-    private MemoryCache memoryCache=new MemoryCache();
-    private Map<ImageView, String> imageViews=new ConcurrentHashMap<ImageView, String>();
+    private MemoryCache memoryCache = new MemoryCache();
+    private Map<ImageView, String> imageViews = new ConcurrentHashMap<ImageView, String>();
     private ExecutorService executorService;
     private final Object mPauseWorkLock = new Object();
     protected boolean mPauseWork = false;
     public static final String KEY = "ImageLoader";
     private Handler handler = new Handler();
-
+    private Context mContext;
+    private AtomicBoolean isPause = new AtomicBoolean(false);
     public ImageLoader(Context context){
+    mContext = context;
     executorService = new ThreadPoolExecutor(5, 5, 0, TimeUnit.MILLISECONDS,
             new LIFOLinkedBlockingDeque<Runnable>());//Executors.newFixedThreadPool(5);
     }
@@ -52,20 +65,41 @@ public class ImageLoader {
         }
     }
 
-    public void displayImage(final String url,final ImageView imageView,final HttpDataSource dataSource,final Processor processor){
+    public void displayImage(final String url,final ImageView imageView){
         imageViews.put(imageView, url);
         Bitmap bitmap=memoryCache.get(url);
-        if(bitmap!=null) {
+        if (bitmap != null) {
             Log.i(TAG, "FromTheCache");
             imageView.setImageBitmap(bitmap);
         }   else {
             Log.i(TAG, "Not FromTheCache");
-            queueImage(url, imageView, dataSource, processor);
+            queueImage(url, imageView);
         }
     }
 
-    private void queueImage(String url, ImageView imageView, HttpDataSource dataSource, Processor processor){
-        MemoryValue p=new MemoryValue(url, imageView, dataSource, processor);
+    public void pause() {
+        isPause.set(true);
+    }
+
+    private final Object mDelayedLock = new Object();
+
+    public void resume() {
+        isPause.set(false);
+        synchronized (mDelayedLock) {
+            for (ImageView imageView : delayedImagesViews) {
+                Object tag = imageView.getTag();
+                if (tag != null) {
+                    displayImage((String) tag, imageView);
+                }
+            }
+            delayedImagesViews.clear();
+        }
+    }
+
+    private Set<ImageView> delayedImagesViews = new HashSet<ImageView>();
+
+    private void queueImage(String url, ImageView imageView){
+        MemoryValue p=new MemoryValue(url, imageView, mContext);
         executorService.submit(new ImagesLoader(p));
     }
 
@@ -74,11 +108,15 @@ public class ImageLoader {
         public final ImageView imageView;
         public final HttpDataSource dataSource;
         public final Processor processor;
-        public MemoryValue(String u, ImageView i, HttpDataSource dataSource, Processor processor){
+        public final HttpDataSource dataUrl;
+        public final Processor processUrl;
+        public MemoryValue(String u, ImageView i, Context context){
             url=u;
             imageView=i;
-            this.dataSource = dataSource;
-            this.processor = processor;
+            this.dataSource = new CachedHttpDataSource(context);
+            this.processor = new BitmapProcessor();
+            dataUrl =  new VkDataSource();
+            processUrl = new ImageUrlProcessor();
             }
     }
 
@@ -93,7 +131,13 @@ public class ImageLoader {
         @Override
         public void run() {
             try{
-                InputStream dataSource = memoryValue.dataSource.getResult(memoryValue.url);
+                InputStream dataUrl = memoryValue.dataUrl.getResult(memoryValue.url);
+                Object procesUrl = memoryValue.processUrl.process(dataUrl);
+                List<Category> data = (List<Category>)procesUrl;
+                String str = data.get(0).getURLIMAGE();
+                str = str.substring(str.indexOf("px")-2, str.indexOf("px")+2);
+                String url = data.get(0).getURLIMAGE().replaceAll(str,"100px");
+                InputStream dataSource = memoryValue.dataSource.getResult(url);
                 Object processingResult = memoryValue.processor.process(dataSource);
                 Bitmap bmp= (Bitmap) processingResult;
 //                synchronized (mPauseWorkLock) {

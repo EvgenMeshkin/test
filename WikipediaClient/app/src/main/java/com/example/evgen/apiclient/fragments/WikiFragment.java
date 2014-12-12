@@ -159,18 +159,23 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         ListView listView = (ListView) content.findViewById(android.R.id.list);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-                    Log.d(LOG_TAG, "listView Scrool");
-                    imageLoader.setPauseWork(true);
-                } else {
-                    imageLoader.setPauseWork(false);
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        imageLoader.resume();
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                        imageLoader.pause();
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        imageLoader.pause();
+                        break;
                 }
             }
 
             @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -267,29 +272,29 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         imageView.setImageBitmap(null);
                         imageView.setTag(urlImage);
 
-                        DataManager.loadData(new DataManager.Callback<List<Category>>() {
-                            @Override
-                            public void onDataLoadStart() {
-                                mProgress.setVisibility(View.VISIBLE);
-                            }
-
-                            @Override
-                            public void onDone(List<Category> data) {
-                                if (data.get(0).getURLIMAGE() == null)  mProgress.setVisibility(View.GONE);
-                                String str = data.get(0).getURLIMAGE();
-                                str = str.substring(str.indexOf("px")-2, str.indexOf("px")+2);
-                                url[0] = data.get(0).getURLIMAGE().replaceAll(str,"100px");
-                                if (imageView.getTag().equals(urlImage)) {
-                                    imageLoader.displayImage(url[0], imageView, CachedHttpDataSource.get(getActivity()), new BitmapProcessor());
-                                }
-                             mProgress.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onError(Exception e) {
-                            }
-
-                        }, urlImage, VkDataSource.get(getActivity()), new ImageUrlProcessor());
+//                        DataManager.loadData(new DataManager.Callback<List<Category>>() {
+//                            @Override
+//                            public void onDataLoadStart() {
+//                                mProgress.setVisibility(View.VISIBLE);
+//                            }
+//
+//                            @Override
+//                            public void onDone(List<Category> data) {
+//                                if (data.get(0).getURLIMAGE() == null)  mProgress.setVisibility(View.GONE);
+//                                String str = data.get(0).getURLIMAGE();
+//                                str = str.substring(str.indexOf("px")-2, str.indexOf("px")+2);
+//                                url[0] = data.get(0).getURLIMAGE().replaceAll(str,"100px");
+                             //   if (imageView.getTag().equals(urlImage)) {
+                                    imageLoader.displayImage(urlImage, imageView);
+                             //   }
+//                             mProgress.setVisibility(View.GONE);
+//                            }
+//
+//                            @Override
+//                            public void onError(Exception e) {
+//                            }
+//
+//                        }, urlImage, VkDataSource.get(getActivity()), new ImageUrlProcessor());
                         return convertView;
                     }
                 };

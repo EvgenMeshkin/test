@@ -9,64 +9,27 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 
 public class MemoryCache {
     private static final String TAG = "MemoryCache";
-    private Map<String, Bitmap> cache=Collections.synchronizedMap(new LinkedHashMap<String, Bitmap>(10,1.5f,true));
-    private long size=0;
-    private long limit=1000000;
+    private static final int MAX_SIZE = 16 * 1024 * 1024;
+    private LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(MAX_SIZE) {
 
-    public MemoryCache(){
-         setLimit(Runtime.getRuntime().maxMemory()/4);
-    }
-
-    public void setLimit(long new_limit){
-        limit=new_limit;
-        Log.i(TAG, "MemoryCache will use up to "+limit/1024./1024.+"MB");
-    }
+        @Override
+        protected int sizeOf(String key, Bitmap value) {
+            return value.getByteCount();
+        }
+    };
 
     public Bitmap get(String id){
-        try{
-            if(!cache.containsKey(id))
-                return null;
             return cache.get(id);
-        }catch(NullPointerException ex){
-            ex.printStackTrace();
-            return null;
-        }
     }
 
     public void put(String id, Bitmap bitmap){
-        try{
-            if(cache.containsKey(id))
-                size-=getSizeInBytes(cache.get(id));
             cache.put(id, bitmap);
-            size+=getSizeInBytes(bitmap);
-            checkSize();
-        }catch(Throwable th){
-            th.printStackTrace();
-        }
     }
 
-    private void checkSize() {
-        Log.i(TAG, "cache size="+size+" length="+cache.size());
-        if(size>limit){
-            Iterator<Entry<String, Bitmap>> iter=cache.entrySet().iterator();//least recently accessed item will be the first one iterated
-            while(iter.hasNext()){
-                Entry<String, Bitmap> entry=iter.next();
-                size-=getSizeInBytes(entry.getValue());
-                iter.remove();
-                if(size<=limit)
-                    break;
-            }
-            Log.i(TAG, "Clean cache. New size "+cache.size());
-        }
-    }
 
-    long getSizeInBytes(Bitmap bitmap) {
-        if(bitmap==null)
-            return 0;
-        return bitmap.getRowBytes() * bitmap.getHeight();
-    }
 }
