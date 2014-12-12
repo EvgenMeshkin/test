@@ -143,29 +143,19 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
     @Override
     public void onShowDetails(int index, NoteGsonModel note) {
         if (mDualPane) {
-            // We can display everything in-place with fragments, so update
-            // the list to highlight the selected item and show the data.
-            // Check what fragment is currently shown, replace if needed.
-            DetailsFragment details = (DetailsFragment)
-                    getSupportFragmentManager().findFragmentById(R.id.frgmCont2);
+            DetailsFragment details = (DetailsFragment)getSupportFragmentManager().findFragmentById(R.id.frgmCont2);
             if (details == null || details.getShownIndex() != index) {
-                // Make new fragment to show this selection.
                 details = DetailsFragment.newInstance(index);
                 NoteGsonModel noteGsonModel = (NoteGsonModel) note;
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("key", noteGsonModel);
                 details.setArguments(bundle);
-                // Execute a transaction, replacing any existing fragment
-                // with this one inside the frame.
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frgmCont2, details)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .commit();
             }
-
         } else {
-            // Otherwise we need to launch a new activity to display
-            // the dialog fragment with selected text.
             NoteGsonModel noteGsonModel = (NoteGsonModel) note;
             Bundle bundle = new Bundle();
             bundle.putParcelable("key", noteGsonModel);

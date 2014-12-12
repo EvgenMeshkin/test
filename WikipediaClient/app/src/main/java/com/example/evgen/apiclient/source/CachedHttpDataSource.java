@@ -32,8 +32,8 @@ public class CachedHttpDataSource extends HttpDataSource {
     private Map<String, File> mLruCache= Collections.synchronizedMap(new LinkedHashMap<String, File>());
     private Context mContext;
     private File mCacheFile;
-    private long mSize=0;
-    private long limit=30000;
+    private long mSize = 0;
+    private long limit = 30000;
     public CachedHttpDataSource(Context context) {
         mContext = context;
     }
@@ -60,7 +60,7 @@ public class CachedHttpDataSource extends HttpDataSource {
             Log.d(TAG, "load from file");
             mCacheFile = mLruCache.get(path);
             return new FileInputStream(mCacheFile);
-        } else{
+        } else {
             Log.d(TAG, "Do not load load from file");
             mCacheFile = new File(path);
             InputStream inputStream = super.getResult(p);
@@ -71,7 +71,7 @@ public class CachedHttpDataSource extends HttpDataSource {
                 throw e;
             }
             mLruCache.put(path, mCacheFile);
-            mSize+=mCacheFile.length();
+            mSize += mCacheFile.length();
             checkSize();
             Log.d(TAG, "copy stream success get from file");
             return new FileInputStream(mCacheFile);
@@ -79,7 +79,7 @@ public class CachedHttpDataSource extends HttpDataSource {
     }
 
     private void checkSize() {
-        Log.i(TAG, "cache size = "+mSize+" length = "+mLruCache.size());
+        Log.i(TAG, "cache size = " + mSize + " length = " + mLruCache.size());
         if(mSize > limit){
             Iterator<Map.Entry<String, File>> iter = mLruCache.entrySet().iterator();
             while(iter.hasNext()){
@@ -88,10 +88,10 @@ public class CachedHttpDataSource extends HttpDataSource {
                 entry.getValue().delete();
                 Log.d(TAG, "delete file:   " + entry.getKey());
                 iter.remove();
-                if(mSize<=limit)
+                if (mSize <= limit)
                     break;
             }
-            Log.i(TAG, "Clean cache. New size "+mLruCache.size());
+            Log.i(TAG, "Clean cache. New size " + mLruCache.size());
         }
     }
 

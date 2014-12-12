@@ -20,13 +20,13 @@ public class ImageUrlProcessor implements Processor<List<Category>,InputStream>{
     public List<Category> process(InputStream inputStream) throws Exception {
         String string = new StringProcessor().process(inputStream);
         JSONObject jsonObject = new JSONObject(string);
-        JSONObject jsonObjectquery = jsonObject.getJSONObject("query");
-         JSONObject jsonObjectquerypages = jsonObjectquery.getJSONObject("pages");
-        Iterator<?> i = jsonObjectquerypages.keys();
-        JSONObject jsonObjectquerypages1 = jsonObjectquerypages.getJSONObject(i.next().toString());
-        JSONObject jsonObjectquerypages1fullurl = jsonObjectquerypages1.getJSONObject("thumbnail");
-        List<Category> noteArray = new ArrayList<Category>(jsonObjectquerypages1fullurl.length());
-        Category category = new Category(jsonObjectquerypages1fullurl);
+        JSONObject query = jsonObject.getJSONObject("query");
+        JSONObject pages = query.getJSONObject("pages");
+        Iterator<?> i = pages.keys();
+        JSONObject pagesId = pages.getJSONObject(i.next().toString());
+        JSONObject thumbnail = pagesId.getJSONObject("thumbnail");
+        List<Category> noteArray = new ArrayList<Category>(thumbnail.length());
+        Category category = new Category(thumbnail);
         category.getURLIMAGE();
         noteArray.add(category);
         return noteArray;

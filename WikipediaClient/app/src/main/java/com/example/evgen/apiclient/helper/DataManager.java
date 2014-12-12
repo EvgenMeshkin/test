@@ -51,7 +51,6 @@ public class DataManager<ProcessingResult, DataSourceResult, Params> {
             throw new IllegalArgumentException("callback can't be null");
         }
         executeInAsyncTask(callback, params, dataSource, processor);
-
    }
 
     private static <ProcessingResult, DataSourceResult, Params> void executeInAsyncTask(final Callback<ProcessingResult> callback, Params params, final DataSource<DataSourceResult, Params> dataSource, final Processor<ProcessingResult, DataSourceResult> processor) {

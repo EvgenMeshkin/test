@@ -268,33 +268,9 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         convertView.setTag(item.getId());
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
                         final ProgressBar mProgress = (ProgressBar) convertView.findViewById(android.R.id.progress);
-                        final String[] url = new String[1];
                         imageView.setImageBitmap(null);
                         imageView.setTag(urlImage);
-
-//                        DataManager.loadData(new DataManager.Callback<List<Category>>() {
-//                            @Override
-//                            public void onDataLoadStart() {
-//                                mProgress.setVisibility(View.VISIBLE);
-//                            }
-//
-//                            @Override
-//                            public void onDone(List<Category> data) {
-//                                if (data.get(0).getURLIMAGE() == null)  mProgress.setVisibility(View.GONE);
-//                                String str = data.get(0).getURLIMAGE();
-//                                str = str.substring(str.indexOf("px")-2, str.indexOf("px")+2);
-//                                url[0] = data.get(0).getURLIMAGE().replaceAll(str,"100px");
-                             //   if (imageView.getTag().equals(urlImage)) {
-                                    imageLoader.displayImage(urlImage, imageView);
-                             //   }
-//                             mProgress.setVisibility(View.GONE);
-//                            }
-//
-//                            @Override
-//                            public void onError(Exception e) {
-//                            }
-//
-//                        }, urlImage, VkDataSource.get(getActivity()), new ImageUrlProcessor());
+                        imageLoader.displayImage(urlImage, imageView);
                         return convertView;
                     }
                 };
@@ -342,7 +318,6 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     @Override
     public void onError(Exception e) {
         Log.d(LOG_TAG, "onError");
-       // mProgress.setVisibility(View.GONE);
         content.findViewById(android.R.id.progress).setVisibility(View.GONE);
         content.findViewById(android.R.id.empty).setVisibility(View.GONE);
         TextView errorView = (TextView) content.findViewById(R.id.error);
