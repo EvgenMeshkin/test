@@ -8,6 +8,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -23,11 +24,13 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.app.ActionBar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -57,7 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class WikiActivity extends FragmentActivity implements WikiFragment.Callbacks {
+public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks {
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
     private ActionBarDrawerToggle myDrawerToggle;
@@ -82,6 +85,7 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
     boolean mDualPane;
     private View  mDetailsFrame;
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,24 +101,25 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
         myDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         myDrawerList = (ListView) findViewById(R.id.left_drawer);
         myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, viewsNames));
-        // enabling action bar app icon and behaving it as toggle button
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setIcon(R.drawable.ic_launcher);
+        actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
+
         myDrawerToggle = new ActionBarDrawerToggle(this, myDrawerLayout,
                 R.drawable.ic_drawer, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
         ) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(myTitle);
+                getSupportActionBar().setTitle(myTitle);
                 // calling onPrepareOptionsMenu() to show action bar icons
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(myDrawerTitle);
+                getSupportActionBar().setTitle(myDrawerTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
         };
         myDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
@@ -254,7 +259,7 @@ public class WikiActivity extends FragmentActivity implements WikiFragment.Callb
     @Override
     public void setTitle(CharSequence title) {
         myTitle = title;
-        getActionBar().setTitle(myTitle);
+        getSupportActionBar().setTitle(myTitle);
     }
 
     /**

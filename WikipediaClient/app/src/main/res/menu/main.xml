@@ -3,14 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".WikiActivity" >
     <item
-
         android:id="@+id/search"
         android:orderInCategory="1"
         android:title="search"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:icon="@android:drawable/ic_menu_search"
-        android:actionViewClass="android.widget.SearchView"
-
+        app:actionViewClass="android.widget.SearchView"
         />
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"

@@ -3,17 +3,16 @@
     package="com.example.evgen.apiclient" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
 
     <application
         android:name=".CoreApplication"
@@ -31,20 +30,21 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
         <activity
             android:name=".VkLoginActivity"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
         <activity
             android:name=".WikiActivity"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
 
         <service
             android:name=".account.WikipediaAccount"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/wiki_auth" />
@@ -52,27 +52,34 @@
         <service
             android:name=".account.SyncService"
             android:exported="false"
-            android:process=":sync">
+            android:process=":sync" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync_adapter" />
         </service>
+
         <activity
             android:name=".account.AuthenticatorActivity"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
         <activity
             android:name=".DetailsFragmentActivity"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
+
         <provider
-            android:authorities="com.example.evgenmeshkin.AdressBook"
             android:name=".db.provider.WikiContentProvider"
-            android:multiprocess="true"
-            android:exported="true">
+            android:authorities="com.example.evgenmeshkin.AdressBook"
+            android:exported="true"
+            android:multiprocess="true" >
         </provider>
 
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
     </application>
 
 </manifest>
