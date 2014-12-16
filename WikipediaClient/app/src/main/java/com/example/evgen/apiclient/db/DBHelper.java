@@ -20,6 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
     static final String CONTACT_ID = "_id";
     static final String CONTACT_NAME = "name";
     static final String CONTACT_EMAIL = "email";
+
     static final String DB_CREATE = "create table " + CONTACT_TABLE + "("
             + CONTACT_ID + " integer primary key autoincrement, "
             + CONTACT_NAME + " text, " + CONTACT_EMAIL + " text" + ");";

@@ -3,7 +3,7 @@ package com.example.evgen.apiclient;
 import android.app.Application;
 import android.content.Context;
 
-import com.example.evgen.apiclient.loader.ImageLoader;
+import com.example.evgen.imageloader.ImageLoader;
 import com.example.evgen.apiclient.source.CachedHttpDataSource;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;

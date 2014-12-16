@@ -1,4 +1,4 @@
-package com.example.evgen.apiclient.loader;
+package com.example.evgen.imageloader;
 
 /**
  * Created by User on 26.11.2014.

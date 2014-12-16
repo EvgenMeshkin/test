@@ -1,31 +1,19 @@
 package com.example.evgen.apiclient.fragments;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.annotation.TargetApi;
-import android.app.Activity;
 
 
-import android.app.DownloadManager;
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,27 +28,17 @@ import android.widget.TextView;
 
 import com.example.evgen.apiclient.Api;
 import com.example.evgen.apiclient.R;
-import com.example.evgen.apiclient.WikiActivity;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
-import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.bo.Category;
-import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
-import com.example.evgen.apiclient.dialogs.ErrorDialog;
 import com.example.evgen.apiclient.helper.DataManager;
-import com.example.evgen.apiclient.loader.ImageLoader;
+import com.example.evgen.imageloader.ImageLoader;
 import com.example.evgen.apiclient.os.AsyncTask;
-import com.example.evgen.apiclient.processing.BitmapProcessor;
 import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
-import com.example.evgen.apiclient.processing.ImageUrlProcessor;
-import com.example.evgen.apiclient.processing.NoteArrayProcessor;
-import com.example.evgen.apiclient.processing.ViewArrayProcessor;
 import com.example.evgen.apiclient.service.GpsLocation;
-import com.example.evgen.apiclient.source.CachedHttpDataSource;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;

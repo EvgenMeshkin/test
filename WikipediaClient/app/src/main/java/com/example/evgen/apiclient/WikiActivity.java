@@ -23,7 +23,6 @@ import android.app.Activity;
 
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.app.ActionBar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -41,7 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import android.support.v7.app.*;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.auth.secure.EncrManager;
 import com.example.evgen.apiclient.bo.Note;
@@ -52,12 +51,7 @@ import com.example.evgen.apiclient.fragments.DetailsFragment;
 import com.example.evgen.apiclient.fragments.MyFragmentPagerAdapter;
 import com.example.evgen.apiclient.fragments.WikiFragment;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 
 public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks {
@@ -101,10 +95,10 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         myDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         myDrawerList = (ListView) findViewById(R.id.left_drawer);
         myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, viewsNames));
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setIcon(R.drawable.ic_launcher);
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
-
+        actionBar . setDisplayOptions ( ActionBar . DISPLAY_SHOW_HOME |  ActionBar . DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP );
+        actionBar . setIcon ( R . drawable . ic_launcher );
         myDrawerToggle = new ActionBarDrawerToggle(this, myDrawerLayout,
                 R.drawable.ic_drawer, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
