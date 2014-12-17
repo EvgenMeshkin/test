@@ -65,11 +65,11 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     private ImageLoader imageLoader;
     Cursor mCursor;
 
-    final Uri CONTACT_URI = Uri
-            .parse("content://com.example.evgenmeshkin.AdressBook/contacts");
+    final Uri WIKI_URI = Uri
+            .parse("content://com.example.evgenmeshkin.GeoData/geodata");
 
-    final String CONTACT_NAME = "name";
-    final String CONTACT_EMAIL = "email";
+    final String WIKI_NAME = "name";
+    final String WIKI_KOR = "koordinaty";
     int mCurCheckPosition = 0;
     final static String LOG_TAG = WikiFragment.class.getSimpleName();
     private CategoryArrayProcessor mCategoryArrayProcessor = new CategoryArrayProcessor();
@@ -230,9 +230,9 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         }
                         Category item = getItem(position);
                         ContentValues cv = new ContentValues();
-                        cv.put(CONTACT_NAME, item.getTITLE());
-                        cv.put(CONTACT_EMAIL, item.getDIST());
-                        Uri newUri = getActivity().getContentResolver().insert(CONTACT_URI, cv);
+                        cv.put(WIKI_NAME, item.getTITLE());
+                        cv.put(WIKI_KOR, item.getDIST());
+                        Uri newUri = getActivity().getContentResolver().insert(WIKI_URI, cv);
                         Log.d(LOG_TAG, "insert, count : " + newUri.toString());
                         mCursor = getActivity().getContentResolver().query(newUri, null, null,
                                 null, null);
@@ -240,7 +240,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);
                         mTitle.setText(mCursor.getString(mCursor.getColumnIndex("name")));
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                        mContent.setText(mCursor.getString(mCursor.getColumnIndex("email")) + " м.");
+                        mContent.setText(mCursor.getString(mCursor.getColumnIndex("koordinaty")) + " м.");
                         mCursor.close();
                         final String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
                         convertView.setTag(item.getId());

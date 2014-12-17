@@ -72,7 +72,7 @@
 
         <provider
             android:name=".db.provider.WikiContentProvider"
-            android:authorities="com.example.evgenmeshkin.AdressBook"
+            android:authorities="com.example.evgenmeshkin.GeoData"
             android:exported="true"
             android:multiprocess="true" >
         </provider>

@@ -10,20 +10,16 @@ import android.util.Log;
  * Created by evgen on 13.12.2014.
  */
 public class DBHelper extends SQLiteOpenHelper {
-    static final String DB_NAME = "mydb";
+    static final String DB_NAME = "wikidb";
     static final int DB_VERSION = 1;
+    static final String WIKI_TABLE = "geodata";
+    static final String WIKI_ID = "_id";
+    static final String WIKI_NAME = "name";
+    static final String WIKI_EMAIL = "koordinaty";
 
-    // Таблица
-    static final String CONTACT_TABLE = "contacts";
-
-    // Поля
-    static final String CONTACT_ID = "_id";
-    static final String CONTACT_NAME = "name";
-    static final String CONTACT_EMAIL = "email";
-
-    static final String DB_CREATE = "create table " + CONTACT_TABLE + "("
-            + CONTACT_ID + " integer primary key autoincrement, "
-            + CONTACT_NAME + " text, " + CONTACT_EMAIL + " text" + ");";
+    static final String DB_CREATE = "create table " + WIKI_TABLE + "("
+            + WIKI_ID + " integer primary key autoincrement, "
+            + WIKI_NAME + " text, " + WIKI_EMAIL + " text" + ");";
     final static String LOG_TAG = DBHelper.class.getSimpleName();
 
     public DBHelper(Context context) {
@@ -36,9 +32,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(DB_CREATE);
         ContentValues cv = new ContentValues();
         for (int i = 1; i <= 3; i++) {
-            cv.put(CONTACT_NAME, "name " + i);
-            cv.put(CONTACT_EMAIL, "email " + i);
-            db.insert(CONTACT_TABLE, null, cv);
+            cv.put(WIKI_NAME, "name " + i);
+            cv.put(WIKI_EMAIL, "koordinaty " + i);
+            db.insert(WIKI_TABLE, null, cv);
         }
     }
 

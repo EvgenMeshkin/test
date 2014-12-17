@@ -81,3 +81,17 @@ habrahabr.ru/post/187526/
 https://github.com/IstiN/android_xcore/tree/master/xcore-library/xcore/src/main/java/by/istin/android/xcore
 https://github.com/Eugeny/ORMy/tree/master/src/com/ormy
 https://github.com/UCASoft/UcaOrm
+
+Gradle
+http://malroy.ru/gradle-part-4/
+http://stoflru.org/questions/24611183/how-to-add-a-project-as-a-library-in-android-studio
+
+RecyclerView
+https://github.com/renal128/RecyclerViewDemo/blob/master/app/src/main/java/com/renal128/demo/recyclerviewdemo/adapter/RecyclerViewAdapter.java
+http://habrahabr.ru/post/237101/
+https://developer.android.com/training/material/theme.html
+http://developer.android.com/training/material/lists-cards.html
+
+Круглый image
+https://github.com/Alezhka/RoundImage/blob/master/src/com/androidcasts/RoundImage/RoundImageView.java
+http://interosite.ru/articles/image-crop-in-android
