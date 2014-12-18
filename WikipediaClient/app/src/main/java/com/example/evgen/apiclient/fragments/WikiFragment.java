@@ -134,6 +134,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         GpsLocation gpsLocation = new GpsLocation();
         gpsLocation.getloc(this,getActivity());
         imageLoader = ImageLoader.get(getActivity());
+        update(dataSource,processor);
         ListView listView = (ListView) content.findViewById(android.R.id.list);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -181,7 +182,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     }
 
     private String getUrl() {
-        mKor = Api.GEOSEARCH_GET + mKor;
+        mKor = Api.GEOSEARCH_GET + "53.677226|23.8489383";//mKor;
         Log.d(LOG_TAG, "mKor="+mKor);
         return mKor;
     }
