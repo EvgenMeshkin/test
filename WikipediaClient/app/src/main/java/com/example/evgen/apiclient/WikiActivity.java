@@ -53,8 +53,8 @@ import com.example.evgen.apiclient.fragments.DetailsFragment;
 import com.example.evgen.apiclient.fragments.MyFragmentPagerAdapter;
 import com.example.evgen.apiclient.fragments.SearchFragment;
 import com.example.evgen.apiclient.fragments.WikiFragment;
-
-
+import com.example.evgen.apiclient.helper.DataManager;
+import com.example.evgen.apiclient.view.SearchViewValue;
 
 
 public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks, SearchFragment.Callbacks,SearchView.OnQueryTextListener {
@@ -81,6 +81,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     private PagerAdapter mPagerAdapter;
     boolean mDualPane;
     private View  mDetailsFrame;
+    private SearchViewValue mSearchViewValue;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -98,6 +99,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         myDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         myDrawerList = (ListView) findViewById(R.id.left_drawer);
         myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, viewsNames));
+        //mSearchViewValue = new SearchViewValue();
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
         actionBar . setDisplayOptions ( ActionBar . DISPLAY_SHOW_HOME |  ActionBar . DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP );
@@ -142,6 +144,10 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         }
     }
 
+    public static interface Callbacks<String> {
+        void onSearchValue(String value);
+    }
+
     @Override
     public void onShowDetails(int index, NoteGsonModel note) {
         if (mDualPane) {
@@ -182,12 +188,14 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        return false;
+        SearchViewValue.endsearch(s);
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
-        return false;
+        SearchViewValue.textsearch(s);
+       return true;
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

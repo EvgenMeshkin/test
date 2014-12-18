@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +31,7 @@ import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
 import com.example.evgen.apiclient.processing.SearchPagesProcessor;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
+import com.example.evgen.apiclient.view.SearchViewValue;
 import com.example.evgen.imageloader.ImageLoader;
 
 import org.apache.http.client.HttpClient;
@@ -39,12 +42,10 @@ import java.util.List;
 /**
  * Created by User on 18.12.2014.
  */
-public class SearchFragment extends ListFragment implements DataManager.Callback<List<Category>> {
+public class SearchFragment extends ListFragment implements DataManager.Callback<List<Category>>, SearchViewValue.Callbacks {
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Category> mData;
-    private HttpClient mClient;
-    private HttpPost mPost;
     private TextView mTitle;
     private TextView mContent;
     private View content;
@@ -54,6 +55,14 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
     private SearchPagesProcessor processor;
     private ImageLoader imageLoader;
     Cursor mCursor;
+    private String mValue;
+    private String mSaveValue;
+    public static final int LOADER_ID = 0;
+    public static final int COUNT = 50;
+    private boolean isImageLoaderControlledByDataManager = false;
+    private boolean isPagingEnabled = true;
+    private View footerProgress;
+
 
     final Uri WIKI_URI = Uri
             .parse("content://com.example.evgenmeshkin.GeoData/geodata");
@@ -79,6 +88,20 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
             parentFragment = parentFragment.getParentFragment();
         }
         return null;
+    }
+
+    @Override
+    public void onSetSearch(String value) {
+//        mValue = mValue + value;
+//        update(dataSource,processor);
+    }
+
+    @Override
+    public void onEndSearch(String value) {
+        mValue = value;
+        mSaveValue = value;
+        update(dataSource, processor);
+        mValue = "";
     }
 
     public interface Callbacks {
@@ -112,32 +135,35 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
         mSwipeRefreshLayout = (SwipeRefreshLayout) content.findViewById(R.id.swipe_container);
         dataSource = getHttpDataSource();
         processor = getProcessor();
+        SearchViewValue value = new SearchViewValue();
+        value.setCallbacks(this);
+        mValue = "";
         empty = (TextView) content.findViewById(android.R.id.empty);
         empty.setVisibility(View.GONE);
         imageLoader = ImageLoader.get(getActivity());
-        update(dataSource,processor);
-        ListView listView = (ListView) content.findViewById(android.R.id.list);
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        imageLoader.resume();
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                        imageLoader.pause();
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                        imageLoader.pause();
-                        break;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
+        //update(dataSource,processor);
+//        ListView listView = (ListView) content.findViewById(android.R.id.list);
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                switch (scrollState) {
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+//                        imageLoader.resume();
+//                        break;
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+//                        imageLoader.pause();
+//                        break;
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+//                        imageLoader.pause();
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//
+//            }
+//        });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -157,13 +183,18 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
 
     private void update(HttpDataSource dataSource, SearchPagesProcessor processor) {
         DataManager.loadData(this,
-                getUrl(),
+                getUrl(COUNT, 0),
                 dataSource,
                 processor);
     }
 
-    private String getUrl() {
-        mKor = Api.SEARCH_GET;//mKor;
+    private String getUrl(int count, int offset) {
+        if (mValue.equals(null)){
+            mKor = Api.SEARCH_GET + "srlimit="+count+"&sroffset="+offset + "&srsearch=" + mSaveValue;
+            Log.d(LOG_TAG, "mKor="+mKor);
+            return mKor;
+        }
+        mKor = Api.SEARCH_GET + "srlimit="+count+"&sroffset="+offset + "&srsearch=" + mValue;
         Log.d(LOG_TAG, "mKor="+mKor);
         return mKor;
     }
@@ -196,12 +227,13 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
             mSwipeRefreshLayout.setRefreshing(false);
         }
         content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-        //data = null;
         if (data == null || data.isEmpty()) {
             content.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
-            onError(new NullPointerException("No data"));
-        }else {
-            AdapterView listView = (AbsListView) content.findViewById(android.R.id.list);
+          //  onError(new NullPointerException("No data"));
+        } else {
+            ListView listView = (ListView) content.findViewById(android.R.id.list);
+            footerProgress = View.inflate(getActivity(), R.layout.view_footer_progress, null);
+            refreshFooter();
             if (mAdapter == null) {
                 mData = data;
                 mAdapter = new ArrayAdapter<Category>(getActivity(), R.layout.adapter_item, android.R.id.text1, data) {
@@ -224,7 +256,7 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);
                         mContent.setText(mCursor.getString(mCursor.getColumnIndex("koordinaty")) + " м.");
                         mCursor.close();
-                        final String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
+                        final String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ", "%20");
                         convertView.setTag(item.getId());
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
                         imageView.setImageBitmap(null);
@@ -233,7 +265,77 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
                         return convertView;
                     }
                 };
+
+                listView.setFooterDividersEnabled(true);
+                listView.addFooterView(footerProgress, null, false);
                 listView.setAdapter(mAdapter);
+                listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+                    private int previousTotal = 0;
+
+                    private int visibleThreshold = 5;
+
+                    @Override
+                    public void onScrollStateChanged(AbsListView view, int scrollState) {
+                        switch (scrollState) {
+                            case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                                if (!isImageLoaderControlledByDataManager) {
+                                    imageLoader.resume();
+                                }
+                                break;
+                            case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                                if (!isImageLoaderControlledByDataManager) {
+                                    imageLoader.pause();
+                                }
+                                break;
+                            case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                                if (!isImageLoaderControlledByDataManager) {
+                                    imageLoader.pause();
+                                }
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        ListAdapter adapter = view.getAdapter();
+                        int count = getRealAdapterCount(adapter);
+                        if (count == 0) {
+                            return;
+                        }
+                        if (previousTotal != totalItemCount && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                            previousTotal = totalItemCount;
+                            isImageLoaderControlledByDataManager = true;
+                            DataManager.loadData(new DataManager.Callback<List<Category>>() {
+                                                     @Override
+                                                     public void onDataLoadStart() {
+                                                         imageLoader.pause();
+                                                     }
+
+                                                     @Override
+                                                     public void onDone(List<Category> data) {
+                                                         updateAdapter(data);
+                                                         refreshFooter();
+                                                         imageLoader.resume();
+                                                         isImageLoaderControlledByDataManager = false;
+                                                     }
+
+                                                     @Override
+                                                     public void onError(Exception e) {
+                                                      //   onError(e);
+                                                         imageLoader.resume();
+                                                         isImageLoaderControlledByDataManager = false;
+                                                     }
+                                                 },
+                                    getUrl(COUNT, count),
+                                    getHttpDataSource(),
+                                    getProcessor());
+                        }
+                    }
+
+                });
+
+
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -243,16 +345,64 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
                     }
                 });
 
+                if (data != null && data.size() == COUNT) {
+                    isPagingEnabled = true;
+                } else {
+                    isPagingEnabled = false;
+                }
             } else {
                 mData.clear();
-                mData.addAll(data);
-                mAdapter.notifyDataSetChanged();
+                updateAdapter(data);
+            }
+
+        }
+        refreshFooter();
+    }
+
+    private void updateAdapter(List<Category> data) {
+        ListView listView = (ListView) content.findViewById(android.R.id.list);
+        if (data != null && data.size() == COUNT) {
+            isPagingEnabled = true;
+            listView.addFooterView(footerProgress, null, false);
+        } else {
+            isPagingEnabled = false;
+            listView.removeFooterView(footerProgress);
+        }
+        if (data != null) {
+            mData.addAll(data);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+
+    public static int getRealAdapterCount(ListAdapter adapter) {
+        if (adapter == null) {
+            return 0;
+        }
+        int count = adapter.getCount();
+        if (adapter instanceof HeaderViewListAdapter) {
+            HeaderViewListAdapter headerViewListAdapter = (HeaderViewListAdapter) adapter;
+            count = count - headerViewListAdapter.getFootersCount() - headerViewListAdapter.getHeadersCount();
+        }
+        return count;
+    }
+
+    private void refreshFooter() {
+        if (footerProgress != null) {
+            if (isPagingEnabled) {
+                footerProgress.setVisibility(View.VISIBLE);
+            } else {
+                footerProgress.setVisibility(View.GONE);
             }
         }
     }
+
+
+
     @Override
     public void onError(Exception e) {
         Log.d(LOG_TAG, "onError");
+        e.printStackTrace();
         content.findViewById(android.R.id.progress).setVisibility(View.GONE);
         content.findViewById(android.R.id.empty).setVisibility(View.GONE);
         TextView errorView = (TextView) content.findViewById(R.id.error);
