@@ -31,6 +31,9 @@ https://en.wikipedia.org/w/api.php?action=query&prop=pageprops&titles=Category:A
 https://en.wikipedia.org/w/api.php?action=query&list=prefixsearch&pssearch=meaning
 https://en.wikipedia.org/w/api.php?action=parse&page=Project:Sandbox
 http://habrahabr.ru/post/154931/
+https://en.wikipedia.org/w/api.php?action=help&modules=mobileview
+https://en.wikipedia.org/w/api.php?action=help&modules=query%2Bsearch
+https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrlimit=50&prop=info&gsrwhat=text&gsrsearch=meaning
 53.677226|23.8489383
 
 ContentProvider
@@ -76,6 +79,7 @@ http://cybern.ru/urok-18-vzaimodejstvie-mezhdu-potokami-metod-wait-i-notifyall.h
 
 SearchView
 http://atrios.ru/%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%B8%D1%82%D1%8C-%D0%BF%D0%BE%D0%BB%D0%B5-%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0-%D0%B2-actionbar/
+http://multiblog.ru/blog/its/520.html
 
 habrahabr.ru/post/187526/
 https://github.com/IstiN/android_xcore/tree/master/xcore-library/xcore/src/main/java/by/istin/android/xcore
