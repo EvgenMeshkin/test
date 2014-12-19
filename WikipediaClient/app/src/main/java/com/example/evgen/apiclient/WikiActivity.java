@@ -82,6 +82,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     boolean mDualPane;
     private View  mDetailsFrame;
     private SearchViewValue mSearchViewValue;
+    private View headerDrawer;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -97,13 +98,16 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         myDrawerTitle = getResources().getString(R.string.menu);
         viewsNames = getResources().getStringArray(R.array.views_array);
         myDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        headerDrawer = View.inflate(this, R.layout.view_header_drawer, null);
         myDrawerList = (ListView) findViewById(R.id.left_drawer);
+        myDrawerList.setHeaderDividersEnabled(true);
+        myDrawerList.addHeaderView(headerDrawer);
         myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, viewsNames));
         //mSearchViewValue = new SearchViewValue();
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
-        actionBar . setDisplayOptions ( ActionBar . DISPLAY_SHOW_HOME |  ActionBar . DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP );
-        actionBar . setIcon ( R . drawable . ic_launcher );
+//        actionBar . setDisplayOptions ( ActionBar . DISPLAY_SHOW_HOME |  ActionBar . DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP );
+//        actionBar . setIcon ( R . drawable . ic_launcher );
         myDrawerToggle = new ActionBarDrawerToggle(this, myDrawerLayout,
                 R.drawable.ic_drawer, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
