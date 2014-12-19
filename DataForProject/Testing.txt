@@ -99,3 +99,6 @@ http://developer.android.com/training/material/lists-cards.html
 Круглый image
 https://github.com/Alezhka/RoundImage/blob/master/src/com/androidcasts/RoundImage/RoundImageView.java
 http://interosite.ru/articles/image-crop-in-android
+
+Designer
+http://romannurik.github.io/AndroidAssetStudio/

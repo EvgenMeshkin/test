@@ -56,7 +56,6 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
     private ImageLoader imageLoader;
     Cursor mCursor;
     private String mValue;
-    private String mSaveValue;
     public static final int LOADER_ID = 0;
     public static final int COUNT = 50;
     private boolean isImageLoaderControlledByDataManager = false;
@@ -99,9 +98,7 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
     @Override
     public void onEndSearch(String value) {
         mValue = value;
-        mSaveValue = value;
         update(dataSource, processor);
-        mValue = "";
     }
 
     public interface Callbacks {
@@ -141,29 +138,6 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
         empty = (TextView) content.findViewById(android.R.id.empty);
         empty.setVisibility(View.GONE);
         imageLoader = ImageLoader.get(getActivity());
-        //update(dataSource,processor);
-//        ListView listView = (ListView) content.findViewById(android.R.id.list);
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                switch (scrollState) {
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-//                        imageLoader.resume();
-//                        break;
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-//                        imageLoader.pause();
-//                        break;
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-//                        imageLoader.pause();
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
-//            }
-//        });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -189,11 +163,6 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
     }
 
     private String getUrl(int count, int offset) {
-        if (mValue.equals(null)){
-            mKor = Api.SEARCH_GET + "srlimit="+count+"&sroffset="+offset + "&srsearch=" + mSaveValue;
-            Log.d(LOG_TAG, "mKor="+mKor);
-            return mKor;
-        }
         mKor = Api.SEARCH_GET + "srlimit="+count+"&sroffset="+offset + "&srsearch=" + mValue;
         Log.d(LOG_TAG, "mKor="+mKor);
         return mKor;
@@ -229,7 +198,7 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
         content.findViewById(android.R.id.progress).setVisibility(View.GONE);
         if (data == null || data.isEmpty()) {
             content.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
-          //  onError(new NullPointerException("No data"));
+            onError(new NullPointerException("No data"));
         } else {
             ListView listView = (ListView) content.findViewById(android.R.id.list);
             footerProgress = View.inflate(getActivity(), R.layout.view_footer_progress, null);
@@ -270,18 +239,16 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
                 listView.addFooterView(footerProgress, null, false);
                 listView.setAdapter(mAdapter);
                 listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-
                     private int previousTotal = 0;
-
                     private int visibleThreshold = 5;
 
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
                         switch (scrollState) {
                             case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                                if (!isImageLoaderControlledByDataManager) {
+                               if (!isImageLoaderControlledByDataManager) {
                                     imageLoader.resume();
-                                }
+                               }
                                 break;
                             case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
                                 if (!isImageLoaderControlledByDataManager) {
@@ -299,17 +266,18 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
                     @Override
                     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                         ListAdapter adapter = view.getAdapter();
-                        int count = getRealAdapterCount(adapter);
+                        final int count = getRealAdapterCount(adapter);
                         if (count == 0) {
                             return;
                         }
                         if (previousTotal != totalItemCount && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                             previousTotal = totalItemCount;
                             isImageLoaderControlledByDataManager = true;
+
                             DataManager.loadData(new DataManager.Callback<List<Category>>() {
                                                      @Override
                                                      public void onDataLoadStart() {
-                                                         imageLoader.pause();
+                                                        imageLoader.pause();
                                                      }
 
                                                      @Override
@@ -322,7 +290,7 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
 
                                                      @Override
                                                      public void onError(Exception e) {
-                                                      //   onError(e);
+                                                         onError(e);
                                                          imageLoader.resume();
                                                          isImageLoaderControlledByDataManager = false;
                                                      }
@@ -334,7 +302,6 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
                     }
 
                 });
-
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -354,13 +321,12 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
                 mData.clear();
                 updateAdapter(data);
             }
-
+            refreshFooter();
         }
-        refreshFooter();
     }
 
     private void updateAdapter(List<Category> data) {
-        ListView listView = (ListView) content.findViewById(android.R.id.list);
+         ListView listView = (ListView) content.findViewById(android.R.id.list);
         if (data != null && data.size() == COUNT) {
             isPagingEnabled = true;
             listView.addFooterView(footerProgress, null, false);
@@ -396,8 +362,6 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
             }
         }
     }
-
-
 
     @Override
     public void onError(Exception e) {
