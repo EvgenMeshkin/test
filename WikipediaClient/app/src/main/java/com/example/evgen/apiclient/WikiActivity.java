@@ -10,6 +10,7 @@ import android.accounts.AccountManager;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
@@ -40,6 +41,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v7.app.*;
@@ -55,9 +57,10 @@ import com.example.evgen.apiclient.fragments.SearchFragment;
 import com.example.evgen.apiclient.fragments.WikiFragment;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.view.SearchViewValue;
+import com.example.evgen.apiclient.view.VkUserDataView;
 
 
-public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks, SearchFragment.Callbacks,SearchView.OnQueryTextListener {
+public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks, SearchFragment.Callbacks,SearchView.OnQueryTextListener, VkUserDataView.Callbacks {
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
     private ActionBarDrawerToggle myDrawerToggle;
@@ -104,6 +107,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         myDrawerList.addHeaderView(headerDrawer);
         myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, viewsNames));
         //mSearchViewValue = new SearchViewValue();
+        VkUserDataView vkUserDataView = new VkUserDataView(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
 //        actionBar . setDisplayOptions ( ActionBar . DISPLAY_SHOW_HOME |  ActionBar . DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP );
@@ -146,6 +150,17 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
             DialogFragment newFragment = ErrorDialog.newInstance(e.getMessage());
             newFragment.show(getSupportFragmentManager(), "Account");
         }
+    }
+
+    @Override
+    public void onUserData(Bitmap foto, String first, String last) {
+        setContentView(R.layout.view_header_drawer);
+        TextView firstname = (TextView) headerDrawer.findViewById(R.id.text1);
+        TextView lastname = (TextView) headerDrawer.findViewById(R.id.text2);
+        ImageView fotos = (ImageView) headerDrawer.findViewById(R.id.icon);
+        fotos.setImageBitmap(foto);
+        firstname.setText(first);
+        lastname.setText(last);
     }
 
     public static interface Callbacks<String> {

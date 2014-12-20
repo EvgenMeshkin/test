@@ -19,6 +19,8 @@ public class VkOAuthHelper {
 
         void onSuccess();
 
+        void onUserId(String id);
+
     }
 
     //TODO don't do it in your project
@@ -47,12 +49,15 @@ public class VkOAuthHelper {
             String fragment = uri.getFragment();
             Uri parsedFragment = Uri.parse("http://temp.com?" + fragment);
             String accessToken = parsedFragment.getQueryParameter("access_token");
+            String userId =  parsedFragment.getQueryParameter("user_id");
             mAccessToken = parsedFragment.getQueryParameter("access_token");
             if (!TextUtils.isEmpty(mAccessToken)) {
                 Log.d(TAG, "token " + mAccessToken);
+                Log.d(TAG, "UserId " + userId);
                 sToken = accessToken;
+                callbacks.onUserId(userId);
                 callbacks.onSuccess();
-                return true;
+            return true;
             } else {
                 String error = parsedFragment.getQueryParameter("error");
                 String errorDescription = parsedFragment.getQueryParameter("error_description");
@@ -66,8 +71,35 @@ public class VkOAuthHelper {
             }
         }
         return false;
-
-
-
     }
+
+    public static boolean procedId(Activity activity, String url, Callbacks callbacks) {
+            Uri uri = Uri.parse(url);
+            String fragment = uri.getFragment();
+            Uri parsedFragment = Uri.parse("http://temp.com?" + fragment);
+            String accessToken = parsedFragment.getQueryParameter("access_token");
+            String userId =  parsedFragment.getQueryParameter("user_id");
+            mAccessToken = parsedFragment.getQueryParameter("access_token");
+            if (!TextUtils.isEmpty(mAccessToken)) {
+                Log.d(TAG, "token " + mAccessToken);
+                Log.d(TAG, "UserId " + userId);
+                sToken = accessToken;
+                callbacks.onUserId(userId);
+                callbacks.onSuccess();
+                return true;
+            } else {
+                String error = parsedFragment.getQueryParameter("error");
+                String errorDescription = parsedFragment.getQueryParameter("error_description");
+                String errorReason = parsedFragment.getQueryParameter("error_reason");
+                if (!TextUtils.isEmpty(error)) {
+                    callbacks.onError(new AuthenticationException(error+", reason : " + errorReason +"("+errorDescription+")"));
+                    return false;
+                } else {
+                    //WTF?
+                }
+            }
+
+        return false;
+    }
+
 }

@@ -44,15 +44,9 @@ public class VkLoginActivity extends ActionBarActivity implements VkOAuthHelper.
         mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         mWebView.setWebViewClient(new VkWebViewClient());
         mWebView.loadUrl(VkOAuthHelper.AUTORIZATION_URL);
-//        final AccountManager am = AccountManager.get(this);
-//        if (sAccount == null) {
-//            sAccount = new Account(getString(R.string.news), ACCOUNT_TYPE);
-//        }
-//        if (am.addAccountExplicitly(sAccount, getPackageName(), new Bundle())) {
-//            ContentResolver.setSyncAutomatically(sAccount, AUTHORITY, true);
-//        }
-
     }
+
+
 
     @Override
     public void onError(Exception e) {
@@ -74,6 +68,11 @@ public class VkLoginActivity extends ActionBarActivity implements VkOAuthHelper.
     public void onSuccess() {
         setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    public void onUserId(String id) {
+
     }
 
     private class VkWebViewClient extends WebViewClient {
