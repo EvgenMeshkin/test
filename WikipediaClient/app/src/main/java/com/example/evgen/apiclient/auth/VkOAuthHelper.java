@@ -25,7 +25,7 @@ public class VkOAuthHelper {
 
     //TODO don't do it in your project
     private static String sToken;
-
+    private static String mUrl;
     public static final String REDIRECT_URL = "https://oauth.vk.com/blank.html";
     public static final String AUTORIZATION_URL = "https://oauth.vk.com/authorize?client_id=4613222&scope=offline,wall,photos,status,messages,notes&redirect_uri=" + REDIRECT_URL + "&display=mobile&response_type=token";
     private static final String TAG = VkOAuthHelper.class.getSimpleName();
@@ -45,6 +45,7 @@ public class VkOAuthHelper {
 
     public static boolean proceedRedirectURL(Activity activity, String url, Callbacks callbacks) {
          if (url.startsWith(REDIRECT_URL)) {
+            mUrl = url;
             Uri uri = Uri.parse(url);
             String fragment = uri.getFragment();
             Uri parsedFragment = Uri.parse("http://temp.com?" + fragment);
@@ -73,8 +74,8 @@ public class VkOAuthHelper {
         return false;
     }
 
-    public static boolean procedId(Activity activity, String url, Callbacks callbacks) {
-            Uri uri = Uri.parse(url);
+    public static boolean procedId(Activity activity, Callbacks callbacks) {
+            Uri uri = Uri.parse(mUrl);
             String fragment = uri.getFragment();
             Uri parsedFragment = Uri.parse("http://temp.com?" + fragment);
             String accessToken = parsedFragment.getQueryParameter("access_token");

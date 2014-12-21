@@ -13,8 +13,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="16dip"
-        android:paddingRight="16dip"
+        android:paddingLeft="0dip"
+        android:paddingRight="0dip"
         tools:context=".WikiActivity">
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent" android:layout_height="match_parent">
@@ -37,7 +37,12 @@
             </android.support.v4.view.PagerTabStrip>
         </android.support.v4.view.ViewPager>
 
-
+        <android.support.v7.widget.Toolbar
+            android:id = "@+id/my_awesome_toolbar"
+            android:layout_height = "wrap_content"
+            android:layout_width = "match_parent"
+            android:minHeight = "?attr/actionBarSize"
+            android:background = "?attr/colorPrimary"  />
 
     </RelativeLayout>
 
@@ -50,6 +55,7 @@
         android:choiceMode="singleChoice"
         android:divider="@color/list_divider"
         android:dividerHeight="1dp"
+        android:fitsSystemWindows = "true"
         android:listSelector="@drawable/list_selector"
         android:background="@color/list_background"/>
 

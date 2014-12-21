@@ -33,6 +33,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -86,12 +87,15 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     private View  mDetailsFrame;
     private SearchViewValue mSearchViewValue;
     private View headerDrawer;
+    final static String LOG_TAG = WikiActivity.class.getSimpleName();
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wiki);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        setSupportActionBar(toolbar);
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -101,7 +105,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         myDrawerTitle = getResources().getString(R.string.menu);
         viewsNames = getResources().getStringArray(R.array.views_array);
         myDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        headerDrawer = View.inflate(this, R.layout.view_header_drawer, null);
+        myDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark_material_light));
+        headerDrawer = View.inflate(this, R.layout.view_header, null);
         myDrawerList = (ListView) findViewById(R.id.left_drawer);
         myDrawerList.setHeaderDividersEnabled(true);
         myDrawerList.addHeaderView(headerDrawer);
@@ -109,6 +114,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         //mSearchViewValue = new SearchViewValue();
         VkUserDataView vkUserDataView = new VkUserDataView(this);
         ActionBar actionBar = getSupportActionBar();
+
         actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
 //        actionBar . setDisplayOptions ( ActionBar . DISPLAY_SHOW_HOME |  ActionBar . DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP );
 //        actionBar . setIcon ( R . drawable . ic_launcher );
@@ -154,7 +160,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
     @Override
     public void onUserData(Bitmap foto, String first, String last) {
-        setContentView(R.layout.view_header_drawer);
+        //setContentView(R.layout.view_header);
+        Log.d(LOG_TAG, "FirstName"+first);
         TextView firstname = (TextView) headerDrawer.findViewById(R.id.text1);
         TextView lastname = (TextView) headerDrawer.findViewById(R.id.text2);
         ImageView fotos = (ImageView) headerDrawer.findViewById(R.id.icon);

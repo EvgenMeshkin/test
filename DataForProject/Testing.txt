@@ -102,3 +102,8 @@ http://interosite.ru/articles/image-crop-in-android
 
 Designer
 http://romannurik.github.io/AndroidAssetStudio/
+http://habrahabr.ru/post/241479/
+http://habrahabr.ru/post/242033/
+
+NavigationDrawer 
+http://stackoverflow.com/questions/26440879/how-do-i-use-drawerlayout-to-display-over-the-actionbar-toolbar-and-under-the-st

@@ -26,7 +26,7 @@ public class VkUserDataView  extends ActionBarActivity implements DataManager.Ca
 
     public VkUserDataView (Callbacks callbacks){
         Log.d(LOG_TAG, "New VkUserDataView " );
-        VkOAuthHelper.procedId(this, VkOAuthHelper.AUTORIZATION_URL, this);
+        VkOAuthHelper.procedId(this, this);
         mCallbacks = callbacks;
     }
 
