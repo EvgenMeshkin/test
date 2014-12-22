@@ -74,6 +74,17 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     final static String LOG_TAG = WikiFragment.class.getSimpleName();
     private CategoryArrayProcessor mCategoryArrayProcessor = new CategoryArrayProcessor();
 
+    public static WikiFragment newInstance(int index) {
+        WikiFragment f = new WikiFragment();
+
+        // Supply index input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("index", index);
+        f.setArguments(args);
+
+        return f;
+    }
+
     public static <T> T findFirstResponderFor(Fragment fragment, Class<T> clazz) {
         FragmentActivity activity = fragment.getActivity();
         if (activity == null)

@@ -23,10 +23,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/framemain">
-              <fragment class="com.example.evgen.apiclient.fragments.SearchFragment"
-                android:id="@+id/titles"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+              <!--<fragment class="com.example.evgen.apiclient.fragments.SearchFragment"-->
+                <!--android:id="@+id/titles"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"/>-->
         </FrameLayout>
 
         <android.support.v4.view.ViewPager

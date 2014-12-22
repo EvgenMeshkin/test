@@ -94,6 +94,12 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wiki);
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            SearchFragment fragment = new SearchFragment();
+            transaction.replace(R.id.framemain, fragment);
+            transaction.commit();
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -119,7 +125,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 //        actionBar . setDisplayOptions ( ActionBar . DISPLAY_SHOW_HOME |  ActionBar . DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP );
 //        actionBar . setIcon ( R . drawable . ic_launcher );
         myDrawerToggle = new ActionBarDrawerToggle(this, myDrawerLayout,
-                R.drawable.ic_drawer, //nav menu toggle icon
+                R.drawable.ic_action, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
         ) {
@@ -135,6 +141,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 supportInvalidateOptionsMenu();
             }
         };
+        myDrawerToggle.setDrawerIndicatorEnabled(true);
         myDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
         myDrawerLayout.setDrawerListener(myDrawerToggle);
         if (savedInstanceState == null) {
@@ -191,7 +198,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                         .commit();
             }
         } else {
-            DetailsFragment detailsmain = (DetailsFragment)getSupportFragmentManager().findFragmentById(R.id.framemain);
+//             detailsmain = (DetailsFragment)getSupportFragmentManager().findFragmentById(R.id.framemain);
 //            NoteGsonModel noteGsonModel = (NoteGsonModel) note;
 //            Bundle bundle = new Bundle();
 //            bundle.putParcelable("key", noteGsonModel);
@@ -199,7 +206,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 //            intent.setClass(this, DetailsFragmentActivity.class);
 //            intent.putExtra("key", bundle);
 //            startActivity(intent);
-            detailsmain = DetailsFragment.newInstance(index);
+            DetailsFragment detailsmain = DetailsFragment.newInstance(index);
             NoteGsonModel noteGsonModel = (NoteGsonModel) note;
             Bundle bundle = new Bundle();
             bundle.putParcelable("key", noteGsonModel);
@@ -251,36 +258,30 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         Fragment fragment = null;
         switch (position) {
             case 0:
-                mDetailsFrame = findViewById(R.id.frgmCont2);
-                if (mDualPane = mDetailsFrame != null){
-                    mDetailsFrame.setVisibility(View.VISIBLE);
-                }
-                findViewById(R.id.titles).setVisibility(View.VISIBLE);
-                mPager.setVisibility(View.GONE);
-                myDrawerLayout.closeDrawer(myDrawerList);
+
                 break;
             case 1:
-                mDetailsFrame = findViewById(R.id.frgmCont2);
-                if (mDualPane = mDetailsFrame != null){
-                   mDetailsFrame.setVisibility(View.GONE);
-                }
-                findViewById(R.id.titles).setVisibility(View.GONE);
-                mPager.setVisibility(View.VISIBLE);
-                mPager.setOffscreenPageLimit(10);
-                myDrawerLayout.closeDrawer(myDrawerList);
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                SearchFragment fragmentmain = new SearchFragment();
+                transaction.replace(R.id.framemain, fragmentmain);
+                transaction.commit();
                 break;
             case 2:
 
                 //    fragment = new ThirdFragment();
                 break;
             case 3:
-                WikiFragment detailsmain = (WikiFragment)getSupportFragmentManager().findFragmentById(R.id.framemain);
-                detailsmain = new WikiFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.titles,detailsmain)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .commit();
+//                WikiFragment detailsmain = (WikiFragment)getSupportFragmentManager().findFragmentById(R.id.framemain);
+//                detailsmain = new WikiFragment();
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.titles,detailsmain)
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                        .commit();
                 //    fragment = new ThirdFragment();
+                FragmentTransaction transactionwiki = getSupportFragmentManager().beginTransaction();
+                WikiFragment fragmentwiki = new WikiFragment();
+                transactionwiki.replace(R.id.framemain, fragmentwiki);
+                transactionwiki.commit();
                 break;
             default:
                 break;
