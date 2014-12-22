@@ -13,6 +13,7 @@ import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
 import com.example.evgen.apiclient.processing.FotoIdUrlProcessor;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
+import com.example.evgen.imageloader.CircleMaskedBitmap;
 
 import java.util.List;
 
@@ -73,6 +74,7 @@ public class VkUserDataView  extends ActionBarActivity implements DataManager.Ca
 
                                  @Override
                                  public void onDone(Bitmap bitmap) {
+                                     bitmap = CircleMaskedBitmap.getCircleMaskedBitmapUsingShader(bitmap, 100);
                                      mCallbacks.onUserData(bitmap, first, last);
                                  }
 

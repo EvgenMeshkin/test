@@ -178,6 +178,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     public void onShowDetails(int index, NoteGsonModel note) {
         if (mDualPane) {
             DetailsFragment details = (DetailsFragment)getSupportFragmentManager().findFragmentById(R.id.frgmCont2);
+
             if (details == null || details.getShownIndex() != index) {
                 details = DetailsFragment.newInstance(index);
                 NoteGsonModel noteGsonModel = (NoteGsonModel) note;
@@ -190,13 +191,24 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                         .commit();
             }
         } else {
+            DetailsFragment detailsmain = (DetailsFragment)getSupportFragmentManager().findFragmentById(R.id.framemain);
+//            NoteGsonModel noteGsonModel = (NoteGsonModel) note;
+//            Bundle bundle = new Bundle();
+//            bundle.putParcelable("key", noteGsonModel);
+//            Intent intent = new Intent();
+//            intent.setClass(this, DetailsFragmentActivity.class);
+//            intent.putExtra("key", bundle);
+//            startActivity(intent);
+            detailsmain = DetailsFragment.newInstance(index);
             NoteGsonModel noteGsonModel = (NoteGsonModel) note;
             Bundle bundle = new Bundle();
             bundle.putParcelable("key", noteGsonModel);
-            Intent intent = new Intent();
-            intent.setClass(this, DetailsFragmentActivity.class);
-            intent.putExtra("key", bundle);
-            startActivity(intent);
+            detailsmain.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.framemain,detailsmain)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
+
         }
     }
 
@@ -258,6 +270,16 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 2:
+
+                //    fragment = new ThirdFragment();
+                break;
+            case 3:
+                WikiFragment detailsmain = (WikiFragment)getSupportFragmentManager().findFragmentById(R.id.framemain);
+                detailsmain = new WikiFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.titles,detailsmain)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .commit();
                 //    fragment = new ThirdFragment();
                 break;
             default:

@@ -7,6 +7,7 @@
     android:paddingRight="16dip"
     android:paddingTop="48dp"
     android:paddingBottom="8dip"
+    android:background="@drawable/gradient"
     >
     <ImageView
         android:id="@+id/icon"

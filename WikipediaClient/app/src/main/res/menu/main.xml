@@ -14,4 +14,12 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/action_note"
+        android:title="Add note"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_like"
+        android:title="Like"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

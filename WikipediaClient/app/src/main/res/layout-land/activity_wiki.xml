@@ -39,6 +39,14 @@
                 android:layout_gravity="top">
             </android.support.v4.view.PagerTabStrip>
         </android.support.v4.view.ViewPager>
+        <android.support.v7.widget.Toolbar
+            android:id = "@+id/my_awesome_toolbar"
+            android:layout_height = "wrap_content"
+            android:layout_width = "match_parent"
+            android:minHeight = "?attr/actionBarSize"
+            android:elevation="3dp"
+
+            android:background = "?attr/colorPrimary"  />
     </LinearLayout>
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"

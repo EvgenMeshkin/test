@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class Category extends JSONObjectWrapper {
     public static final String URL = "fullurl";
     public static final String URLIMAGE = "source";
-    public static final String URLFOTO = "photo_50";
+    public static final String URLFOTO = "photo_200_orig";
     private static final String ACTION = "action";
     private static final String PROP = "prop";
     private static final String FORMAT = "format";
