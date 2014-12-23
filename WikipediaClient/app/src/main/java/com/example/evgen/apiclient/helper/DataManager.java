@@ -13,20 +13,8 @@ import android.util.Log;
 import com.example.evgen.apiclient.R;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.os.AsyncTask;
-//import com.example.evgen.apiclient.os.MyLoader;
-import com.example.evgen.apiclient.processing.NoteArrayProcessor;
 import com.example.evgen.apiclient.processing.Processor;
 import com.example.evgen.apiclient.source.DataSource;
-import com.example.evgen.apiclient.source.HttpDataSource;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.IOException;
-
-import static android.app.PendingIntent.getActivity;
 
 /**
  * Created by evgen on 18.10.2014.
