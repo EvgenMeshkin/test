@@ -116,14 +116,11 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         myDrawerList = (ListView) findViewById(R.id.left_drawer);
         myDrawerList.setHeaderDividersEnabled(true);
         myDrawerList.addHeaderView(headerDrawer);
-        myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, viewsNames));
-        //mSearchViewValue = new SearchViewValue();
+        myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item,android.R.id.text2, viewsNames));
         VkUserDataView vkUserDataView = new VkUserDataView(this);
         ActionBar actionBar = getSupportActionBar();
 
         actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
-//        actionBar . setDisplayOptions ( ActionBar . DISPLAY_SHOW_HOME |  ActionBar . DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP );
-//        actionBar . setIcon ( R . drawable . ic_launcher );
         myDrawerToggle = new ActionBarDrawerToggle(this, myDrawerLayout,
                 R.drawable.ic_action, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
@@ -198,14 +195,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                         .commit();
             }
         } else {
-//             detailsmain = (DetailsFragment)getSupportFragmentManager().findFragmentById(R.id.framemain);
-//            NoteGsonModel noteGsonModel = (NoteGsonModel) note;
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelable("key", noteGsonModel);
-//            Intent intent = new Intent();
-//            intent.setClass(this, DetailsFragmentActivity.class);
-//            intent.putExtra("key", bundle);
-//            startActivity(intent);
             DetailsFragment detailsmain = DetailsFragment.newInstance(index);
             NoteGsonModel noteGsonModel = (NoteGsonModel) note;
             Bundle bundle = new Bundle();
@@ -233,13 +222,17 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
     @Override
     public boolean onQueryTextSubmit(String s) {
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        SearchFragment fragmentmain = new SearchFragment();
+//        transaction.replace(R.id.framemain, fragmentmain);
+//        transaction.commit();
         SearchViewValue.endsearch(s);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
-        SearchViewValue.textsearch(s);
+ //       SearchViewValue.textsearch(s);
        return true;
     }
 
@@ -271,13 +264,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 //    fragment = new ThirdFragment();
                 break;
             case 3:
-//                WikiFragment detailsmain = (WikiFragment)getSupportFragmentManager().findFragmentById(R.id.framemain);
-//                detailsmain = new WikiFragment();
-//                getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.titles,detailsmain)
-//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//                        .commit();
-                //    fragment = new ThirdFragment();
                 FragmentTransaction transactionwiki = getSupportFragmentManager().beginTransaction();
                 WikiFragment fragmentwiki = new WikiFragment();
                 transactionwiki.replace(R.id.framemain, fragmentwiki);
@@ -293,7 +279,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setQueryHint("Поиск");
+        searchView.setQueryHint("Search");
         searchView.setOnQueryTextListener(this);
 
         return true;

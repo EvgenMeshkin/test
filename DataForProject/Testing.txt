@@ -107,3 +107,23 @@ http://habrahabr.ru/post/242033/
 
 NavigationDrawer 
 http://stackoverflow.com/questions/26440879/how-do-i-use-drawerlayout-to-display-over-the-actionbar-toolbar-and-under-the-st
+
+/BroadcastReceiver / local BroadcastReceiver
+http://developer.alexanderklimov.ru/android/theory/broadcast.php
+
+Singleton
+http://www.javenue.info/post/2
+http://pro-prof.com/archives/1546
+
+ДОБАВИТЬ В ПРОЕКТ!:
+1. Создать базу для сохранения просмотренных страниц и данных
+2. Доработать дизайн- тени, цвета, размеры
+3. Доделать синхронизацию для авторизации
+4. Поиск на всех фрагментах
+5. Исправить acktionbar
+6. Сделать открытие домашней страницы, произвольной а также страницы настроек
+7. перенисти логику авторизации
+8. Добавить ООП
+9. Добавление в записи и лайк в ВК
+10. Содержание по странице с правой стороны
+11. добавить в listView Holder

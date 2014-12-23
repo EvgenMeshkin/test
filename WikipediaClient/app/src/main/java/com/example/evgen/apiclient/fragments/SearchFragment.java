@@ -223,7 +223,7 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);
                         mTitle.setText(mCursor.getString(mCursor.getColumnIndex("name")));
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                        mContent.setText(mCursor.getString(mCursor.getColumnIndex("koordinaty")) + " м.");
+                        mContent.setText(mCursor.getString(mCursor.getColumnIndex("koordinaty")));
                         mCursor.close();
                         final String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ", "%20");
                         convertView.setTag(item.getId());
