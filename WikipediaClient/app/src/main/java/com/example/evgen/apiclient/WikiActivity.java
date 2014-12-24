@@ -69,17 +69,11 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     private String[] viewsNames;
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-   // public static final String URL = "https://en.wikipedia.org/w/api.php?action=query&prop=categories&format=json&titles=Albert%20Einstein";
-    private static final String TAG = VkOAuthHelper.class.getSimpleName();
     public static final String ACCOUNT_TYPE = "com.example.evgen.apiclient.account";
-    private Fragment mFrag1;
-    private Fragment mFrag2;
-    private Fragment mFrag3;
     public static final String AUTHORITY = "com.example.evgen.apiclient";
     private AccountManager mAm;
     public static Account sAccount;
     private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
     boolean mDualPane;
     private View  mDetailsFrame;
     private SearchViewValue mSearchViewValue;
@@ -100,7 +94,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(mPagerAdapter);
         mDetailsFrame = findViewById(R.id.frgmCont2);
         mDualPane = mDetailsFrame != null && mDetailsFrame.getVisibility() == View.VISIBLE;
         myTitle = getTitle();
@@ -160,7 +153,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
     @Override
     public void onUserData(Bitmap foto, String first, String last) {
-        //setContentView(R.layout.view_header);
         Log.d(LOG_TAG, "FirstName"+first);
         TextView firstname = (TextView) headerDrawer.findViewById(R.id.text1);
         TextView lastname = (TextView) headerDrawer.findViewById(R.id.text2);
@@ -218,10 +210,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        SearchFragment fragmentmain = new SearchFragment();
-//        transaction.replace(R.id.framemain, fragmentmain);
-//        transaction.commit();
         SearchViewValue.endsearch(s);
         return true;
     }
@@ -237,13 +225,11 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         public void onItemClick(
                 AdapterView<?> parent, View view, int position,  long id
         ) {
-            // display view for selected nav drawer item
             displayView(position);
         }
     }
 
     private void displayView(int position) {
-        // update the main content by replacing fragments
         Fragment fragment = null;
         switch (position) {
             case 0:
@@ -257,7 +243,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 break;
             case 2:
 
-                //    fragment = new ThirdFragment();
                 break;
             case 3:
                 FragmentTransaction transactionwiki = getSupportFragmentManager().beginTransaction();
@@ -277,17 +262,14 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("Search");
         searchView.setOnQueryTextListener(this);
-
-        return true;
+      return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // toggle nav drawer on selecting action bar app icon/title
         if (myDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle action bar actions click
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
@@ -296,12 +278,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         }
     }
 
-    /**
-     * Called when invalidateOptionsMenu() is triggered
-     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // if navigation drawer is opened, hide the action items
         boolean drawerOpen = myDrawerLayout.isDrawerOpen(myDrawerList);
         menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
@@ -313,10 +291,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         getSupportActionBar().setTitle(myTitle);
     }
 
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
