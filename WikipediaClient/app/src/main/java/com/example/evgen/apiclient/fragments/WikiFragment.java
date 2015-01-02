@@ -27,6 +27,7 @@ import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.bo.Category;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.helper.DataManager;
+import com.example.evgen.apiclient.helper.SentsVkNotes;
 import com.example.evgen.imageloader.ImageLoader;
 import com.example.evgen.apiclient.os.AsyncTask;
 import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
@@ -222,30 +223,31 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
                         final Category item = (Category) mAdapter.getItem(position);
                         NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getNs());
                         //TODO WTF
-                        new AsyncTask() {
-                            @Override
-                            protected void onPostExecute(Object processingResult) {
-                                super.onPostExecute(processingResult);
-                                content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-                            }
-                            @Override
-                            protected void onPreExecute() {
-                                super.onPreExecute();
-                                content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
-                                mClient = new DefaultHttpClient();
-                            }
-                            @Override
-                            protected Object doInBackground(Object[] params) throws Exception {
-                                mPost = new HttpPost(Api.VKNOTES_GET + item.getTitle().replaceAll(" ", "%20") +"&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
-                                mClient.execute(mPost);
-                              //  content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-                                return null;
-                            }
-                            @Override
-                            protected void onPostException(Exception e) {
-                              onError(e);
-                            }
-                        }.execute();
+                        new SentsVkNotes(item.getTitle());
+//                        new AsyncTask() {
+//                            @Override
+//                            protected void onPostExecute(Object processingResult) {
+//                                super.onPostExecute(processingResult);
+//                                content.findViewById(android.R.id.progress).setVisibility(View.GONE);
+//                            }
+//                            @Override
+//                            protected void onPreExecute() {
+//                                super.onPreExecute();
+//                                content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
+//                                mClient = new DefaultHttpClient();
+//                            }
+//                            @Override
+//                            protected Object doInBackground(Object[] params) throws Exception {
+//                                mPost = new HttpPost(Api.VKNOTES_GET + item.getTitle().replaceAll(" ", "%20") +"&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
+//                                mClient.execute(mPost);
+//                              //  content.findViewById(android.R.id.progress).setVisibility(View.GONE);
+//                                return null;
+//                            }
+//                            @Override
+//                            protected void onPostException(Exception e) {
+//                              onError(e);
+//                            }
+//                        }.execute();
                         showDetails(position, note);
                     }
                 });

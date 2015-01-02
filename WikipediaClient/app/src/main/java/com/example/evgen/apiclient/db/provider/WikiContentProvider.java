@@ -24,8 +24,9 @@ public class WikiContentProvider extends ContentProvider {
     // Items
     static final String WIKI_ID = "_id";
     static final String WIKI_NAME = "name";
+
     //TODO rename and check
-    static final String WIKI_KOR = "koordinaty";
+    static final String WIKI_DATE = "wikidate";
 
     // Uri
     // authority
@@ -67,7 +68,7 @@ public class WikiContentProvider extends ContentProvider {
             case URI_DATA:
                 Log.d(LOG_TAG, "URI_DATA");
                 if (TextUtils.isEmpty(sortOrder)) {
-                    sortOrder = WIKI_NAME + " ASC";
+                    sortOrder = "date(" + WIKI_DATE + ") DESC";
                 }
                 break;
             case URI_DATA_ID: // Uri с ID

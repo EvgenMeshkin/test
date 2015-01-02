@@ -14,8 +14,14 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/saving_pages"
+        android:title="@string/saving_pages"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
     <item android:id="@+id/action_note"
         android:title="Add note"
+        android:onClick="sentNote"
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item android:id="@+id/action_like"

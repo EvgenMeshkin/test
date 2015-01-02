@@ -72,6 +72,12 @@ http://findevelop.blogspot.com/2014/01/handler-android.html
 http://tutorials.jenkov.com/java-util-concurrent/executorservice.html
 http://habrahabr.ru/post/116363/
 
+Poleznoe
+http://habrahabr.ru/post/232913/
+http://habrahabr.ru/post/146632/
+http://androidtrainningcenter.blogspot.com/2012/03/android-listview-with-section-header.html
+http://kmansoft.com/2010/11/16/adding-group-headers-to-listview/
+
 Потоки
 http://developer.alexanderklimov.ru/android/java/thread.php
 

@@ -57,6 +57,7 @@ import com.example.evgen.apiclient.fragments.WatchListFragment;
 import com.example.evgen.apiclient.fragments.WikiFragment;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.helper.LoadRandomPage;
+import com.example.evgen.apiclient.helper.SentsVkNotes;
 import com.example.evgen.apiclient.listener.RightDrawerItemClickListener;
 import com.example.evgen.apiclient.view.VkUserDataView;
 
@@ -68,6 +69,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     private ListView myDrawerList;
     private ListView mDrawerListRight;
     private ActionBarDrawerToggle myDrawerToggle;
+    NoteGsonModel mNoteGsonModel;
     // navigation drawer title
     private CharSequence myDrawerTitle;
     // used to store app title
@@ -84,6 +86,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     private ViewPager mPager;
     private View  mDetailsFrame;
     private View headerDrawer;
+    private MenuItem mLikeItem;
+    private MenuItem mNoteItem;
     final static String LOG_TAG = WikiActivity.class.getSimpleName();
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -109,7 +113,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         headerDrawer = View.inflate(this, R.layout.view_header, null);
         myDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerListRight = (ListView) findViewById(R.id.list_right_menu);
-        myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
+        myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, mDrawerListRight);
         myDrawerList.addHeaderView(headerDrawer);
         myDrawerList.setHeaderDividersEnabled(true);
         myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item,android.R.id.text2, viewsNames));
@@ -148,6 +152,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         try {
             mAm.setUserData(sAccount, "Token", EncrManager.encrypt(this, VkOAuthHelper.mAccessToken));
             VkUserDataView vkUserDataView = new VkUserDataView(this);
+            mLikeItem.setEnabled(true);
 
         } catch (Exception e) {
         }
@@ -173,9 +178,9 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     public void onShowDetails(int index, NoteGsonModel note) {
             myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             DetailsFragment detailsmain = new DetailsFragment();//DetailsFragment.newInstance(index);
-            NoteGsonModel noteGsonModel = (NoteGsonModel) note;
+            mNoteGsonModel = (NoteGsonModel) note;
             Bundle bundle = new Bundle();
-            bundle.putParcelable("key", noteGsonModel);
+            bundle.putParcelable("key", mNoteGsonModel);
             detailsmain.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.framemain,detailsmain)
@@ -252,6 +257,10 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 4:
+                myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
+                myDrawerLayout.closeDrawer(myDrawerList);
+                break;
+            case 5:
                 FragmentTransaction transactionwatch = getSupportFragmentManager().beginTransaction();
                 WatchListFragment fragmentwatch = new WatchListFragment();
                 transactionwatch.replace(R.id.framemain, fragmentwatch);
@@ -259,11 +268,11 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
                 myDrawerLayout.closeDrawer(myDrawerList);
                 break;
-            case 5:
+            case 6:
 
                 break;
 
-            case 6:
+            case 7:
                 FragmentTransaction buck = getSupportFragmentManager().beginTransaction();
                 SearchFragment fragmentbuck = new SearchFragment();
                 buck.replace(R.id.framemain, fragmentbuck);
@@ -281,12 +290,22 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.search);
+        mLikeItem = menu.findItem(R.id.action_note);
+        //mLikeItem.setEnabled(false);
+        mLikeItem = menu.findItem(R.id.action_like);
+        //mLikeItem.setEnabled(false);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("Search");
         searchView.setOnQueryTextListener(this);
     return true;
     }
 
+    public void sentNote(MenuItem item) {
+        Log.d(LOG_TAG, "sentNote");
+        if (!mNoteGsonModel.equals(null)) {
+            new SentsVkNotes(Api.MAIN_URL + mNoteGsonModel.getTitle().replaceAll(" ", "_"));
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (myDrawerToggle.onOptionsItemSelected(item)) {

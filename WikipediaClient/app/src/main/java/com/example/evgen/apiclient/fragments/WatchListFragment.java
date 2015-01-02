@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.evgen.apiclient.Api;
 import com.example.evgen.apiclient.R;
+import com.example.evgen.apiclient.adapters.DateAdapter;
 import com.example.evgen.apiclient.bo.Category;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.imageloader.ImageLoader;
@@ -30,11 +31,12 @@ import java.util.List;
  */
 public class WatchListFragment extends Fragment {
     private TextView mTitle;
+    private TextView mDate;
     private View content;
     private TextView empty;
-    private ArrayAdapter mAdapter;
+    private DateAdapter mAdapter;
     private ImageLoader imageLoader;
-    Cursor mCursor;
+    private Cursor mCursor;
     final Uri WIKI_URI = Uri
             .parse("content://com.example.evgenmeshkin.GeoData/geodata");
     final static String LOG_TAG = WatchListFragment.class.getSimpleName();
@@ -55,30 +57,48 @@ public class WatchListFragment extends Fragment {
 
             } while (mCursor.moveToNext());
         }
-        if (mCursor != null && !mCursor.isClosed()) {
-            mCursor.close();
+
+        mCursor.moveToFirst();
+        final List<Long> listData = new ArrayList<Long>();
+        if (mCursor.moveToFirst()) {
+            do {
+                listData.add(mCursor.getLong(mCursor.getColumnIndex("wikidate")));
+
+            } while (mCursor.moveToNext());
         }
-        Log.d(LOG_TAG, "data watchlist : " + list.toString());
+
+//        if (mCursor != null && !mCursor.isClosed()) {
+//            mCursor.close();
+//        }
+
         ListView listView = (ListView) content.findViewById(android.R.id.list);
         imageLoader = ImageLoader.get(getActivity());
+        String[] from = new String[] { "name", "wikidate" };
+        int[] to = new int[] { R.id.text1, R.id.text2 };
+        mCursor.moveToFirst();
         if (mAdapter == null) {
-            mAdapter = new ArrayAdapter<String>(getActivity(), R.layout.adapter_item, android.R.id.text1, list) {
-                @Override
-                public View getView(final int position, View convertView, ViewGroup parent) {
-                    if (convertView == null) {
-                        convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
-                    }
-                    mTitle = (TextView) convertView.findViewById(android.R.id.text1);
-                    mTitle.setText(list.get(position));
-                    final String urlImage = Api.IMAGEVIEW_GET + list.get(position).replaceAll(" ", "%20");
-                    convertView.setTag(position);
-                    final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
-                    imageView.setImageBitmap(null);
-                    imageView.setTag(urlImage);
-                    imageLoader.displayImage(urlImage, imageView);
-                    return convertView;
-                }
-            };
+            mAdapter = new DateAdapter(getActivity(), R.layout.adapter_item, mCursor, from, to);
+//            {
+//                @Override
+//                public View getView(final int position, View convertView, ViewGroup parent) {
+//                    if (convertView == null) {
+//                        convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
+//                    }
+//                    mTitle = (TextView) convertView.findViewById(android.R.id.text1);
+//                    mTitle.setText(list.get(position));
+//                    mDate = (TextView) convertView.findViewById(android.R.id.text2);
+//                    java.sql.Date dt = new java.sql.Date(listData.get(position));
+//                    mDate.setText(dt.toString());
+//                    Log.d(LOG_TAG, "data watchlist : " + dt.toString());
+//                    final String urlImage = Api.IMAGEVIEW_GET + list.get(position).replaceAll(" ", "%20");
+//                    convertView.setTag(position);
+//                    final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
+//                    imageView.setImageBitmap(null);
+//                    imageView.setTag(urlImage);
+//                    imageLoader.displayImage(urlImage, imageView);
+//                    return convertView;
+//                }
+//            };
         }
             listView.setAdapter(mAdapter);
             return content;

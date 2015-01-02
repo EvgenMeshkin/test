@@ -23,11 +23,13 @@ import com.example.evgen.apiclient.R;
 import com.example.evgen.apiclient.bo.Category;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.helper.DataManager;
+import com.example.evgen.apiclient.helper.SentsVkNotes;
 import com.example.evgen.apiclient.processing.ContentsArrayProcessor;
 import com.example.evgen.apiclient.processing.MobileViewProcessor;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,7 +51,8 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     private final Uri WIKI_URI = Uri
             .parse("content://com.example.evgenmeshkin.GeoData/geodata");
     private final String WIKI_NAME = "name";
-    private final String WIKI_KOR = "koordinaty";
+    private final String WIKI_DATE = "wikidate";
+    private final String WIKI_EMAIL = "koordinaty";
     public interface Callbacks {
         void onSetContents (List data);
     }
@@ -147,6 +150,8 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
         mTextHtml = "";
         ContentValues cv = new ContentValues();
         cv.put(WIKI_NAME, mHistory);
+        cv.put(WIKI_DATE, new java.util.Date().getTime());
+        Log.d(LOG_TAG, "DATE = " + new java.util.Date().getTime() );
         //getActivity().getContentResolver().delete(WIKI_URI, null, null);
         if (!cv.equals(null)) {
             getActivity().getContentResolver().insert(WIKI_URI, cv);
@@ -204,6 +209,7 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
         Log.d(LOG_TAG, "onError");
 //        mProgress.setVisibility(View.GONE);
     }
+
 
 
     private class HelloWebViewClient extends WebViewClient {

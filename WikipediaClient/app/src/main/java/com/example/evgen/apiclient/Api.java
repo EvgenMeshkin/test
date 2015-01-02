@@ -19,6 +19,7 @@ public class Api {
     public static final String CONTENTS_GET = "https://en.wikipedia.org/w/api.php?action=mobileview&format=json&page=";
     public static final String RANDOM_GET = "https://en.wikipedia.org/w/api.php?action=query&format=json&list=wikigrokrandom";
     public static final String MOBILE_GET = "https://en.wikipedia.org/w/api.php?action=mobileview&sections=all&format=json&page=";
+    public static final String MAIN_URL = "https://http://en.wikipedia.org/wiki/";
 
 
 }
