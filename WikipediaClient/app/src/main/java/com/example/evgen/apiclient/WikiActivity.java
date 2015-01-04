@@ -49,12 +49,9 @@ import android.widget.TextView;
 import android.support.v7.app.*;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.auth.secure.EncrManager;
-import com.example.evgen.apiclient.bo.Note;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.dialogs.ErrorDialog;
-import com.example.evgen.apiclient.fragments.ChildFragment;
 import com.example.evgen.apiclient.fragments.DetailsFragment;
-import com.example.evgen.apiclient.fragments.MyFragmentPagerAdapter;
 import com.example.evgen.apiclient.fragments.SearchFragment;
 import com.example.evgen.apiclient.fragments.WikiFragment;
 import com.example.evgen.apiclient.helper.DataManager;
@@ -235,13 +232,10 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     //TODO
     @Override
     public boolean onQueryTextSubmit(String s) {
-<<<<<<< HEAD
        // displayView(1);
        // SearchViewValue.endsearch(this, s);
         onSentSearch(s);
-=======
-        SearchViewValue.endsearch(s);
->>>>>>> d0ab09d8384f1298dcd7b066c5bfe80cd27f1058
+      //  SearchViewValue.endsearch(s);
         return true;
     }
 
@@ -303,11 +297,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
             case 2:
 
-<<<<<<< HEAD
-
-=======
                 break;
->>>>>>> d0ab09d8384f1298dcd7b066c5bfe80cd27f1058
             case 3:
                 FragmentTransaction transactionwiki = getSupportFragmentManager().beginTransaction();
                 WikiFragment fragmentwiki = new WikiFragment();
@@ -330,7 +320,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("Search");
         searchView.setOnQueryTextListener(this);
-<<<<<<< HEAD
 //        MenuInflater inflater = getMenuInflater();
 //        inflater.inflate(R.menu.main, menu);
 //
@@ -341,10 +330,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 //        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 //        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
-        return true;
-=======
       return true;
->>>>>>> d0ab09d8384f1298dcd7b066c5bfe80cd27f1058
     }
 
     @Override
