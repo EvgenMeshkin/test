@@ -4,6 +4,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion '21.0.2'
 
+    //TODO rename package name
     defaultConfig {
         applicationId "com.example.evgen.apiclient"
         minSdkVersion 10

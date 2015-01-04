@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.widget.Checkable;
 import android.widget.FrameLayout;
 
+//TODO hardcoded color
 public class CheckableFrameLayout extends FrameLayout implements Checkable {
     private boolean mChecked;
 

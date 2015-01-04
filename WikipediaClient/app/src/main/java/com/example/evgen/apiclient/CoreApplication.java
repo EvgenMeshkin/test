@@ -11,6 +11,7 @@ import com.example.evgen.apiclient.source.VkDataSource;
 /**
  * Created by evgen on 18.10.2014.
  */
+//TODO refactoring
 public class CoreApplication extends Application {
 
     private HttpDataSource mHttpDataSource;

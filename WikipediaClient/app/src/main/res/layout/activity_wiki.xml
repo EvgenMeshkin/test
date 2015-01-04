@@ -65,4 +65,13 @@
         android:listSelector="@drawable/list_selector"
         android:background="@color/list_background"/>
 
+    <ListView
+        android:id="@+id/list_right_menu"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/list_background"
+        android:visibility="gone"
+        />
+
 </android.support.v4.widget.DrawerLayout>

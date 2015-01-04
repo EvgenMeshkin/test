@@ -16,6 +16,7 @@ import com.example.evgen.apiclient.utils.AuthUtils;
 /**
  * Created by User on 07.10.2014.
  */
+//TODO refactoring
 public class LoginActivity extends ActionBarActivity {
 
     public static final int REQUEST_CODE_VK = 0;

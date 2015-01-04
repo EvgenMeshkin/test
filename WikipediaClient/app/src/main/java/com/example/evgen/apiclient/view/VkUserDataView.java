@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Created by User on 20.12.2014.
  */
+//TODO remove activity from parent, move from this package
 public class VkUserDataView  extends ActionBarActivity implements DataManager.Callback<List<Category>>, VkOAuthHelper.Callbacks{
 
     final static String LOG_TAG = VkUserDataView.class.getSimpleName();
@@ -80,7 +81,7 @@ public class VkUserDataView  extends ActionBarActivity implements DataManager.Ca
 
                                  @Override
                                  public void onError(Exception e) {
-
+                                    //TODO
                                  }
                              },
                 url,
@@ -91,7 +92,7 @@ public class VkUserDataView  extends ActionBarActivity implements DataManager.Ca
 
     @Override
     public void onError(Exception e) {
-
+        //TODO
     }
 
 

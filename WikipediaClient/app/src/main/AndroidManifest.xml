@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--TODO remove -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -12,6 +13,8 @@
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!--TODO remove or need explain-->
     <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
 
     <application
@@ -24,11 +27,13 @@
         <activity
             android:name=".StartActivity"
             android:label="@string/app_name" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- TODO orientation, launchMode, etc -->
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" />
@@ -37,8 +42,21 @@
             android:label="@string/app_name" />
         <activity
             android:name=".WikiActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name">
+            <!--android:launchMode="singleTop" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action  android:name = "android.intent.action.SEARCH"  />-->
+            <!--</intent-filter>-->
+            <!--<meta-data  android:name = "android.app.searchable"-->
+                <!--android:resource = "@xml/searchable" />-->
+        </activity>
 
+
+        <!-- TODO remove -->
         <service
             android:name=".account.WikipediaAccount"
             android:exported="false" >
@@ -57,18 +75,21 @@
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-
-            <meta-data
+           <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync_adapter" />
         </service>
 
+        <!--TODO remove -->
         <activity
             android:name=".account.AuthenticatorActivity"
             android:label="@string/app_name" />
         <activity
             android:name=".DetailsFragmentActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name" >
+           <meta-data android:name="android.app.default_searchable"
+                android:value=".WikiActivity" />
+           </activity>
 
         <provider
             android:name=".db.provider.WikiContentProvider"

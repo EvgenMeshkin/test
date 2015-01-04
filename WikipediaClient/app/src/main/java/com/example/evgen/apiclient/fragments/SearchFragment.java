@@ -1,6 +1,7 @@
 package com.example.evgen.apiclient.fragments;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,7 +43,8 @@ import java.util.List;
 /**
  * Created by User on 18.12.2014.
  */
-public class SearchFragment extends ListFragment implements DataManager.Callback<List<Category>>, SearchViewValue.Callbacks {
+//TODO rewrite
+public class SearchFragment extends Fragment implements DataManager.Callback<List<Category>>, SearchViewValue.Callbacks {
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Category> mData;
@@ -61,6 +63,7 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
     private boolean isImageLoaderControlledByDataManager = false;
     private boolean isPagingEnabled = true;
     private View footerProgress;
+    private Context mContext = getActivity();
 
 
     final Uri WIKI_URI = Uri
@@ -69,7 +72,7 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
     final String WIKI_NAME = "name";
     final String WIKI_KOR = "koordinaty";
     int mCurCheckPosition = 0;
-    final static String LOG_TAG = WikiFragment.class.getSimpleName();
+    final static String LOG_TAG = SearchFragment.class.getSimpleName();
     private SearchPagesProcessor mSearchPagesProcessor = new SearchPagesProcessor();
 
     public static <T> T findFirstResponderFor(Fragment fragment, Class<T> clazz) {
@@ -96,7 +99,8 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
     }
 
     @Override
-    public void onEndSearch(String value) {
+    public void onEndSearch(Context context, String value) {
+        mContext = context;
         mValue = value;
         update(dataSource, processor);
     }
@@ -110,9 +114,9 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
     void showDetails(int index, NoteGsonModel note) {
         mCurCheckPosition = index;
         Callbacks callbacks = getCallbacks();
-        if (callbacks.isDualPane()) {
-            getListView().setItemChecked(index, true);
-        }
+//        if (callbacks.isDualPane()) {
+//            getListView().setItemChecked(index, true);
+//        }
         callbacks.onShowDetails(index, note);
     }
 
@@ -134,10 +138,15 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
         processor = getProcessor();
         SearchViewValue value = new SearchViewValue();
         value.setCallbacks(this);
+        mContext = getActivity();
         mValue = "";
         empty = (TextView) content.findViewById(android.R.id.empty);
         empty.setVisibility(View.GONE);
         imageLoader = ImageLoader.get(getActivity());
+        if(getArguments() != null) {
+            mValue = getArguments().getString("key");;
+            update(dataSource, processor);
+        }
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -152,7 +161,7 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
     }
 
     private HttpDataSource getHttpDataSource() {
-        return VkDataSource.get(getActivity());
+        return new VkDataSource();
     }
 
     private void update(HttpDataSource dataSource, SearchPagesProcessor processor) {
@@ -176,10 +185,10 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
             // Restore last state for checked position.
             mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
         }
-        if (getCallbacks().isDualPane()) {
-            // In dual-pane mode, the list view highlights the selected item.
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }
+//        if (getCallbacks().isDualPane()) {
+//            // In dual-pane mode, the list view highlights the selected item.
+//            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+//        }
     }
 
     @Override
@@ -201,23 +210,23 @@ public class SearchFragment extends ListFragment implements DataManager.Callback
             onError(new NullPointerException("No data"));
         } else {
             ListView listView = (ListView) content.findViewById(android.R.id.list);
-            footerProgress = View.inflate(getActivity(), R.layout.view_footer_progress, null);
+            footerProgress = View.inflate(mContext, R.layout.view_footer_progress, null);
             refreshFooter();
             if (mAdapter == null) {
                 mData = data;
-                mAdapter = new ArrayAdapter<Category>(getActivity(), R.layout.adapter_item, android.R.id.text1, data) {
+                mAdapter = new ArrayAdapter<Category>(mContext, R.layout.adapter_item, android.R.id.text1, data) {
                     @Override
                     public View getView(final int position, View convertView, ViewGroup parent) {
                         if (convertView == null) {
-                            convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
+                            convertView = View.inflate(mContext, R.layout.adapter_item, null);
                         }
                         Category item = getItem(position);
                         ContentValues cv = new ContentValues();
                         cv.put(WIKI_NAME, item.getTITLE());
                         cv.put(WIKI_KOR, item.getDIST());
-                        Uri newUri = getActivity().getContentResolver().insert(WIKI_URI, cv);
+                        Uri newUri = mContext.getContentResolver().insert(WIKI_URI, cv);
                         Log.d(LOG_TAG, "insert, count : " + newUri.toString());
-                        mCursor = getActivity().getContentResolver().query(newUri, null, null,
+                        mCursor = mContext.getContentResolver().query(newUri, null, null,
                                 null, null);
                         mCursor.moveToFirst();
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);

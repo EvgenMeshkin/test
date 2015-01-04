@@ -16,6 +16,7 @@ import com.example.evgen.apiclient.bo.NoteGsonModel;
  */
 public class GpsLocation implements LocationListener {
     private LocationManager lm;
+    //TODO rename to sCoords
     private static String mLatitude;
     private Callbacks callbacks;
 
@@ -23,6 +24,7 @@ public class GpsLocation implements LocationListener {
         void onShowKor (String latitude);
     }
 
+    //TODO rename method
     public void getloc (Callbacks callbacks, Context сontext) {
         this.callbacks = callbacks;
         lm = (LocationManager) сontext.getSystemService(Context.LOCATION_SERVICE);

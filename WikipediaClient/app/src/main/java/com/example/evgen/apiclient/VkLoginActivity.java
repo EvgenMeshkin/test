@@ -25,6 +25,7 @@ import java.io.IOException;
 /**
  * Created by User on 30.10.2014.
  */
+//TODO
 public class VkLoginActivity extends ActionBarActivity implements VkOAuthHelper.Callbacks {
 
     private static final String TAG = VkLoginActivity.class.getSimpleName();

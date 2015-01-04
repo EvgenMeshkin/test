@@ -18,27 +18,19 @@ public class DetailsFragmentActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  setContentView(R.layout.activity_wiki);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-//        setSupportActionBar(toolbar);
         if (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE) {
-            // If the screen is now in landscape mode, we can show the
-            // dialog in-line with the list so we don't need this activity.
             finish();
             return;
         }
 
-        if (savedInstanceState == null) {
-            DetailsFragment details = new DetailsFragment();
-            details.setArguments(getIntent().<Bundle>getParcelableExtra("key"));
-            getSupportFragmentManager().beginTransaction().add(
-                    android.R.id.content, details).commit();
-        }
+//        if (savedInstanceState == null) {
+//            DetailsFragment details = new DetailsFragment();
+//            details.setArguments(getIntent().<Bundle>getParcelableExtra("key"));
+//            getSupportFragmentManager().beginTransaction().add(
+//                    android.R.id.content, details).commit();
+//        }
         ActionBar actionBar = getSupportActionBar();
-//        actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
-//        actionBar . setDisplayOptions ( ActionBar . DISPLAY_SHOW_HOME |  ActionBar . DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP );
-//        actionBar . setIcon ( R . drawable . ic_launcher );
     }
 
 

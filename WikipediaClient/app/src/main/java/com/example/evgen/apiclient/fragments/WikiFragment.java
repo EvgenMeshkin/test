@@ -48,32 +48,40 @@ import java.util.List;
 /**
  * Created by User on 30.10.2014.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class WikiFragment extends ListFragment implements DataManager.Callback<List<Category>>, GpsLocation.Callbacks {
+public class WikiFragment extends Fragment implements DataManager.Callback<List<Category>>, GpsLocation.Callbacks {
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Category> mData;
+
+    //TODO remove from this, refactoring!
     private HttpClient mClient;
+    //TODO remove from this, refactoring!
     private HttpPost mPost;
     private TextView mTitle;
     private TextView mContent;
     private View content;
     private TextView empty;
+    //TODO already have in class related to location
     private static String mKor;
     private HttpDataSource dataSource;
     private CategoryArrayProcessor processor;
     private ImageLoader imageLoader;
+    //TODO without private
     Cursor mCursor;
 
+    //TODO without private/public
     final Uri WIKI_URI = Uri
             .parse("content://com.example.evgenmeshkin.GeoData/geodata");
 
+    //TODO without private/public
     final String WIKI_NAME = "name";
+    //TODO without private/public
     final String WIKI_KOR = "koordinaty";
     int mCurCheckPosition = 0;
     final static String LOG_TAG = WikiFragment.class.getSimpleName();
     private CategoryArrayProcessor mCategoryArrayProcessor = new CategoryArrayProcessor();
 
+    //TODO refactoring
     public static WikiFragment newInstance(int index) {
         WikiFragment f = new WikiFragment();
 
@@ -85,6 +93,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         return f;
     }
 
+    //TODO refactoring
     public static <T> T findFirstResponderFor(Fragment fragment, Class<T> clazz) {
         FragmentActivity activity = fragment.getActivity();
         if (activity == null)
@@ -109,6 +118,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         update(dataSource, processor);
     }
 
+    //TODO move to top
     public interface Callbacks {
         void onShowDetails(int index, NoteGsonModel note);
         boolean isDualPane();
@@ -118,9 +128,9 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     void showDetails(int index, NoteGsonModel note) {
         mCurCheckPosition = index;
         Callbacks callbacks = getCallbacks();
-        if (callbacks.isDualPane()) {
-            getListView().setItemChecked(index, true);
-        }
+//        if (callbacks.isDualPane()) {
+//            getListView().setItemChecked(index, true);
+//        }
         callbacks.onShowDetails(index, note);
     }
 
@@ -129,6 +139,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     }
 
     @Override
+    //TODO remove
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -192,6 +203,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                 processor);
     }
 
+    //TODO remove hardcode! make customizable, create preference screen
     private String getUrl() {
         mKor = Api.GEOSEARCH_GET + "53.677226|23.8489383";//mKor;
         Log.d(LOG_TAG, "mKor="+mKor);
@@ -199,6 +211,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
     }
 
     @Override
+    //TODO refactoring
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
          super.onActivityCreated(savedInstanceState);
         // Populate list with our static array of titles.
@@ -206,10 +219,10 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
             // Restore last state for checked position.
             mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
         }
-        if (getCallbacks().isDualPane()) {
-            // In dual-pane mode, the list view highlights the selected item.
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }
+//        if (getCallbacks().isDualPane()) {
+//            // In dual-pane mode, the list view highlights the selected item.
+//            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+//        }
     }
 
     @Override
@@ -229,6 +242,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
         //data = null;
         if (data == null || data.isEmpty()) {
             content.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+            //TODO refactoring
             onError(new NullPointerException("No data"));
         }else {
             AdapterView listView = (AbsListView) content.findViewById(android.R.id.list);
@@ -270,6 +284,7 @@ public class WikiFragment extends ListFragment implements DataManager.Callback<L
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         final Category item = (Category) mAdapter.getItem(position);
                         NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTITLE(), item.getNS());
+                        //TODO WTF
                         new AsyncTask() {
                             @Override
                             protected void onPostExecute(Object processingResult) {

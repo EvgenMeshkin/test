@@ -15,6 +15,7 @@ import com.example.evgen.apiclient.db.DBHelper;
 /**
  * Created by evgen on 13.12.2014.
  */
+//TODO refactoring, try to create something like ORM with content provider
 public class WikiContentProvider extends ContentProvider {
     final String LOG_TAG = WikiContentProvider.class.getSimpleName();
     // Table
@@ -23,6 +24,7 @@ public class WikiContentProvider extends ContentProvider {
     // Items
     static final String WIKI_ID = "_id";
     static final String WIKI_NAME = "name";
+    //TODO rename and check
     static final String WIKI_KOR = "koordinaty";
 
     // Uri
@@ -49,6 +51,7 @@ public class WikiContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, WIKI_PATH + "/#", URI_DATA_ID);
     }
 
+    //TODO make private member
     DBHelper dbHelper;
     SQLiteDatabase db;
 

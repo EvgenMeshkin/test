@@ -16,4 +16,5 @@ public class Api {
     public static final String VKNOTES_GET = "https://api.vk.com/method/notes.add?title=Wikipedia&privacy=3&comment_privacy=3&v=5.26&text=";
     public static final String VKFOTOS_GET = "https://api.vk.com/method/users.get?fields=photo_200_orig,city,verified&name_case=Nom&version=5.27&user_ids=";
     public static final String SEARCH_GET = "https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&";//"https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrlimit=50&prop=info&gsrsearch=meaning";
+    public static final String CONTENTS_GET = "https://en.wikipedia.org/w/api.php?action=mobileview&format=json&page=";
 }

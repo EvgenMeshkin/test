@@ -22,6 +22,7 @@ public class Category extends JSONObjectWrapper {
     private static final String DIST = "dist";
     private static final String FIRSTNAME = "first_name";
     private static final String LASTNAME = "last_name";
+    private static final String LINE = "line";
 
     //INTERNAL
     private static final String NAME = "NAME";
@@ -51,6 +52,10 @@ public class Category extends JSONObjectWrapper {
 
     public String getACTION() {
         return getString(ACTION);
+    }
+
+    public String getLINE() {
+        return getString(LINE);
     }
 
     public String getPROP() {
