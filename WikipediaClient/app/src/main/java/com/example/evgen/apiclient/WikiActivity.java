@@ -235,9 +235,13 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     //TODO
     @Override
     public boolean onQueryTextSubmit(String s) {
+<<<<<<< HEAD
        // displayView(1);
        // SearchViewValue.endsearch(this, s);
         onSentSearch(s);
+=======
+        SearchViewValue.endsearch(s);
+>>>>>>> d0ab09d8384f1298dcd7b066c5bfe80cd27f1058
         return true;
     }
 
@@ -299,7 +303,11 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
             case 2:
 
+<<<<<<< HEAD
 
+=======
+                break;
+>>>>>>> d0ab09d8384f1298dcd7b066c5bfe80cd27f1058
             case 3:
                 FragmentTransaction transactionwiki = getSupportFragmentManager().beginTransaction();
                 WikiFragment fragmentwiki = new WikiFragment();
@@ -322,6 +330,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("Search");
         searchView.setOnQueryTextListener(this);
+<<<<<<< HEAD
 //        MenuInflater inflater = getMenuInflater();
 //        inflater.inflate(R.menu.main, menu);
 //
@@ -333,6 +342,9 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 //        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
         return true;
+=======
+      return true;
+>>>>>>> d0ab09d8384f1298dcd7b066c5bfe80cd27f1058
     }
 
     @Override
