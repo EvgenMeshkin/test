@@ -24,6 +24,7 @@ public class Category extends JSONObjectWrapper {
     private static final String LASTNAME = "last_name";
     private static final String LINE = "line";
 
+
     //INTERNAL
     private static final String NAME = "NAME";
 

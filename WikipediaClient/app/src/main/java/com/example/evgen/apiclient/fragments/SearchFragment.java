@@ -44,7 +44,7 @@ import java.util.List;
  * Created by User on 18.12.2014.
  */
 //TODO rewrite
-public class SearchFragment extends Fragment implements DataManager.Callback<List<Category>>, SearchViewValue.Callbacks {
+public class SearchFragment extends Fragment implements DataManager.Callback<List<Category>> {
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Category> mData;
@@ -92,18 +92,7 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
         return null;
     }
 
-    @Override
-    public void onSetSearch(String value) {
-//        mValue = mValue + value;
-//        update(dataSource,processor);
-    }
 
-    @Override
-    public void onEndSearch(Context context, String value) {
-        mContext = context;
-        mValue = value;
-        update(dataSource, processor);
-    }
 
     public interface Callbacks {
         void onShowDetails(int index, NoteGsonModel note);
@@ -136,8 +125,7 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
         mSwipeRefreshLayout = (SwipeRefreshLayout) content.findViewById(R.id.swipe_container);
         dataSource = getHttpDataSource();
         processor = getProcessor();
-        SearchViewValue value = new SearchViewValue();
-        value.setCallbacks(this);
+
         mContext = getActivity();
         mValue = "";
         empty = (TextView) content.findViewById(android.R.id.empty);

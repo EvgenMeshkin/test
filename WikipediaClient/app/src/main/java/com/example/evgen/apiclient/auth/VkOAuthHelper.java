@@ -33,9 +33,9 @@ public class VkOAuthHelper {
 
     public static String sign(String url) {
         if (url.contains("?")) {
-            return url + "&access_token="+sToken;
+            return url + "&access_token=" + sToken;
         } else {
-            return url + "?access_token="+sToken;
+            return url + "?access_token=" + sToken;
         }
     }
 
@@ -44,42 +44,13 @@ public class VkOAuthHelper {
     }
 
     public static boolean proceedRedirectURL(Activity activity, String url, Callbacks callbacks) {
-         if (url.startsWith(REDIRECT_URL)) {
+        if (url.startsWith(REDIRECT_URL)) {
             mUrl = url;
             Uri uri = Uri.parse(url);
             String fragment = uri.getFragment();
             Uri parsedFragment = Uri.parse("http://temp.com?" + fragment);
             String accessToken = parsedFragment.getQueryParameter("access_token");
-            String userId =  parsedFragment.getQueryParameter("user_id");
-            mAccessToken = parsedFragment.getQueryParameter("access_token");
-            if (!TextUtils.isEmpty(mAccessToken)) {
-                Log.d(TAG, "token " + mAccessToken);
-                Log.d(TAG, "UserId " + userId);
-                sToken = accessToken;
-                callbacks.onUserId(userId);
-                callbacks.onSuccess();
-            return true;
-            } else {
-                String error = parsedFragment.getQueryParameter("error");
-                String errorDescription = parsedFragment.getQueryParameter("error_description");
-                String errorReason = parsedFragment.getQueryParameter("error_reason");
-                if (!TextUtils.isEmpty(error)) {
-                    callbacks.onError(new AuthenticationException(error+", reason : " + errorReason +"("+errorDescription+")"));
-                    return false;
-                } else {
-                    //WTF?
-                }
-            }
-        }
-        return false;
-    }
-
-    public static boolean procedId(Activity activity, Callbacks callbacks) {
-            Uri uri = Uri.parse(mUrl);
-            String fragment = uri.getFragment();
-            Uri parsedFragment = Uri.parse("http://temp.com?" + fragment);
-            String accessToken = parsedFragment.getQueryParameter("access_token");
-            String userId =  parsedFragment.getQueryParameter("user_id");
+            String userId = parsedFragment.getQueryParameter("user_id");
             mAccessToken = parsedFragment.getQueryParameter("access_token");
             if (!TextUtils.isEmpty(mAccessToken)) {
                 Log.d(TAG, "token " + mAccessToken);
@@ -93,13 +64,43 @@ public class VkOAuthHelper {
                 String errorDescription = parsedFragment.getQueryParameter("error_description");
                 String errorReason = parsedFragment.getQueryParameter("error_reason");
                 if (!TextUtils.isEmpty(error)) {
-                    callbacks.onError(new AuthenticationException(error+", reason : " + errorReason +"("+errorDescription+")"));
+                    callbacks.onError(new AuthenticationException(error + ", reason : " + errorReason + "(" + errorDescription + ")"));
                     return false;
                 } else {
                     //WTF?
                 }
             }
+        }
+        return false;
+    }
 
+    public static boolean procedId(Activity activity, Callbacks callbacks) {
+        if (!mUrl.equals(null) && mUrl.startsWith(REDIRECT_URL)) {
+            Uri uri = Uri.parse(mUrl);
+            String fragment = uri.getFragment();
+            Uri parsedFragment = Uri.parse("http://temp.com?" + fragment);
+            String accessToken = parsedFragment.getQueryParameter("access_token");
+            String userId = parsedFragment.getQueryParameter("user_id");
+            mAccessToken = parsedFragment.getQueryParameter("access_token");
+            if (!TextUtils.isEmpty(mAccessToken)) {
+                Log.d(TAG, "token " + mAccessToken);
+                Log.d(TAG, "UserId " + userId);
+                sToken = accessToken;
+                callbacks.onUserId(userId);
+                callbacks.onSuccess();
+                return true;
+            } else {
+                String error = parsedFragment.getQueryParameter("error");
+                String errorDescription = parsedFragment.getQueryParameter("error_description");
+                String errorReason = parsedFragment.getQueryParameter("error_reason");
+                if (!TextUtils.isEmpty(error)) {
+                    callbacks.onError(new AuthenticationException(error + ", reason : " + errorReason + "(" + errorDescription + ")"));
+                    return false;
+                } else {
+                    //WTF?
+                }
+            }
+        }
         return false;
     }
 

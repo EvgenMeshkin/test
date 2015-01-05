@@ -55,6 +55,7 @@ import com.example.evgen.apiclient.fragments.DetailsFragment;
 import com.example.evgen.apiclient.fragments.SearchFragment;
 import com.example.evgen.apiclient.fragments.WikiFragment;
 import com.example.evgen.apiclient.helper.DataManager;
+import com.example.evgen.apiclient.helper.LoadRandomPage;
 import com.example.evgen.apiclient.listener.RightDrawerItemClickListener;
 import com.example.evgen.apiclient.view.SearchViewValue;
 import com.example.evgen.apiclient.view.VkUserDataView;
@@ -62,7 +63,7 @@ import com.example.evgen.apiclient.view.VkUserDataView;
 import java.util.List;
 
 //TODO clear unused code
-public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks, DetailsFragment.Callbacks, SearchFragment.Callbacks, SearchView.OnQueryTextListener, VkUserDataView.Callbacks {
+public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks, DetailsFragment.Callbacks, SearchFragment.Callbacks, SearchView.OnQueryTextListener, VkUserDataView.Callbacks, LoadRandomPage.Callbacks {
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
     private ListView mDrawerListRight;
@@ -76,6 +77,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     private SwipeRefreshLayout mSwipeRefreshLayout;
     public static final String ACCOUNT_TYPE = "com.example.evgen.apiclient.account";
     public static final String AUTHORITY = "com.example.evgen.apiclient";
+    public static final int requestL = 0;
     private AccountManager mAm;
     //TODO why static?
     public static Account sAccount;
@@ -99,6 +101,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
             transaction.replace(R.id.framemain, fragment);
             transaction.commit();
         }
+        LoadRandomPage load = new LoadRandomPage();
+        load.loadingRandomPage(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -109,15 +113,14 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         viewsNames = getResources().getStringArray(R.array.views_array);
         myDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         myDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark_material_light));
-
         headerDrawer = View.inflate(this, R.layout.view_header, null);
         myDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerListRight = (ListView) findViewById(R.id.list_right_menu);
         myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
-        myDrawerList.setHeaderDividersEnabled(true);
         myDrawerList.addHeaderView(headerDrawer);
+        myDrawerList.setHeaderDividersEnabled(true);
         myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item,android.R.id.text2, viewsNames));
-        VkUserDataView vkUserDataView = new VkUserDataView(this);
+    //    VkUserDataView vkUserDataView = new VkUserDataView(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
         myDrawerToggle = new ActionBarDrawerToggle(this, myDrawerLayout,
@@ -149,6 +152,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         mDrawerListRight.setOnItemClickListener(new RightDrawerItemClickListener());
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mAm = AccountManager.get(this);
+
         if (sAccount == null) {
             sAccount = new Account(getString(R.string.news), ACCOUNT_TYPE);
         }
@@ -157,15 +161,17 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         }
         try {
             mAm.setUserData(sAccount, "Token", EncrManager.encrypt(this, VkOAuthHelper.mAccessToken));
+            myDrawerList.addHeaderView(headerDrawer);
+            VkUserDataView vkUserDataView = new VkUserDataView(this);
         } catch (Exception e) {
-            DialogFragment newFragment = ErrorDialog.newInstance(e.getMessage());
-            newFragment.show(getSupportFragmentManager(), "Account");
+//            DialogFragment newFragment = ErrorDialog.newInstance(e.getMessage());
+//            newFragment.show(getSupportFragmentManager(), "Account");
         }
     }
 
     @Override
     public void onUserData(Bitmap foto, String first, String last) {
-        Log.d(LOG_TAG, "FirstName"+first);
+        Log.d(LOG_TAG, "FirstName" + first);
         TextView firstname = (TextView) headerDrawer.findViewById(R.id.text1);
         TextView lastname = (TextView) headerDrawer.findViewById(R.id.text2);
         ImageView fotos = (ImageView) headerDrawer.findViewById(R.id.icon);
@@ -304,6 +310,17 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 transactionwiki.replace(R.id.framemain, fragmentwiki);
                 transactionwiki.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transactionwiki.commit();
+            case 4:
+
+                break;
+            case 5:
+
+                break;
+
+            case 6:
+                startActivity(new Intent(this, StartActivity.class));
+
+                break;
 
             default:
                 myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
@@ -312,6 +329,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         }
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
