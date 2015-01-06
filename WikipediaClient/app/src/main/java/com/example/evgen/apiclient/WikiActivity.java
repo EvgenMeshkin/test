@@ -100,9 +100,9 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
             SearchFragment fragment = new SearchFragment();
             transaction.replace(R.id.framemain, fragment);
             transaction.commit();
+
         }
-        LoadRandomPage load = new LoadRandomPage();
-        load.loadingRandomPage(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -152,7 +152,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         mDrawerListRight.setOnItemClickListener(new RightDrawerItemClickListener());
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mAm = AccountManager.get(this);
-
+        LoadRandomPage load = new LoadRandomPage();
+        load.loadingRandomPage(this);
         if (sAccount == null) {
             sAccount = new Account(getString(R.string.news), ACCOUNT_TYPE);
         }
@@ -161,8 +162,9 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         }
         try {
             mAm.setUserData(sAccount, "Token", EncrManager.encrypt(this, VkOAuthHelper.mAccessToken));
-            myDrawerList.addHeaderView(headerDrawer);
+           // myDrawerList.addHeaderView(headerDrawer);
             VkUserDataView vkUserDataView = new VkUserDataView(this);
+
         } catch (Exception e) {
 //            DialogFragment newFragment = ErrorDialog.newInstance(e.getMessage());
 //            newFragment.show(getSupportFragmentManager(), "Account");
@@ -310,6 +312,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 transactionwiki.replace(R.id.framemain, fragmentwiki);
                 transactionwiki.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transactionwiki.commit();
+                myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
+                myDrawerLayout.closeDrawer(myDrawerList);
             case 4:
 
                 break;
@@ -318,10 +322,11 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 break;
 
             case 6:
+                FragmentTransaction buck = getSupportFragmentManager().beginTransaction();
+                SearchFragment fragmentbuck = new SearchFragment();
+                buck.replace(R.id.framemain, fragmentbuck);
+                buck.commit();
                 startActivity(new Intent(this, StartActivity.class));
-
-                break;
-
             default:
                 myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
                 myDrawerLayout.closeDrawer(myDrawerList);

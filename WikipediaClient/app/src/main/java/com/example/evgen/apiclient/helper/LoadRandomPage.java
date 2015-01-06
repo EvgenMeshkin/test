@@ -49,11 +49,12 @@ public class LoadRandomPage implements DataManager.Callback<List<Category>>{
     @Override
     public void onDone(List<Category> data) {
       Log.d(LOG_TAG, "Item ");
-      Category item = (Category) data;
+      Integer i = data.size();
+      Category item = data.get(i-1);
       Log.d(LOG_TAG, "Item " + item.getTITLE());
       NoteGsonModel note = new NoteGsonModel(null, item.getTITLE(), null);
 
-      mCallback.onShowDetails(Integer.parseInt(null), note);
+      mCallback.onShowDetails(0, note);
     }
 
     @Override

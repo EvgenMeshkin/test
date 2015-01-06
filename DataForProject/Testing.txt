@@ -115,6 +115,13 @@ Singleton
 http://www.javenue.info/post/2
 http://pro-prof.com/archives/1546
 
+SaveHistory
+https://github.com/gregko/WebArchiveReader/blob/master/src/com/hyperionics/war_test/MyActivity.java
+https://github.com/gregko/WebArchiveReader/blob/master/src/com/hyperionics/war_test/WebArchiveReader.java
+http://developer.alexanderklimov.ru/android/views/webview.php
+http://www.herongyang.com/Android/WebView-saveWebArchive-Method-Saving-Web-Archive-File.html
+
+
 ДОБАВИТЬ В ПРОЕКТ!:
 1. Создать базу для сохранения просмотренных страниц и данных
 2. Доработать дизайн- тени, цвета, размеры

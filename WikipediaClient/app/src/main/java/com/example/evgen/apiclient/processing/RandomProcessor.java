@@ -21,6 +21,7 @@ public class RandomProcessor implements Processor<List<Category>,InputStream>{
     public List<Category> process(InputStream inputStream) throws Exception {
         Log.d(LOG_TAG, "0");
         String string = new StringProcessor().process(inputStream);
+        Log.d(LOG_TAG, "01");
         JSONObject jsonObject = new JSONObject(string);
         Log.d(LOG_TAG, "1");
         JSONObject query = jsonObject.getJSONObject("query");
