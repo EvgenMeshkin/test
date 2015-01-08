@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
@@ -56,6 +57,7 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     private static WebView mWebView;
     private static String mUrl;
     private static List mData;
+    private String mHistory;
     //TODO remove
  //   public DetailsFragment(){}
     private ProgressDialog pd;
@@ -124,8 +126,48 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
             obj = (NoteGsonModel) getArguments().getParcelable("key");
         }
 
+
+        mHistory = obj.getTitle().replaceAll(" ", "_");
+        content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
+        final HttpDataSource dataSource = getHttpDataSource();
+        final MobileViewProcessor processor = getProcessor();
+        String url = Api.MOBILE_GET + obj.getTitle().replaceAll(" ", "%20");
+        update(dataSource, processor, url);
+        return content;
+    }
+
+    private MobileViewProcessor getProcessor() {
+        return mMobileViewProcessor;
+    }
+
+    private HttpDataSource getHttpDataSource() {
+        return VkDataSource.get(getActivity());
+    }
+
+    private void update(HttpDataSource dataSource, MobileViewProcessor processor, String url) {
+        //TODO make custom log that can be disabled for release
+        Log.d(LOG_TAG,getUrl() + obj.getTitle().replaceAll(" ", "%20"));
+        //TODO todo string encode/decode values
+        DataManager.loadData(this,
+                url,
+                dataSource,
+                processor);
+    }
+
+    private String getUrl() {
+        return Api.MOBILE_GET;
+    }
+
+    @Override
+    public void onDataLoadStart() {
+        content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onDone(List<Category> data) {
+
         ContentValues cv = new ContentValues();
-        cv.put(WIKI_NAME, obj.getTitle());
+        cv.put(WIKI_NAME, mHistory);
         //getActivity().getContentResolver().delete(WIKI_URI, null, null);
         getActivity().getContentResolver().insert(WIKI_URI, cv);
 
@@ -147,46 +189,10 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
 //                                     onError(e);
                                  }
                              },
-                Api.CONTENTS_GET + obj.getTitle().replaceAll(" ", "_"),
+                Api.CONTENTS_GET + mHistory,
                 getHttpDataSource(),
                 new ContentsArrayProcessor());
 
-        content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
-        final HttpDataSource dataSource = getHttpDataSource();
-        final MobileViewProcessor processor = getProcessor();
-        update(dataSource, processor);
-        return content;
-    }
-
-    private MobileViewProcessor getProcessor() {
-        return mMobileViewProcessor;
-    }
-
-    private HttpDataSource getHttpDataSource() {
-        return VkDataSource.get(getActivity());
-    }
-
-    private void update(HttpDataSource dataSource, MobileViewProcessor processor) {
-        //TODO make custom log that can be disabled for release
-        Log.d(LOG_TAG,getUrl() + obj.getTitle().replaceAll(" ", "%20"));
-        //TODO todo string encode/decode values
-        DataManager.loadData(this,
-                getUrl() + obj.getTitle().replaceAll(" ", "%20"),
-                dataSource,
-                processor);
-    }
-
-    private String getUrl() {
-        return Api.MOBILE_GET;
-    }
-
-    @Override
-    public void onDataLoadStart() {
-        content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onDone(List<Category> data) {
         String str = "";
         if (data == null || data.isEmpty()) {
             //TODO empty!!! this is not error!!!
@@ -198,13 +204,21 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
                 str = str + data.get(i).getTEXT();
             }
             Log.d(LOG_TAG, "STR =" + str);
-        //    mUrl = data.get(0).getURL().replace("en.", "en.m.");
             mWebView = (WebView) content.findViewById(R.id.webView);
+
+            WebSettings webSettings = mWebView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setBuiltInZoomControls(true);
+            webSettings.setDisplayZoomControls(false);
+
+           // mWebView.scroll
+
             mWebView.setWebViewClient(new HelloWebViewClient());
             //TODO data.get(0) ?!!!
-            mWebView.loadDataWithBaseURL(null, str, "text/html/image", "utf-8", null);
+            mWebView.loadDataWithBaseURL("http://en.wikipedia.org/", str, "text/html", "utf-8", null);
            // mWebView.loadData("<h3><span class=\\\"mw-headline\\\" id=\\\"New_singer-era.2C_hiatus_and_first_reunion_.281991.E2.80.932003.29\\\">New singer-era, hiatus and first reunion (1991\\u20132003)</span><span class=\\\"mw-editsection\\\"><span class=\\\"mw-editsection-bracket\\\">[</span><a href=\\\"/w/index.php?title=Candlemass&amp;action=edit&amp;section=3\\\" title=\\\"Edit section: New singer-era, hiatus and first reunion (1991\\u20132003)\\\">edit</a><span class=\\\"mw-editsection-bracket\\\">]</span></span></h3>\\n<p>After Marcolin left, Candlemass recruited vocalist <a href=\\\"/wiki/Thomas_Vikstr%C3%B6m\\\" title=\\\"Thomas Vikstr\\u00f6m\\\">Thomas Vikstr\\u00f6m</a> and recorded <i><a href=\\\"/wiki/Chapter_VI_(album)\\\" title=\\\"Chapter VI (album)\\\">Chapter VI</a></i> (1992). The band then toured in support of that album. By 1994, Candlemass had called it quits, partly because <i>Chapter VI</i> was unsuccessful<sup class=\\\"noprint Inline-Template Template-Fact\\\" style=\\\"white-space:nowrap;\\\">[<i><a href=\\\"/wiki/Wikipedia:Citation_needed\\\" title=\\\"Wikipedia:Citation needed\\\"><span title=\\\"This claim needs references to reliable sources. (March 2007)\\\">citation needed</span></a></i>]</sup> and partially because Edling had formed another project under the name of <a href=\\\"/wiki/Abstrakt_Algebra\\\" title=\\\"Abstrakt Algebra\\\">Abstrakt Algebra</a>. With Abstrakt Algebra not doing well, Leif suddenly recruited a new line-up under the name of Candlemass and recorded the album <i><a href=\\\"/wiki/Dactylis_Glomerata\\\" title=\\\"Dactylis Glomerata\\\">Dactylis Glomerata</a></i>,<sup class=\\\"noprint Inline-Template Template-Fact\\\" style=\\\"white-space:nowrap;\\\">[<i><a href=\\\"/wiki/Wikipedia:Citation_needed\\\" title=\\\"Wikipedia:Citation needed\\\"><span title=\\\"Sept. 2008 (September 2008)\\\">citation needed</span></a></i>]</sup> which was a combination of songs for a new Abstrakt Algebra CD and some new material.<sup class=\\\"noprint Inline-Template Template-Fact\\\" style=\\\"white-space:nowrap;\\\">[<i><a href=\\\"/wiki/Wikipedia:Citation_needed\\\" title=\\\"Wikipedia:Citation needed\\\"><span title=\\\"Sept. 2008 (September 2008)\\\">citation needed</span></a></i>]</sup> A year later the album <i><a href=\\\"/wiki/From_the_13th_Sun\\\" title=\\\"From the 13th Sun\\\">From the 13th Sun</a></i> was released.</p>\\n<p>In 2002, the members of a past Candlemass line-up reunited. They performed some well-received live shows<sup class=\\\"noprint Inline-Template Template-Fact\\\" style=\\\"white-space:nowrap;\\\">[<i><a href=\\\"/wiki/Wikipedia:Citation_needed\\\" title=\\\"Wikipedia:Citation needed\\\"><span title=\\\"This claim needs references to reliable sources. (January 2010)\\\">citation needed</span></a></i>]</sup> and released another live album. Other albums released by the reformed band were <a href=\\\"/wiki/Remaster\\\" title=\\\"Remaster\\\">remastered</a> versions of <i>Epicus Doomicus Metallicus, Nightfall, Ancient Dreams</i>, and <i>Tales of Creation</i>. A <a href=\\\"/wiki/DVD\\\" title=\\\"DVD\\\">DVD</a> called <i><a href=\\\"/wiki/Documents_of_Doom\\\" title=\\\"Documents of Doom\\\">Documents of Doom</a></i> was released as well. The band was working on a new album and recorded some new songs while searching for a record label when differences arose again, resulting in Candlemass disbanding a second time. In the meantime, Leif Edling started a new project, <a href=\\\"/wiki/Krux\\\" title=\\\"Krux\\\">Krux</a>, with former Abstrakt Algebra singer <a href=\\\"/wiki/Mats_Lev%C3%A9n\\\" title=\\\"Mats Lev\\u00e9n\\\">Mats Lev\\u00e9n</a> and two members of <a href=\\\"/wiki/Entombed_(band)\\\" title=\\\"Entombed (band)\\\">Entombed</a>.</p>","text/html" ,  null);
-            Log.d(LOG_TAG, data.get(0).getURL().replace("en.", "en.m."));
+            Log.d(LOG_TAG, "wiev url  " + mWebView.getUrl());
         }
      }
 
@@ -215,14 +229,21 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     @Override
     public void onError(Exception e) {
         Log.d(LOG_TAG, "onError");
-        mProgress.setVisibility(View.GONE);
+//        mProgress.setVisibility(View.GONE);
     }
 
 
     private class HelloWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url){
-            view.loadUrl(url);
+            final HttpDataSource dataSource = getHttpDataSource();
+            final MobileViewProcessor processor = getProcessor();
+            Integer position  = url.lastIndexOf("/");
+            mHistory = url.substring(position+1);
+            String newUrl = Api.MOBILE_GET + mHistory;
+            Log.d(LOG_TAG, "newurl =" + newUrl);
+            update(dataSource, processor, newUrl);
+            //view.loadUrl(url);
             content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
             return true;
         }
