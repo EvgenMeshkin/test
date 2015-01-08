@@ -260,7 +260,7 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
                         cv.put(WIKI_KOR, item.getDIST());
                         Uri newUri = getActivity().getContentResolver().insert(WIKI_URI, cv);
                         Log.d(LOG_TAG, "insert, count : " + newUri.toString());
-                        mCursor = getActivity().getContentResolver().query(newUri, null, null,
+                        mCursor = getActivity().getContentResolver().query(WIKI_URI, null, null,
                                 null, null);
                         mCursor.moveToFirst();
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);

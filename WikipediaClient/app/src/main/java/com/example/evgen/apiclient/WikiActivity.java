@@ -53,6 +53,7 @@ import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.dialogs.ErrorDialog;
 import com.example.evgen.apiclient.fragments.DetailsFragment;
 import com.example.evgen.apiclient.fragments.SearchFragment;
+import com.example.evgen.apiclient.fragments.WatchListFragment;
 import com.example.evgen.apiclient.fragments.WikiFragment;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.helper.LoadRandomPage;
@@ -314,9 +315,12 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 transactionwiki.commit();
                 myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
                 myDrawerLayout.closeDrawer(myDrawerList);
-            case 4:
-
                 break;
+            case 4:
+                FragmentTransaction transactionwatch = getSupportFragmentManager().beginTransaction();
+                WatchListFragment fragmentwatch = new WatchListFragment();
+                transactionwatch.replace(R.id.framemain, fragmentwatch);
+                transactionwatch.commit();
             case 5:
 
                 break;
