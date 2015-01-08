@@ -7,6 +7,7 @@
     android:focusable="false"
     android:focusableInTouchMode="false">
 
+
     <!-- The main content view -->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -16,13 +17,21 @@
         android:paddingRight="0dip"
         tools:context=".WikiActivity">
 
-
+        <android.support.v7.widget.Toolbar
+            android:id = "@+id/my_awesome_toolbar"
+            android:layout_height = "wrap_content"
+            android:layout_width = "match_parent"
+            android:minHeight = "?attr/actionBarSize"
+            android:elevation="3dp"
+            android:background = "?attr/colorPrimary"  />
 
         <FrameLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/my_awesome_toolbar"
             android:id="@+id/framemain">
+
               <!--<fragment class="com.example.evgen.apiclient.fragments.SearchFragment"-->
                 <!--android:id="@+id/titles"-->
                 <!--android:layout_width="match_parent"-->
@@ -42,13 +51,7 @@
             </android.support.v4.view.PagerTabStrip>
         </android.support.v4.view.ViewPager>
 
-        <android.support.v7.widget.Toolbar
-            android:id = "@+id/my_awesome_toolbar"
-            android:layout_height = "wrap_content"
-            android:layout_width = "match_parent"
-            android:minHeight = "?attr/actionBarSize"
-            android:elevation="3dp"
-            android:background = "?attr/colorPrimary"  />
+
 
     </RelativeLayout>
 

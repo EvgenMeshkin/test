@@ -303,9 +303,13 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 SearchFragment fragmentmain = new SearchFragment();
                 transaction.replace(R.id.framemain, fragmentmain);
                 transaction.commit();
-
+                myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
+                myDrawerLayout.closeDrawer(myDrawerList);
+                break;
             case 2:
-
+                LoadRandomPage load = new LoadRandomPage();
+                load.loadingRandomPage(this);
+                myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 3:
                 FragmentTransaction transactionwiki = getSupportFragmentManager().beginTransaction();
@@ -321,6 +325,9 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 WatchListFragment fragmentwatch = new WatchListFragment();
                 transactionwatch.replace(R.id.framemain, fragmentwatch);
                 transactionwatch.commit();
+                myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,mDrawerListRight);
+                myDrawerLayout.closeDrawer(myDrawerList);
+                break;
             case 5:
 
                 break;

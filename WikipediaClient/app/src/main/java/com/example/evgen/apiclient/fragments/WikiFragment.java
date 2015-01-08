@@ -67,7 +67,7 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
     private CategoryArrayProcessor processor;
     private ImageLoader imageLoader;
     //TODO without private
-    Cursor mCursor;
+    private Cursor mCursor;
 
     //TODO without private/public
     final Uri WIKI_URI = Uri
@@ -255,19 +255,19 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
                             convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
                         }
                         Category item = getItem(position);
-                        ContentValues cv = new ContentValues();
-                        cv.put(WIKI_NAME, item.getTITLE());
-                        cv.put(WIKI_KOR, item.getDIST());
-                        Uri newUri = getActivity().getContentResolver().insert(WIKI_URI, cv);
-                        Log.d(LOG_TAG, "insert, count : " + newUri.toString());
-                        mCursor = getActivity().getContentResolver().query(WIKI_URI, null, null,
-                                null, null);
-                        mCursor.moveToFirst();
+//                        ContentValues cv = new ContentValues();
+//                        cv.put(WIKI_NAME, item.getTITLE());
+//                        cv.put(WIKI_KOR, item.getDIST());
+//                        Uri newUri = getActivity().getContentResolver().insert(WIKI_URI, cv);
+//                        Log.d(LOG_TAG, "insert, count : " + newUri.toString());
+//                        mCursor = getActivity().getContentResolver().query(newUri, null, null,
+//                                null, null);
+//                        mCursor.moveToFirst();
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);
-                        mTitle.setText(mCursor.getString(mCursor.getColumnIndex("name")));
+                        mTitle.setText(item.getTITLE());
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                        mContent.setText(mCursor.getString(mCursor.getColumnIndex("koordinaty")) + " м.");
-                        mCursor.close();
+                        mContent.setText(item.getDIST() + " м.");
+//                        mCursor.close();
                         final String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
                         convertView.setTag(item.getId());
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);

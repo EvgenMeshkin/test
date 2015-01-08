@@ -122,7 +122,7 @@ public class WikiContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("Wrong URI: " + uri);
         }
         db = dbHelper.getWritableDatabase();
-        int cnt = db.delete(WIKI_TABLE, selection, selectionArgs);
+        int cnt = db.delete(WIKI_TABLE, null, null);
         getContext().getContentResolver().notifyChange(uri, null);
         return cnt;
     }

@@ -23,6 +23,7 @@ public class Category extends JSONObjectWrapper {
     private static final String FIRSTNAME = "first_name";
     private static final String LASTNAME = "last_name";
     private static final String LINE = "line";
+    private static final String TEXT = "text";
 
 
     //INTERNAL
@@ -73,6 +74,10 @@ public class Category extends JSONObjectWrapper {
 
     public String getTITLE () {
         return getString(TITLE );
+    }
+
+    public String getTEXT () {
+        return getString(TEXT );
     }
 
     public String getURL() {
