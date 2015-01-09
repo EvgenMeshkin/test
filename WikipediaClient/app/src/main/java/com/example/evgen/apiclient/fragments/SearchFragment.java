@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,22 +27,16 @@ import com.example.evgen.apiclient.R;
 import com.example.evgen.apiclient.bo.Category;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.helper.DataManager;
-import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
 import com.example.evgen.apiclient.processing.SearchPagesProcessor;
 import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
-import com.example.evgen.apiclient.view.SearchViewValue;
 import com.example.evgen.imageloader.ImageLoader;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 
 import java.util.List;
 
 /**
  * Created by User on 18.12.2014.
  */
-//TODO rewrite
 public class SearchFragment extends Fragment implements DataManager.Callback<List<Category>> {
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -96,16 +89,12 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
 
     public interface Callbacks {
         void onShowDetails(int index, NoteGsonModel note);
-        boolean isDualPane();
         void onErrorA(Exception e);
     }
 
     void showDetails(int index, NoteGsonModel note) {
         mCurCheckPosition = index;
         Callbacks callbacks = getCallbacks();
-//        if (callbacks.isDualPane()) {
-//            getListView().setItemChecked(index, true);
-//        }
         callbacks.onShowDetails(index, note);
     }
 
@@ -125,7 +114,6 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
         mSwipeRefreshLayout = (SwipeRefreshLayout) content.findViewById(R.id.swipe_container);
         dataSource = getHttpDataSource();
         processor = getProcessor();
-
         mContext = getActivity();
         mValue = "";
         empty = (TextView) content.findViewById(android.R.id.empty);
@@ -168,15 +156,9 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Populate list with our static array of titles.
-        if (savedInstanceState != null) {
-            // Restore last state for checked position.
+         if (savedInstanceState != null) {
             mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
         }
-//        if (getCallbacks().isDualPane()) {
-//            // In dual-pane mode, the list view highlights the selected item.
-//            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-//        }
     }
 
     @Override
@@ -209,20 +191,11 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
                             convertView = View.inflate(mContext, R.layout.adapter_item, null);
                         }
                         Category item = getItem(position);
-                        ContentValues cv = new ContentValues();
-                        cv.put(WIKI_NAME, item.getTITLE());
-                        cv.put(WIKI_KOR, item.getDIST());
-                        Uri newUri = mContext.getContentResolver().insert(WIKI_URI, cv);
-                        Log.d(LOG_TAG, "insert, count : " + newUri.toString());
-                        mCursor = mContext.getContentResolver().query(newUri, null, null,
-                                null, null);
-                        mCursor.moveToFirst();
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);
-                        mTitle.setText(mCursor.getString(mCursor.getColumnIndex("name")));
+                        mTitle.setText(item.getTitle());
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                        mContent.setText(mCursor.getString(mCursor.getColumnIndex("koordinaty")));
-                        mCursor.close();
-                        final String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ", "%20");
+                        mContent.setText(item.getDist());
+                        final String urlImage = Api.IMAGEVIEW_GET + item.getTitle().replaceAll(" ", "%20");
                         convertView.setTag(item.getId());
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
                         imageView.setImageBitmap(null);
@@ -231,7 +204,6 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
                         return convertView;
                     }
                 };
-
                 listView.setFooterDividersEnabled(true);
                 listView.addFooterView(footerProgress, null, false);
                 listView.setAdapter(mAdapter);
@@ -304,7 +276,7 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         final Category item = (Category) mAdapter.getItem(position);
-                        NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTITLE(), item.getNS());
+                        NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getNs());
                         showDetails(position, note);
                     }
                 });

@@ -58,7 +58,6 @@ import com.example.evgen.apiclient.fragments.WikiFragment;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.helper.LoadRandomPage;
 import com.example.evgen.apiclient.listener.RightDrawerItemClickListener;
-import com.example.evgen.apiclient.view.SearchViewValue;
 import com.example.evgen.apiclient.view.VkUserDataView;
 
 import java.util.List;
@@ -83,9 +82,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     //TODO why static?
     public static Account sAccount;
     private ViewPager mPager;
-    boolean mDualPane;
     private View  mDetailsFrame;
-    private SearchViewValue mSearchViewValue;
     private View headerDrawer;
     final static String LOG_TAG = WikiActivity.class.getSimpleName();
 
@@ -94,21 +91,16 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wiki);
-     //   handleIntent ( getIntent ());
         if (savedInstanceState == null) {
             //TODO WTF remove and implement correct search with SearchManager + save history
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             SearchFragment fragment = new SearchFragment();
             transaction.replace(R.id.framemain, fragment);
             transaction.commit();
-
         }
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         mPager = (ViewPager) findViewById(R.id.pager);
-        mDetailsFrame = findViewById(R.id.frgmCont2);
-        mDualPane = mDetailsFrame != null && mDetailsFrame.getVisibility() == View.VISIBLE;
         myTitle = getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
         viewsNames = getResources().getStringArray(R.array.views_array);
@@ -121,34 +113,26 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         myDrawerList.addHeaderView(headerDrawer);
         myDrawerList.setHeaderDividersEnabled(true);
         myDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item,android.R.id.text2, viewsNames));
-    //    VkUserDataView vkUserDataView = new VkUserDataView(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);//setDisplayShowTitleEnabled(true);
         myDrawerToggle = new ActionBarDrawerToggle(this, myDrawerLayout,
                 toolbar,
-                //R.drawable.ic_action, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
         ) {
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(myTitle);
-                // calling onPrepareOptionsMenu() to show action bar icons
                 supportInvalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(myDrawerTitle);
-                // calling onPrepareOptionsMenu() to hide action bar icons
                 supportInvalidateOptionsMenu();
             }
         };
         myDrawerToggle.setDrawerIndicatorEnabled(true);
         myDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
         myDrawerLayout.setDrawerListener(myDrawerToggle);
-//        if (savedInstanceState == null) {
-//            // on first time display view for first nav item
-//            displayView(0);
-//        }
         myDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerListRight.setOnItemClickListener(new RightDrawerItemClickListener());
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -163,12 +147,9 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         }
         try {
             mAm.setUserData(sAccount, "Token", EncrManager.encrypt(this, VkOAuthHelper.mAccessToken));
-           // myDrawerList.addHeaderView(headerDrawer);
             VkUserDataView vkUserDataView = new VkUserDataView(this);
 
         } catch (Exception e) {
-//            DialogFragment newFragment = ErrorDialog.newInstance(e.getMessage());
-//            newFragment.show(getSupportFragmentManager(), "Account");
         }
     }
 
@@ -188,28 +169,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         mDrawerListRight.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item,android.R.id.text2, data));
     }
 
-    public static interface Callbacks<String> {
-        void onSearchValue(String value);
-    }
-
-    //TODO it is not working
     @Override
     public void onShowDetails(int index, NoteGsonModel note) {
-        if (mDualPane) {
-            DetailsFragment details = (DetailsFragment)getSupportFragmentManager().findFragmentById(R.id.frgmCont2);
-
-            if (details == null || details.getShownIndex() != index) {
-                details = new DetailsFragment();
-                NoteGsonModel noteGsonModel = (NoteGsonModel) note;
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("key", noteGsonModel);
-                details.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frgmCont2, details)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .commit();
-            }
-        } else {
             myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             DetailsFragment detailsmain = new DetailsFragment();//DetailsFragment.newInstance(index);
             NoteGsonModel noteGsonModel = (NoteGsonModel) note;
@@ -220,15 +181,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                     .replace(R.id.framemain,detailsmain)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
-
-        }
-    }
-
-
-    //TODO is large...
-    @Override
-    public boolean isDualPane() {
-        return false;
     }
 
     //TODO rename
@@ -241,15 +193,11 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     //TODO
     @Override
     public boolean onQueryTextSubmit(String s) {
-       // displayView(1);
-       // SearchViewValue.endsearch(this, s);
-        onSentSearch(s);
-      //  SearchViewValue.endsearch(s);
-        return true;
+       onSentSearch(s);
+       return true;
     }
 
     private void onSentSearch(String s){
-      //  displayView(1);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SearchFragment fragmentmain = new SearchFragment();
         Bundle bundle = new Bundle();
@@ -257,30 +205,13 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         fragmentmain.setArguments(bundle);
         transaction.replace(R.id.framemain, fragmentmain);
         transaction.commit();
-      //  SearchViewValue.endsearch(this, s);
-    }
+     }
 
     @Override
     public boolean onQueryTextChange(String s) {
 //       SearchViewValue.textsearch(s);
        return true;
     }
-
-//    @Override
-//    protected  void onNewIntent ( Intent intent )  {
-//        setIntent ( intent );
-//        handleIntent ( intent );
-//    }
-//
-//    private  void handleIntent ( Intent intent )  {
-//        if  ( Intent . ACTION_SEARCH . equals ( intent . getAction ()))  {
-//            String query = intent . getStringExtra ( SearchManager. QUERY );
-//     //       displayView(1);
-//            SearchViewValue.endsearch(WikiActivity.this, query);
-//
-//
-//        }
-//    }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -346,8 +277,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -355,17 +284,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("Search");
         searchView.setOnQueryTextListener(this);
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.main, menu);
-//
-//        // Get the SearchView and set the searchable configuration
-//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-//        // Assumes current activity is the searchable activity
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-
-      return true;
+    return true;
     }
 
     @Override
@@ -397,14 +316,12 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         myDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
         myDrawerToggle.onConfigurationChanged(newConfig);
     }
 }

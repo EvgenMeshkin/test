@@ -51,9 +51,8 @@ public class WikiContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, WIKI_PATH + "/#", URI_DATA_ID);
     }
 
-    //TODO make private member
-    DBHelper dbHelper;
-    SQLiteDatabase db;
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
 
     public boolean onCreate() {
         Log.d(LOG_TAG, "onCreate");

@@ -1,18 +1,13 @@
 package com.example.evgen.apiclient.fragments;
 
-import android.annotation.TargetApi;
 
-
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,31 +61,13 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
     private HttpDataSource dataSource;
     private CategoryArrayProcessor processor;
     private ImageLoader imageLoader;
-    //TODO without private
-    private Cursor mCursor;
-
-    //TODO without private/public
-    final Uri WIKI_URI = Uri
-            .parse("content://com.example.evgenmeshkin.GeoData/geodata");
-
-    //TODO without private/public
-    final String WIKI_NAME = "name";
-    //TODO without private/public
-    final String WIKI_KOR = "koordinaty";
     int mCurCheckPosition = 0;
     final static String LOG_TAG = WikiFragment.class.getSimpleName();
     private CategoryArrayProcessor mCategoryArrayProcessor = new CategoryArrayProcessor();
 
-    //TODO refactoring
-    public static WikiFragment newInstance(int index) {
-        WikiFragment f = new WikiFragment();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
+    public interface Callbacks {
+        void onShowDetails(int index, NoteGsonModel note);
+        void onErrorA(Exception e);
     }
 
     //TODO refactoring
@@ -118,30 +95,14 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
         update(dataSource, processor);
     }
 
-    //TODO move to top
-    public interface Callbacks {
-        void onShowDetails(int index, NoteGsonModel note);
-        boolean isDualPane();
-        void onErrorA(Exception e);
-    }
-
     void showDetails(int index, NoteGsonModel note) {
         mCurCheckPosition = index;
         Callbacks callbacks = getCallbacks();
-//        if (callbacks.isDualPane()) {
-//            getListView().setItemChecked(index, true);
-//        }
         callbacks.onShowDetails(index, note);
     }
 
     private Callbacks getCallbacks() {
         return findFirstResponderFor(this, Callbacks.class);
-    }
-
-    @Override
-    //TODO remove
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -211,21 +172,6 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
     }
 
     @Override
-    //TODO refactoring
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-         super.onActivityCreated(savedInstanceState);
-        // Populate list with our static array of titles.
-        if (savedInstanceState != null) {
-            // Restore last state for checked position.
-            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
-        }
-//        if (getCallbacks().isDualPane()) {
-//            // In dual-pane mode, the list view highlights the selected item.
-//            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-//        }
-    }
-
-    @Override
     public void onDataLoadStart() {
         if (!mSwipeRefreshLayout.isRefreshing()) {
             content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
@@ -255,20 +201,11 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
                             convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
                         }
                         Category item = getItem(position);
-//                        ContentValues cv = new ContentValues();
-//                        cv.put(WIKI_NAME, item.getTITLE());
-//                        cv.put(WIKI_KOR, item.getDIST());
-//                        Uri newUri = getActivity().getContentResolver().insert(WIKI_URI, cv);
-//                        Log.d(LOG_TAG, "insert, count : " + newUri.toString());
-//                        mCursor = getActivity().getContentResolver().query(newUri, null, null,
-//                                null, null);
-//                        mCursor.moveToFirst();
                         mTitle = (TextView) convertView.findViewById(android.R.id.text1);
-                        mTitle.setText(item.getTITLE());
+                        mTitle.setText(item.getTitle());
                         mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                        mContent.setText(item.getDIST() + " м.");
-//                        mCursor.close();
-                        final String urlImage = Api.IMAGEVIEW_GET + item.getTITLE().replaceAll(" ","%20");
+                        mContent.setText(item.getDist() + " м.");
+                        final String urlImage = Api.IMAGEVIEW_GET + item.getTitle().replaceAll(" ","%20");
                         convertView.setTag(item.getId());
                         final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
                         final ProgressBar mProgress = (ProgressBar) convertView.findViewById(android.R.id.progress);
@@ -283,7 +220,7 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         final Category item = (Category) mAdapter.getItem(position);
-                        NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTITLE(), item.getNS());
+                        NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getNs());
                         //TODO WTF
                         new AsyncTask() {
                             @Override
@@ -299,7 +236,7 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
                             }
                             @Override
                             protected Object doInBackground(Object[] params) throws Exception {
-                                mPost = new HttpPost(Api.VKNOTES_GET + item.getTITLE().replaceAll(" ", "%20") +"&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
+                                mPost = new HttpPost(Api.VKNOTES_GET + item.getTitle().replaceAll(" ", "%20") +"&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
                                 mClient.execute(mPost);
                               //  content.findViewById(android.R.id.progress).setVisibility(View.GONE);
                                 return null;

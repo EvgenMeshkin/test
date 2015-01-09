@@ -1,7 +1,5 @@
 package com.example.evgen.apiclient.processing;
 
-import android.util.Log;
-
 import com.example.evgen.apiclient.bo.Category;
 
 import org.json.JSONObject;
@@ -27,7 +25,7 @@ public class ImageUrlProcessor implements Processor<List<Category>,InputStream>{
         JSONObject thumbnail = pagesId.getJSONObject("thumbnail");
         List<Category> noteArray = new ArrayList<Category>(thumbnail.length());
         Category category = new Category(thumbnail);
-        category.getURLIMAGE();
+        category.getUrlImage();
         noteArray.add(category);
         return noteArray;
     }

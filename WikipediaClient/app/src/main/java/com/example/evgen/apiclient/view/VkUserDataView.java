@@ -9,9 +9,7 @@ import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.bo.Category;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.processing.BitmapProcessor;
-import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
 import com.example.evgen.apiclient.processing.FotoIdUrlProcessor;
-import com.example.evgen.apiclient.source.HttpDataSource;
 import com.example.evgen.apiclient.source.VkDataSource;
 import com.example.evgen.imageloader.CircleMaskedBitmap;
 
@@ -33,9 +31,7 @@ public class VkUserDataView  extends ActionBarActivity implements DataManager.Ca
     }
 
     public static interface Callbacks {
-
         void onUserData(Bitmap foto, String first, String last);
-
     }
 
 
@@ -62,9 +58,9 @@ public class VkUserDataView  extends ActionBarActivity implements DataManager.Ca
     @Override
     public void onDone(List<Category> data) {
         Category item = data.get(0);
-        String url = item.getURLFOTO();
-        final String first = item.getFIRSTNAME();
-        final String last = item.getLASTNAME();
+        String url = item.getUrlFoto();
+        final String first = item.getFirstName();
+        final String last = item.getLastName();
         Log.d(LOG_TAG, "URL= " + url);
 
         DataManager.loadData(new DataManager.Callback<Bitmap>() {

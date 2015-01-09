@@ -52,65 +52,44 @@ public class Category extends JSONObjectWrapper {
         super(in);
     }
 
-    public String getACTION() {
-        return getString(ACTION);
-    }
-
-    public String getLINE() {
+    public String getLine() {
         return getString(LINE);
     }
 
-    public String getPROP() {
-        return getString(PROP);
-    }
-
-    public String getFORMAT() {
-        return getString(FORMAT);
-    }
-
-    public String getNS () {
+    public String getNs() {
         return getString(NS);
     }
 
-    public String getTITLE () {
+    public String getTitle() {
         return getString(TITLE );
     }
 
-    public String getTEXT () {
+    public String getText() {
         return getString(TEXT );
     }
 
-    public String getURL() {
+    public String getUrl() {
         return getString(URL);
     }
 
-    public String getURLFOTO() {
+    public String getUrlFoto() {
         return getString(URLFOTO);
     }
 
-    public String getURLIMAGE() {
+    public String getUrlImage() {
         return getString(URLIMAGE);
     }
 
-    public String getFIRSTNAME() {
+    public String getFirstName() {
         return getString(FIRSTNAME);
     }
 
-    public String getLASTNAME() {
+    public String getLastName() {
         return getString(LASTNAME);
     }
 
-
-    public String getDIST() {
+    public String getDist() {
         return getString(DIST);
-    }
-
-    public void initName() {
-        set(NAME, getTITLE());
-    }
-
-    public void initUrl() {
-        set(NAME, getURL());
     }
 
     public Long getId() {

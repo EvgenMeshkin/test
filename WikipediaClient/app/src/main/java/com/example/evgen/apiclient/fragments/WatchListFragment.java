@@ -61,7 +61,6 @@ public class WatchListFragment extends Fragment {
         Log.d(LOG_TAG, "data watchlist : " + list.toString());
         ListView listView = (ListView) content.findViewById(android.R.id.list);
         imageLoader = ImageLoader.get(getActivity());
-
         if (mAdapter == null) {
             mAdapter = new ArrayAdapter<String>(getActivity(), R.layout.adapter_item, android.R.id.text1, list) {
                 @Override
@@ -83,7 +82,6 @@ public class WatchListFragment extends Fragment {
         }
             listView.setAdapter(mAdapter);
             return content;
-
-    }
+   }
 
 }

@@ -23,14 +23,7 @@ public class DetailsFragmentActivity extends ActionBarActivity {
             finish();
             return;
         }
-
-//        if (savedInstanceState == null) {
-//            DetailsFragment details = new DetailsFragment();
-//            details.setArguments(getIntent().<Bundle>getParcelableExtra("key"));
-//            getSupportFragmentManager().beginTransaction().add(
-//                    android.R.id.content, details).commit();
-//        }
-        ActionBar actionBar = getSupportActionBar();
+       ActionBar actionBar = getSupportActionBar();
     }
 
 

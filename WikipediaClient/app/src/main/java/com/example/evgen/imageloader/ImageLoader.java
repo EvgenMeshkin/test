@@ -16,13 +16,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.Shader;
 import android.os.Handler;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -127,9 +120,9 @@ public class ImageLoader {
                 InputStream dataUrl = memoryValue.dataUrl.getResult(memoryValue.url);
                 Object procesUrl = memoryValue.processUrl.process(dataUrl);
                 List<Category> data = (List<Category>)procesUrl;
-                String str = data.get(0).getURLIMAGE();
+                String str = data.get(0).getUrlImage();
                 str = str.substring(str.indexOf("px")-2, str.indexOf("px")+2);
-                String url = data.get(0).getURLIMAGE().replaceAll(str,"100px");
+                String url = data.get(0).getUrlImage().replaceAll(str,"100px");
                 InputStream dataSource = memoryValue.dataSource.getResult(url);
                 Object processingResult = memoryValue.processor.process(dataSource);
                 Bitmap bmp = (Bitmap) processingResult;

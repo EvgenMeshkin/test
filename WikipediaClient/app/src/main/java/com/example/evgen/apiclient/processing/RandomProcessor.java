@@ -16,7 +16,7 @@ import java.util.List;
  * Created by User on 05.01.2015.
  */
 public class RandomProcessor implements Processor<List<Category>,InputStream>{
-    final static String LOG_TAG = RandomProcessor.class.getSimpleName();
+
     @Override
     public List<Category> process(InputStream inputStream) throws Exception {
         String string = new StringProcessor().process(inputStream);
@@ -25,9 +25,8 @@ public class RandomProcessor implements Processor<List<Category>,InputStream>{
         JSONArray array = (JSONArray)query.get("wikigrokrandom");
         List<Category> noteArray = new ArrayList<Category>(array.length());
         for (int i = 0; i < array.length(); i++) {
-            JSONObject jsonObject2 = array.getJSONObject(i);
-            Log.d(LOG_TAG, "4");
-            noteArray.add(new Category(jsonObject2));
+            JSONObject rand = array.getJSONObject(i);
+            noteArray.add(new Category(rand));
         }
         return noteArray;
     }

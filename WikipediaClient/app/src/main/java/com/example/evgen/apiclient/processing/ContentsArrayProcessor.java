@@ -30,9 +30,9 @@ public class ContentsArrayProcessor implements Processor<List<String>,InputStrea
             JSONObject jsonObject2 = array.getJSONObject(i);
             Category category = new Category(jsonObject2);
 
-            Log.d(LOG_TAG,  category.getLINE());
-            category.getLINE();
-            noteArray.add(category.getLINE());
+            Log.d(LOG_TAG,  category.getLine());
+            category.getLine();
+            noteArray.add(category.getLine());
            // noteArray.add(new Category(jsonObject2));
         }
        return noteArray;
