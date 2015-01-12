@@ -24,7 +24,7 @@ public class SentsVkNotes {
 
 
     public SentsVkNotes (final String url){
-        Log.d(LOG_TAG, "Url " + url);
+        Log.d(LOG_TAG, "Url " + VkOAuthHelper.mAccessToken);
 
         new AsyncTask() {
             @Override

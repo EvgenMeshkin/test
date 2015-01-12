@@ -23,9 +23,11 @@
         android:title="Add note"
         android:onClick="sentNote"
         android:orderInCategory="100"
+
         app:showAsAction="never" />
     <item android:id="@+id/action_like"
         android:title="Like"
+        android:onClick="sentLike"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

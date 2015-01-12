@@ -13,6 +13,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.opengl.Visibility;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
@@ -56,12 +57,15 @@ import com.example.evgen.apiclient.fragments.SearchFragment;
 import com.example.evgen.apiclient.fragments.WatchListFragment;
 import com.example.evgen.apiclient.fragments.WikiFragment;
 import com.example.evgen.apiclient.helper.DataManager;
+import com.example.evgen.apiclient.helper.LikeVkNotes;
 import com.example.evgen.apiclient.helper.LoadRandomPage;
 import com.example.evgen.apiclient.helper.SentsVkNotes;
 import com.example.evgen.apiclient.listener.RightDrawerItemClickListener;
 import com.example.evgen.apiclient.view.VkUserDataView;
 
 import java.util.List;
+
+import static android.view.View.VISIBLE;
 
 //TODO clear unused code
 public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks, DetailsFragment.Callbacks, SearchFragment.Callbacks, SearchView.OnQueryTextListener, VkUserDataView.Callbacks, LoadRandomPage.Callbacks {
@@ -88,6 +92,8 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     private View headerDrawer;
     private MenuItem mLikeItem;
     private MenuItem mNoteItem;
+    private Menu mMenu;
+    private Integer mVisibleMenu;
     final static String LOG_TAG = WikiActivity.class.getSimpleName();
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -102,6 +108,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
             transaction.replace(R.id.framemain, fragment);
             transaction.commit();
         }
+        mVisibleMenu = 1;
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -176,6 +183,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
     @Override
     public void onShowDetails(int index, NoteGsonModel note) {
+            mVisibleMenu = 1;
             myDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             DetailsFragment detailsmain = new DetailsFragment();//DetailsFragment.newInstance(index);
             mNoteGsonModel = (NoteGsonModel) note;
@@ -235,6 +243,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
 
             case 1:
+                mVisibleMenu = 0;
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 SearchFragment fragmentmain = new SearchFragment();
                 transaction.replace(R.id.framemain, fragmentmain);
@@ -243,11 +252,13 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 2:
+                mVisibleMenu = 1;
                 LoadRandomPage load = new LoadRandomPage();
                 load.loadingRandomPage(this);
                 myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 3:
+                mVisibleMenu = 0;
                 FragmentTransaction transactionwiki = getSupportFragmentManager().beginTransaction();
                 WikiFragment fragmentwiki = new WikiFragment();
                 transactionwiki.replace(R.id.framemain, fragmentwiki);
@@ -261,6 +272,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
                 myDrawerLayout.closeDrawer(myDrawerList);
                 break;
             case 5:
+                mVisibleMenu = 0;
                 FragmentTransaction transactionwatch = getSupportFragmentManager().beginTransaction();
                 WatchListFragment fragmentwatch = new WatchListFragment();
                 transactionwatch.replace(R.id.framemain, fragmentwatch);
@@ -288,12 +300,12 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.search);
-        mLikeItem = menu.findItem(R.id.action_note);
-        //mLikeItem.setEnabled(false);
+        mNoteItem = menu.findItem(R.id.action_note);
         mLikeItem = menu.findItem(R.id.action_like);
-        //mLikeItem.setEnabled(false);
+        //mLikeItem.setVisible(false);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("Search");
         searchView.setOnQueryTextListener(this);
@@ -306,6 +318,14 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
             new SentsVkNotes(Api.MAIN_URL + mNoteGsonModel.getTitle().replaceAll(" ", "_"));
         }
     }
+
+    public void sentLike(MenuItem item) {
+        Log.d(LOG_TAG, "sentLike");
+        if (!mNoteGsonModel.equals(null)) {
+            new LikeVkNotes(Api.MAIN_URL + mNoteGsonModel.getTitle().replaceAll(" ", "_"));
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (myDrawerToggle.onOptionsItemSelected(item)) {
@@ -323,6 +343,15 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean drawerOpen = myDrawerLayout.isDrawerOpen(myDrawerList);
         menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+        mNoteItem = menu.findItem(R.id.action_note);
+        mLikeItem = menu.findItem(R.id.action_like);
+        if (mVisibleMenu == 0) {
+            mLikeItem.setVisible(false);
+            mNoteItem.setVisible(false);
+        } else {
+            mLikeItem.setVisible(true);
+            mNoteItem.setVisible(true);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 

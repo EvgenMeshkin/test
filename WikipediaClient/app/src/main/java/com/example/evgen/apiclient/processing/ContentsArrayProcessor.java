@@ -21,20 +21,15 @@ public class ContentsArrayProcessor implements Processor<List<String>,InputStrea
         String string = new StringProcessor().process(inputStream);
         JSONObject jsonObject = new JSONObject(string);
         JSONObject jsonObjectquery = jsonObject.getJSONObject("mobileview");
-//        String strid = jsonObjectquery.getString("pages").substring(jsonObjectquery.getString("pages").indexOf("{")+2,jsonObjectquery.getString("pages").indexOf(":")-1);
-//        JSONObject jsonObjectquerypages = jsonObjectquery.getJSONObject("pages");
-//        JSONObject jsonObjectquerypages1 = jsonObjectquerypages.getJSONObject(strid);
         JSONArray array = (JSONArray)jsonObjectquery.get("sections");
         List<String> noteArray = new ArrayList<>(array.length());
         for (int i = 0; i < array.length(); i++) {
             JSONObject jsonObject2 = array.getJSONObject(i);
             Category category = new Category(jsonObject2);
-
             Log.d(LOG_TAG,  category.getLine());
             category.getLine();
             noteArray.add(category.getLine());
-           // noteArray.add(new Category(jsonObject2));
-        }
+         }
        return noteArray;
     }
 
