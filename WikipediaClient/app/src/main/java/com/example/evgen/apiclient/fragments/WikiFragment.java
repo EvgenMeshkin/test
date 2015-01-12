@@ -223,7 +223,7 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
                         final Category item = (Category) mAdapter.getItem(position);
                         NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getNs());
                         //TODO WTF
-                        new SentsVkNotes(item.getTitle());
+                        //new SentsVkNotes(item.getTitle());
 //                        new AsyncTask() {
 //                            @Override
 //                            protected void onPostExecute(Object processingResult) {
