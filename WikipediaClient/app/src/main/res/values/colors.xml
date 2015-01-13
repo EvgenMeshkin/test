@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="list_background">#4F4F4F</color>
+    <color name="list_background">#607D8B</color>
     <color name="list_background_pressed">#000</color>
     <color name="drawer_item_color">#fff</color>
-    <color name="list_divider">#5e5e5e</color>
+    <color name="list_divider">#607D8B</color>
 </resources>

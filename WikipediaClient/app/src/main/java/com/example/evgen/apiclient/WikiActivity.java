@@ -211,6 +211,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     }
 
     private void onSentSearch(String s){
+        mVisibleMenu = 0;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SearchFragment fragmentmain = new SearchFragment();
         Bundle bundle = new Bundle();

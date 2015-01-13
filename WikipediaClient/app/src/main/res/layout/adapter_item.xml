@@ -17,7 +17,6 @@
             android:layout_width="54dip"
             android:scaleType="centerCrop"
             android:layout_height="54dip"
-            android:layout_marginRight="8dip"
         />
         <ProgressBar
             android:id="@android:id/progress"
@@ -28,17 +27,19 @@
 
         <TextView
             android:id="@android:id/text1"
-            android:layout_toRightOf="@android:id/icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/icon"
+            android:layout_marginLeft="72dip"
             />
         <TextView
             android:id="@android:id/text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@android:id/icon"
-            android:layout_below="@android:id/text1"
-            />
+            android:textColor="#727272"
+            android:layout_alignBottom="@android:id/icon"
+            android:layout_alignLeft="@android:id/text1"
+            android:layout_alignStart="@android:id/text1" />
     </RelativeLayout>
 
 </com.example.evgen.apiclient.view.CheckableFrameLayout>
