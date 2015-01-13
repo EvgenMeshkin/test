@@ -9,6 +9,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +26,13 @@ import android.widget.TextView;
 
 import com.example.evgen.apiclient.Api;
 import com.example.evgen.apiclient.R;
+import com.example.evgen.apiclient.adapters.RecyclerWikiAdapter;
 import com.example.evgen.apiclient.auth.VkOAuthHelper;
 import com.example.evgen.apiclient.bo.Category;
 import com.example.evgen.apiclient.bo.NoteGsonModel;
 import com.example.evgen.apiclient.helper.DataManager;
 import com.example.evgen.apiclient.helper.SentsVkNotes;
+import com.example.evgen.apiclient.listener.RecyclerItemClickListener;
 import com.example.evgen.imageloader.ImageLoader;
 import com.example.evgen.apiclient.os.AsyncTask;
 import com.example.evgen.apiclient.processing.CategoryArrayProcessor;
@@ -45,19 +50,11 @@ import java.util.List;
  * Created by User on 30.10.2014.
  */
 public class WikiFragment extends Fragment implements DataManager.Callback<List<Category>>, GpsLocation.Callbacks {
-    private ArrayAdapter mAdapter;
+    private RecyclerWikiAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Category> mData;
-
-    //TODO remove from this, refactoring!
-    private HttpClient mClient;
-    //TODO remove from this, refactoring!
-    private HttpPost mPost;
-    private TextView mTitle;
-    private TextView mContent;
     private View content;
-    private TextView empty;
-    //TODO already have in class related to location
+   //TODO already have in class related to location
     private static String mKor;
     private HttpDataSource dataSource;
     private CategoryArrayProcessor processor;
@@ -65,6 +62,8 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
     int mCurCheckPosition = 0;
     final static String LOG_TAG = WikiFragment.class.getSimpleName();
     private CategoryArrayProcessor mCategoryArrayProcessor = new CategoryArrayProcessor();
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
 
     public interface Callbacks {
         void onShowDetails(int index, NoteGsonModel note);
@@ -109,38 +108,18 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        content = inflater.inflate(R.layout.fragment_wiki, null);
+        content = inflater.inflate(R.layout.fragment_wiki_recycler, null);
         mSwipeRefreshLayout = (SwipeRefreshLayout) content.findViewById(R.id.swipe_container);
         dataSource = getHttpDataSource();
         processor = getProcessor();
-        empty = (TextView) content.findViewById(android.R.id.empty);
-        empty.setVisibility(View.GONE);
+        mRecyclerView = (RecyclerView)content.findViewById(R.id.recyclerView);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        mRecyclerView.setItemAnimator(itemAnimator);
         GpsLocation gpsLocation = new GpsLocation();
         gpsLocation.getloc(this,getActivity());
-        imageLoader = ImageLoader.get(getActivity());
         update(dataSource,processor);
-        ListView listView = (ListView) content.findViewById(android.R.id.list);
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        imageLoader.resume();
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                        imageLoader.pause();
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                        imageLoader.pause();
-                        break;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -177,7 +156,6 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
         if (!mSwipeRefreshLayout.isRefreshing()) {
             content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
         }
-            empty.setVisibility(View.GONE);
     }
 
     @Override
@@ -186,72 +164,24 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
             mSwipeRefreshLayout.setRefreshing(false);
         }
         content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-        //data = null;
         if (data == null || data.isEmpty()) {
-            content.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
             //TODO refactoring
             onError(new NullPointerException("No data"));
         }else {
-            AdapterView listView = (AbsListView) content.findViewById(android.R.id.list);
+            RecyclerView recyclerView = (RecyclerView)content.findViewById(R.id.recyclerView);
             if (mAdapter == null) {
+                mAdapter = new RecyclerWikiAdapter(getActivity(), data);
+                recyclerView.setAdapter(mAdapter); //      recyclerView.setItemAnimator(itemAnimator);r(mAdapter);
                 mData = data;
-                mAdapter = new ArrayAdapter<Category>(getActivity(), R.layout.adapter_item, android.R.id.text1, data) {
-                    @Override
-                    public View getView(final int position, View convertView, ViewGroup parent) {
-                        if (convertView == null) {
-                            convertView = View.inflate(getActivity(), R.layout.adapter_item, null);
-                        }
-                        Category item = getItem(position);
-                        mTitle = (TextView) convertView.findViewById(android.R.id.text1);
-                        mTitle.setText(item.getTitle());
-                        mContent = (TextView) convertView.findViewById(android.R.id.text2);
-                        mContent.setText(item.getDist() + " м.");
-                        final String urlImage = Api.IMAGEVIEW_GET + item.getTitle().replaceAll(" ","%20");
-                        convertView.setTag(item.getId());
-                        final ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
-                        final ProgressBar mProgress = (ProgressBar) convertView.findViewById(android.R.id.progress);
-                        imageView.setImageBitmap(null);
-                        imageView.setTag(urlImage);
-                        imageLoader.displayImage(urlImage, imageView);
-                        return convertView;
-                    }
-                };
-                listView.setAdapter(mAdapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        final Category item = (Category) mAdapter.getItem(position);
-                        NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getNs());
-                        //TODO WTF
-                        //new SentsVkNotes(item.getTitle());
-//                        new AsyncTask() {
-//                            @Override
-//                            protected void onPostExecute(Object processingResult) {
-//                                super.onPostExecute(processingResult);
-//                                content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-//                            }
-//                            @Override
-//                            protected void onPreExecute() {
-//                                super.onPreExecute();
-//                                content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
-//                                mClient = new DefaultHttpClient();
-//                            }
-//                            @Override
-//                            protected Object doInBackground(Object[] params) throws Exception {
-//                                mPost = new HttpPost(Api.VKNOTES_GET + item.getTitle().replaceAll(" ", "%20") +"&access_token=" + VkOAuthHelper.mAccessToken);//EncrManager.decrypt(getActivity(), mAm.getUserData(sAccount, "Token")));
-//                                mClient.execute(mPost);
-//                              //  content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-//                                return null;
-//                            }
-//                            @Override
-//                            protected void onPostException(Exception e) {
-//                              onError(e);
-//                            }
-//                        }.execute();
-                        showDetails(position, note);
-                    }
-                });
-
+                mRecyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override public void onItemClick(View view, int position) {
+                                final Category item = (Category) mData.get(position);
+                                NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getNs());
+                                showDetails(position, note);
+                            }
+                        })
+                );
             } else {
                 mData.clear();
                 mData.addAll(data);
@@ -263,10 +193,6 @@ public class WikiFragment extends Fragment implements DataManager.Callback<List<
     public void onError(Exception e) {
         Log.d(LOG_TAG, "onError");
         content.findViewById(android.R.id.progress).setVisibility(View.GONE);
-        content.findViewById(android.R.id.empty).setVisibility(View.GONE);
-        TextView errorView = (TextView) content.findViewById(R.id.error);
-        errorView.setVisibility(View.VISIBLE);
-        errorView.setText(errorView.getText() + "\n" + e.getMessage());
         Callbacks callbacks = getCallbacks();
         callbacks.onErrorA(e);
     }

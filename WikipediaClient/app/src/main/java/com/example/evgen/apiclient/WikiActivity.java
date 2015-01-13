@@ -68,7 +68,7 @@ import java.util.List;
 import static android.view.View.VISIBLE;
 
 //TODO clear unused code
-public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks, DetailsFragment.Callbacks, SearchFragment.Callbacks, SearchView.OnQueryTextListener, VkUserDataView.Callbacks, LoadRandomPage.Callbacks, SentsVkNotes.Callbacks {
+public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks, DetailsFragment.Callbacks, SearchFragment.Callbacks, SearchView.OnQueryTextListener, VkUserDataView.Callbacks, LoadRandomPage.Callbacks, SentsVkNotes.Callbacks, WatchListFragment.Callbacks {
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
     private ListView mDrawerListRight;
@@ -310,7 +310,6 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         MenuItem searchItem = menu.findItem(R.id.search);
         mNoteItem = menu.findItem(R.id.action_note);
         mLikeItem = menu.findItem(R.id.action_like);
-        //mLikeItem.setVisible(false);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("Search");
         searchView.setOnQueryTextListener(this);
@@ -320,7 +319,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     public void sentNote(MenuItem item) {
         Log.d(LOG_TAG, "sentNote");
         if (!mNoteGsonModel.equals(null)) {
-            new SentsVkNotes(this, mNoteGsonModel.getTitle().replaceAll(" ", "_"));
+            new SentsVkNotes(this, this, mNoteGsonModel.getTitle().replaceAll(" ", "_"));
         }
     }
 
@@ -328,7 +327,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
         Log.d(LOG_TAG, "sentLike");
         if (!mNoteGsonModel.equals(null)) {
 
-            new LikeVkNotes(mNoteGsonModel.getTitle().replaceAll(" ", "_"));
+            new LikeVkNotes(this, mNoteGsonModel.getTitle().replaceAll(" ", "_"));
         }
     }
 
