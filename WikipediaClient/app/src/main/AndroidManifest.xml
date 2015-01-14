@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.evgen.apiclient" >
+    package="by.evgen.android.apiclient" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -18,25 +18,26 @@
     <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
 
     <application
-        android:name=".CoreApplication"
+        android:name="by.evgen.android.apiclient.CoreApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         >
         <activity
-            android:name=".StartActivity"
+            android:name="by.evgen.android.apiclient.StartActivity"
             android:label="@string/app_name" >
         </activity>
         <!-- TODO orientation, launchMode, etc -->
         <activity
-            android:name=".LoginActivity"
+            android:name="by.evgen.android.apiclient.LoginActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".VkLoginActivity"
+            android:name="by.evgen.android.apiclient.VkLoginActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".WikiActivity"
+            android:name="by.evgen.android.apiclient.WikiActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,7 +58,7 @@
                 android:resource="@xml/wiki_auth" />
         </service>
         <service
-            android:name=".account.SyncService"
+            android:name="by.evgen.android.apiclient.account.SyncService"
             android:exported="false"
             android:process=":sync" >
             <intent-filter>
@@ -73,14 +74,14 @@
             android:name=".account.AuthenticatorActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".DetailsFragmentActivity"
+            android:name="by.evgen.android.apiclient.DetailsFragmentActivity"
             android:label="@string/app_name" >
            <meta-data android:name="android.app.default_searchable"
                 android:value=".WikiActivity" />
            </activity>
 
         <provider
-            android:name=".db.provider.WikiContentProvider"
+            android:name="by.evgen.android.apiclient.db.provider.WikiContentProvider"
             android:authorities="com.example.evgenmeshkin.GeoData"
             android:exported="true"
             android:multiprocess="true" >

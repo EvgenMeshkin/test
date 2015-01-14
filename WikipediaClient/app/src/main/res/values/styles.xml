@@ -13,6 +13,8 @@
         <item name="android:panelBackground">#607D8B</item>
         <item name="android:panelColorBackground">#607D8B</item>
         <item name="android:colorBackground">#607D8B</item>
+        <item name="android:textColorAlertDialogListItem">#FFFFFF</item>
+
 
 
 

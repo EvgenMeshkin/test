@@ -10,7 +10,7 @@
         <item>Favourites</item>
         <item>Watchlist</item>
         <item>Settings</item>
-        <item>Log in</item>
+        <item>Log_in</item>
     </string-array>
 
     <string name="hello_world">Hello world!</string>
