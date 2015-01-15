@@ -37,6 +37,8 @@ import java.util.List;
 /**
  * Created by User on 18.12.2014.
  */
+
+//TODO create Base fragment with common logic of download data
 public class SearchFragment extends Fragment implements DataManager.Callback<List<Category>> {
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -51,6 +53,7 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
     private ImageLoader imageLoader;
     Cursor mCursor;
     private String mValue;
+    //TODO generate ID
     public static final int LOADER_ID = 0;
     public static final int COUNT = 50;
     private boolean isImageLoaderControlledByDataManager = false;
@@ -96,6 +99,8 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
         dataSource = getHttpDataSource();
         processor = getProcessor();
         mContext = getActivity();
+        //TODO or we use m prefix or not
+        //TODO do not use several getters in one method
         mValue = "";
         empty = (TextView) content.findViewById(android.R.id.empty);
         empty.setVisibility(View.GONE);

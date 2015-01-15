@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Created by User on 05.01.2015.
  */
+//TODO rename
 public class LoadRandomPage implements DataManager.Callback<List<Category>>{
 
     private Callbacks mCallback;

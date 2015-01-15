@@ -47,6 +47,7 @@ public class LikeVkNotes implements SentsVkNotes.Callbacks{
                                      onError(e);
                                  }
                              },
+                //TODO move access token
                 Api.VKLIKEIS_GET + id + "&access_token=" + VkOAuthHelper.mAccessToken,
                 new HttpDataSource(),
                 new LikeIsProcessor());

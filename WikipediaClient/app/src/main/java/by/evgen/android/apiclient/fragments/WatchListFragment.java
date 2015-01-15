@@ -32,6 +32,7 @@ public class WatchListFragment extends Fragment {
     private DateAdapter mAdapter;
     private ImageLoader imageLoader;
     private Cursor mCursor;
+    //TODO what is example
     final Uri WIKI_URI = Uri
             .parse("content://com.example.evgenmeshkin.GeoData/geodata");
     final static String LOG_TAG = WatchListFragment.class.getSimpleName();

@@ -35,6 +35,8 @@ import java.util.List;
 /**
  * Created by User on 22.10.2014.
  */
+
+//TODO check with Default WebViewFragment
 public class DetailsFragment extends Fragment implements DataManager.Callback<List<Category>> {
 
     private View content;
@@ -42,11 +44,15 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     private MobileViewProcessor mMobileViewProcessor = new MobileViewProcessor();
     private NoteGsonModel obj;
     private ProgressBar mProgress;
+
+    //TODO remove static
     private static WebView mWebView;
     private static String mUrl;
     private static List mData;
-    private String mHistory;
+    //TODO remove static
     private static String mTextHtml;
+
+    private String mHistory;
     private ProgressDialog pd;
     private final Uri WIKI_URI = Uri
             .parse("content://com.example.evgenmeshkin.GeoData/geodata");
@@ -83,6 +89,7 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
             return null;
         }
         content = inflater.inflate(R.layout.fragment_details, container, false);
+        //TODO create variable
         if (getArguments() != null) {
             obj = (NoteGsonModel) getArguments().getParcelable("key");
         }
@@ -92,6 +99,7 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
         content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
         final HttpDataSource dataSource = getHttpDataSource();
         final MobileViewProcessor processor = getProcessor();
+        //TODO use URLEncoder, URLDecoder
         String url = Api.MOBILE_GET + obj.getTitle().replaceAll(" ", "%20");
         update(dataSource, processor, url);
         return content;
@@ -189,6 +197,7 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     }
 
 
+    //TODO create new activity
     private class WikiWebViewClient extends WebViewClient {
 
         @Override
