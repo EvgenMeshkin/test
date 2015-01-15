@@ -15,35 +15,35 @@ import java.util.List;
  * Created by User on 05.01.2015.
  */
 //TODO rename
-public class LoadRandomPage implements DataManager.Callback<List<Category>>{
+public class LoadRandomPage implements ManagerDownload.Callback<List<Category>>{
 
     private Callbacks mCallback;
 
     public interface Callbacks {
-        void onShowDetails(int index, NoteGsonModel note);
+        void onShowDetails(NoteGsonModel note);
         void onErrorDialog(Exception e);
     }
 
     public void loadingRandomPage (Callbacks callback){
         Log.text(this.getClass(), "SrtartLoader");
         mCallback = callback;
-        DataManager.loadData(this,
+        ManagerDownload.load(this,
                 Api.RANDOM_GET,
                 new HttpDataSource(),
                 new RandomProcessor());
     }
 
     @Override
-    public void onDataLoadStart() {
+    public void onPreExecute() {
 
     }
 
     @Override
-    public void onDone(List<Category> data) {
+    public void onPostExecute(List<Category> data) {
       Integer i = data.size();
       Category item = data.get(i-1);
       NoteGsonModel note = new NoteGsonModel(null, item.getTitle(), null);
-      mCallback.onShowDetails(0, note);
+      mCallback.onShowDetails(note);
     }
 
     @Override

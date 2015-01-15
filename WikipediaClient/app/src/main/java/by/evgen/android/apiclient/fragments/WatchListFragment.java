@@ -38,13 +38,13 @@ public class WatchListFragment extends Fragment {
     final static String LOG_TAG = WatchListFragment.class.getSimpleName();
 
     public interface Callbacks {
-        void onShowDetails(int index, NoteGsonModel note);
+        void onShowDetails(NoteGsonModel note);
         void onErrorDialog(Exception e);
     }
 
-    void showDetails(int index, NoteGsonModel note) {
+    void showDetails(NoteGsonModel note) {
         Callbacks callbacks = getCallbacks();
-        callbacks.onShowDetails(index, note);
+        callbacks.onShowDetails(note);
     }
 
     private Callbacks getCallbacks() {
@@ -96,7 +96,7 @@ public class WatchListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor)mAdapter.getItem(position);
                 NoteGsonModel note = new NoteGsonModel(cursor.getLong(cursor.getColumnIndex("_id")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("wikidate")));
-                showDetails(position, note);
+                showDetails(note);
             }
         });
             return content;

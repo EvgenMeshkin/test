@@ -167,7 +167,7 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     }
 
     @Override
-    public void onShowDetails(int index, NoteGsonModel note) {
+    public void onShowDetails(NoteGsonModel note) {
             mVisibleMenu = 1;
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             DetailsFragment detailsmain = new DetailsFragment();

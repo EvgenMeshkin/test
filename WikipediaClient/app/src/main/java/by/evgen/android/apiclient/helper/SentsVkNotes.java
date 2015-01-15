@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by evgen on 11.01.2015.
  */
-public class SentsVkNotes implements DataManager.Callback<List<Category>>{
+public class SentsVkNotes implements ManagerDownload.Callback<List<Category>>{
 
     private String mBaseUrl;
     private Callbacks mCallbacks;
@@ -30,7 +30,7 @@ public class SentsVkNotes implements DataManager.Callback<List<Category>>{
         mCallbacks = callbacks;
         mContext = context;
         mBaseUrl = url;
-        DataManager.loadData( this,
+        ManagerDownload.load(this,
                 Api.VKNOTES_ALL_GET + VkOAuthHelper.mAccessToken,
                 new HttpDataSource(),
                 new NotesAllProcessor());
@@ -40,12 +40,12 @@ public class SentsVkNotes implements DataManager.Callback<List<Category>>{
 
 
     @Override
-    public void onDataLoadStart() {
+    public void onPreExecute() {
 
     }
 
     @Override
-    public void onDone(List<Category> data) {
+    public void onPostExecute(List<Category> data) {
 
         Long id = null;
         for (int i = 0; i < data.size(); i++) {
@@ -58,13 +58,13 @@ public class SentsVkNotes implements DataManager.Callback<List<Category>>{
             Toast.makeText(mContext, "You already added this note", Toast.LENGTH_SHORT).show();
         } else {
             final Long[] mData = new Long[1];
-            DataManager.loadData(new DataManager.Callback<Long>() {
+            ManagerDownload.load(new ManagerDownload.Callback<Long>() {
                                      @Override
-                                     public void onDataLoadStart() {
+                                     public void onPreExecute() {
                                      }
 
                                      @Override
-                                     public void onDone(Long data) {
+                                     public void onPostExecute(Long data) {
                                          mCallbacks.onReturnId(data);
                                          Toast.makeText(mContext, "Note added", Toast.LENGTH_SHORT).show();
                                      }
@@ -74,7 +74,7 @@ public class SentsVkNotes implements DataManager.Callback<List<Category>>{
                                          onError(e);
                                      }
                                  },
-                    Api.VKNOTES_GET + mBaseUrl + "&text=" + Api.MAIN_URL + mBaseUrl +"&access_token=" + VkOAuthHelper.mAccessToken,
+                    Api.VKNOTES_GET + mBaseUrl + "&text=" + Api.MAIN_URL + mBaseUrl + "&access_token=" + VkOAuthHelper.mAccessToken,
                     new HttpDataSource(),
                     new NoteProcessor());
 

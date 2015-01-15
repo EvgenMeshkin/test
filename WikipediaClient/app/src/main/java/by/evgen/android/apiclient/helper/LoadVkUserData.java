@@ -17,14 +17,14 @@ import java.util.List;
 /**
  * Created by User on 20.12.2014.
  */
-public class LoadVkUserData implements DataManager.Callback<List<Category>> {
+public class LoadVkUserData implements ManagerDownload.Callback<List<Category>> {
 
     final static String LOG_TAG = LoadVkUserData.class.getSimpleName();
     private Callbacks mCallbacks;
 
     public LoadVkUserData(Callbacks callbacks){
         String url = Api.VKFOTOS_GET + VkOAuthHelper.mAccessToken;
-        DataManager.loadData(this,
+        ManagerDownload.load(this,
                 url,
                 new VkDataSource(),
                 new FotoIdUrlProcessor());
@@ -36,33 +36,33 @@ public class LoadVkUserData implements DataManager.Callback<List<Category>> {
     }
 
    @Override
-    public void onDataLoadStart() {
+    public void onPreExecute() {
 
     }
 
     @Override
-    public void onDone(List<Category> data) {
+    public void onPostExecute(List<Category> data) {
         Category item = data.get(0);
         String url = item.getUrlFoto();
         final String first = item.getFirstName();
         final String last = item.getLastName();
         Log.text(this.getClass(), "Load url " + url);
-        DataManager.loadData(new DataManager.Callback<Bitmap>() {
+        ManagerDownload.load(new ManagerDownload.Callback<Bitmap>() {
 
                                  @Override
-                                 public void onDataLoadStart() {
+                                 public void onPreExecute() {
 
                                  }
 
                                  @Override
-                                 public void onDone(Bitmap bitmap) {
+                                 public void onPostExecute(Bitmap bitmap) {
                                      bitmap = CircleMaskedBitmap.getCircleMaskedBitmapUsingShader(bitmap, 100);
                                      mCallbacks.onUserData(bitmap, first, last);
                                  }
 
                                  @Override
                                  public void onError(Exception e) {
-                                    //TODO
+                                     //TODO
                                  }
                              },
                 url,

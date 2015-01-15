@@ -26,13 +26,13 @@ public class LikeVkNotes implements SentsVkNotes.Callbacks{
 
     @Override
     public void onReturnId(final Long id) {
-        DataManager.loadData(new DataManager.Callback<String>() {
+        ManagerDownload.load(new ManagerDownload.Callback<String>() {
                                  @Override
-                                 public void onDataLoadStart() {
+                                 public void onPreExecute() {
                                  }
 
                                  @Override
-                                 public void onDone(String data) {
+                                 public void onPostExecute(String data) {
                                      Log.text(this.getClass(), "Sent" + data);
                                      if (data.equals("0")) {
                                          Log.text(this.getClass(), "Sent like");

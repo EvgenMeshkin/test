@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +19,9 @@ import android.widget.ProgressBar;
 
 import by.evgen.android.apiclient.Api;
 import by.evgen.android.apiclient.R;
-import by.evgen.android.apiclient.auth.VkOAuthHelper;
 import by.evgen.android.apiclient.bo.Category;
 import by.evgen.android.apiclient.bo.NoteGsonModel;
-import by.evgen.android.apiclient.helper.DataManager;
+import by.evgen.android.apiclient.helper.ManagerDownload;
 import by.evgen.android.apiclient.processing.ContentsArrayProcessor;
 import by.evgen.android.apiclient.processing.MobileViewProcessor;
 import by.evgen.android.apiclient.source.HttpDataSource;
@@ -37,7 +35,7 @@ import java.util.List;
  */
 
 //TODO check with Default WebViewFragment
-public class DetailsFragment extends Fragment implements DataManager.Callback<List<Category>> {
+public class DetailsFragment extends Fragment implements ManagerDownload.Callback<List<Category>> {
 
     private View content;
     final static String LOG_TAG = "DetailsFragment";
@@ -93,8 +91,6 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
         if (getArguments() != null) {
             obj = (NoteGsonModel) getArguments().getParcelable("key");
         }
-
-
         mHistory = obj.getTitle().replaceAll(" ", "_");
         content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
         final HttpDataSource dataSource = getHttpDataSource();
@@ -117,7 +113,7 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
         //TODO make custom log that can be disabled for release
         Log.d(LOG_TAG, getUrl() + obj.getTitle().replaceAll(" ", "%20"));
         //TODO todo string encode/decode values
-        DataManager.loadData(this,
+        ManagerDownload.load(this,
                 url,
                 dataSource,
                 processor);
@@ -128,12 +124,12 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
     }
 
     @Override
-    public void onDataLoadStart() {
+    public void onPreExecute() {
         content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onDone(List<Category> data) {
+    public void onPostExecute(List<Category> data) {
         mTextHtml = "";
         ContentValues cv = new ContentValues();
         cv.put(WIKI_NAME, mHistory);
@@ -142,14 +138,14 @@ public class DetailsFragment extends Fragment implements DataManager.Callback<Li
         if (!cv.equals(null)) {
             getActivity().getContentResolver().insert(WIKI_URI, cv);
         }
-        DataManager.loadData(new DataManager.Callback<List<String>>() {
+        ManagerDownload.load(new ManagerDownload.Callback<List<String>>() {
                                  @Override
-                                 public void onDataLoadStart() {
+                                 public void onPreExecute() {
 
                                  }
 
                                  @Override
-                                 public void onDone(List<String> data) {
+                                 public void onPostExecute(List<String> data) {
                                      mData = data;
                                      setListData(data);
                                      Log.d(LOG_TAG, data.toString());

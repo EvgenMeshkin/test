@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +24,7 @@ import by.evgen.android.apiclient.Api;
 import by.evgen.android.apiclient.R;
 import by.evgen.android.apiclient.bo.Category;
 import by.evgen.android.apiclient.bo.NoteGsonModel;
-import by.evgen.android.apiclient.helper.DataManager;
+import by.evgen.android.apiclient.helper.ManagerDownload;
 import by.evgen.android.apiclient.processing.SearchPagesProcessor;
 import by.evgen.android.apiclient.source.HttpDataSource;
 import by.evgen.android.apiclient.source.VkDataSource;
@@ -39,7 +38,7 @@ import java.util.List;
  */
 
 //TODO create Base fragment with common logic of download data
-public class SearchFragment extends Fragment implements DataManager.Callback<List<Category>> {
+public class SearchFragment extends Fragment implements ManagerDownload.Callback<List<Category>> {
     private ArrayAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Category> mData;
@@ -72,14 +71,14 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
     private SearchPagesProcessor mSearchPagesProcessor = new SearchPagesProcessor();
 
     public interface Callbacks {
-        void onShowDetails(int index, NoteGsonModel note);
+        void onShowDetails(NoteGsonModel note);
         void onErrorDialog(Exception e);
     }
 
-    void showDetails(int index, NoteGsonModel note) {
-        mCurCheckPosition = index;
+    void showDetails(NoteGsonModel note) {
+
         Callbacks callbacks = getCallbacks();
-        callbacks.onShowDetails(index, note);
+        callbacks.onShowDetails(note);
     }
 
     private Callbacks getCallbacks() {
@@ -127,7 +126,7 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
     }
 
     private void update(HttpDataSource dataSource, SearchPagesProcessor processor) {
-        DataManager.loadData(this,
+        ManagerDownload.load(this,
                 getUrl(COUNT, 0),
                 dataSource,
                 processor);
@@ -139,16 +138,8 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
         return mKor;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-         if (savedInstanceState != null) {
-            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
-        }
-    }
-
-    @Override
-    public void onDataLoadStart() {
+   @Override
+    public void onPreExecute() {
         if (!mSwipeRefreshLayout.isRefreshing()) {
             content.findViewById(android.R.id.progress).setVisibility(View.VISIBLE);
         }
@@ -156,7 +147,7 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
     }
 
     @Override
-    public void onDone(List<Category> data) {
+    public void onPostExecute(List<Category> data) {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -229,14 +220,14 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
                             previousTotal = totalItemCount;
                             isImageLoaderControlledByDataManager = true;
 
-                            DataManager.loadData(new DataManager.Callback<List<Category>>() {
+                            ManagerDownload.load(new ManagerDownload.Callback<List<Category>>() {
                                                      @Override
-                                                     public void onDataLoadStart() {
-                                                        imageLoader.pause();
+                                                     public void onPreExecute() {
+                                                         imageLoader.pause();
                                                      }
 
                                                      @Override
-                                                     public void onDone(List<Category> data) {
+                                                     public void onPostExecute(List<Category> data) {
                                                          updateAdapter(data);
                                                          refreshFooter();
                                                          imageLoader.resume();
@@ -263,7 +254,7 @@ public class SearchFragment extends Fragment implements DataManager.Callback<Lis
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         final Category item = (Category) mAdapter.getItem(position);
                         NoteGsonModel note = new NoteGsonModel(item.getId(), item.getTitle(), item.getNs());
-                        showDetails(position, note);
+                        showDetails(note);
                     }
                 });
 

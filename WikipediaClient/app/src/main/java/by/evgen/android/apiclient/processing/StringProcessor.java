@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
  * Created by evgen on 18.10.2014.
  */
 public class StringProcessor implements Processor<String, InputStream> {
+
     @Override
     public String process(InputStream inputStream) throws Exception {
         InputStreamReader inputStreamReader = null;
