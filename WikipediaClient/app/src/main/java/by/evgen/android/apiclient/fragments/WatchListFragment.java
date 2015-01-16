@@ -90,7 +90,7 @@ public class WatchListFragment extends Fragment {
             mAdapter = new DateAdapter(getActivity(), R.layout.adapter_item, mCursor, from, to);
 
         }
-            listView.setAdapter(mAdapter);
+        listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

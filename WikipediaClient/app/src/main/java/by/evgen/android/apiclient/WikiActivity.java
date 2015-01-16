@@ -40,6 +40,7 @@ import by.evgen.android.apiclient.auth.VkOAuthHelper;
 import by.evgen.android.apiclient.auth.secure.EncrManager;
 import by.evgen.android.apiclient.bo.NoteGsonModel;
 import by.evgen.android.apiclient.dialogs.ErrorDialog;
+import by.evgen.android.apiclient.fragments.AbstractFragment;
 import by.evgen.android.apiclient.fragments.DetailsFragment;
 import by.evgen.android.apiclient.fragments.SearchFragment;
 import by.evgen.android.apiclient.fragments.WatchListFragment;
@@ -54,7 +55,7 @@ import by.evgen.android.apiclient.utils.Log;
 import java.util.List;
 
 //TODO clear unused code
-public class WikiActivity extends ActionBarActivity implements WikiFragment.Callbacks, DetailsFragment.Callbacks, SearchFragment.Callbacks, SearchView.OnQueryTextListener, LoadVkUserData.Callbacks, LoadRandomPage.Callbacks, SentsVkNotes.Callbacks, WatchListFragment.Callbacks {
+public class WikiActivity extends ActionBarActivity implements AbstractFragment.Callbacks, DetailsFragment.Callbacks, SearchView.OnQueryTextListener, LoadVkUserData.Callbacks, LoadRandomPage.Callbacks, SentsVkNotes.Callbacks, WatchListFragment.Callbacks {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ListView mDrawerListRight;
@@ -87,12 +88,12 @@ public class WikiActivity extends ActionBarActivity implements WikiFragment.Call
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wiki);
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            SearchFragment fragment = new SearchFragment();
-            transaction.replace(R.id.framemain, fragment);
-            transaction.commit();
-        }
+//        if (savedInstanceState == null) {
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            SearchFragment fragment = new SearchFragment();
+//            transaction.replace(R.id.framemain, fragment);
+//            transaction.commit();
+//        }
         mVisibleMenu = 1;
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
