@@ -20,7 +20,7 @@ import by.evgen.android.apiclient.utils.FindResponder;
 /**
  * Created by User on 15.01.2015.
  */
-public abstract class AbstractFragment <T> extends Fragment implements ManagerDownload.Callback<List<Category>> {
+public abstract class AbstractFragment<T> extends Fragment implements ManagerDownload.Callback<List<Category>> {
 
     private View mContent;
     private DataSource mDatasource;
@@ -32,6 +32,7 @@ public abstract class AbstractFragment <T> extends Fragment implements ManagerDo
 
     public interface Callbacks {
         void onShowDetails(NoteGsonModel note);
+
         void onErrorDialog(Exception e);
     }
 
@@ -72,13 +73,12 @@ public abstract class AbstractFragment <T> extends Fragment implements ManagerDo
 
     public abstract void onExecute(List<Category> data);
 
-    public void load (String Url, DataSource dataSource, Processor processor) {
+    public void load(String Url, DataSource dataSource, Processor processor) {
         ManagerDownload.load(this,
                 Url,
                 dataSource,
                 processor);
     }
-
 
 
     @Override
@@ -97,7 +97,7 @@ public abstract class AbstractFragment <T> extends Fragment implements ManagerDo
         if (data == null || data.isEmpty()) {
             //TODO refactoring
             onError(new NullPointerException("No data"));
-        }else {
+        } else {
             onExecute(data);
         }
     }

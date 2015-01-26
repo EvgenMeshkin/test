@@ -1,8 +1,7 @@
 package by.evgen.android.apiclient.source;
+
 import android.content.Context;
 import android.util.Log;
-
-import by.evgen.android.apiclient.CoreApplication;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,17 +17,20 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import by.evgen.android.apiclient.CoreApplication;
+
 /**
  * Created by User on 04.12.2014.
  */
 public class CachedHttpDataSource extends HttpDataSource {
     public static final String KEY = "CachedHttpDataSource";
     public static final String TAG = "cache_http_data_source";
-    private Map<String, File> mLruCache= Collections.synchronizedMap(new LinkedHashMap<String, File>());
+    private Map<String, File> mLruCache = Collections.synchronizedMap(new LinkedHashMap<String, File>());
     private Context mContext;
     private File mCacheFile;
     private long mSize = 0;
     private long limit = 30000;
+
     public CachedHttpDataSource(Context context) {
         mContext = context;
     }
@@ -46,9 +48,9 @@ public class CachedHttpDataSource extends HttpDataSource {
         Log.d(TAG, "directory cache:  " + Arrays.toString(list));
         String path = file.getPath() + File.separator + generateFileName(p);
         mCacheFile = new File(path);
-        if (mCacheFile.exists() && !mLruCache.containsKey(path)){
+        if (mCacheFile.exists() && !mLruCache.containsKey(path)) {
             mLruCache.put(path, mCacheFile);
-            mSize+=mCacheFile.length();
+            mSize += mCacheFile.length();
             checkSize();
         }
         if (mLruCache.containsKey(path)) {
@@ -60,7 +62,7 @@ public class CachedHttpDataSource extends HttpDataSource {
             mCacheFile = new File(path);
             InputStream inputStream = super.getResult(p);
             try {
-              copy(inputStream, mCacheFile);
+                copy(inputStream, mCacheFile);
             } catch (Exception e) {
                 mCacheFile.delete();
                 throw e;
@@ -75,9 +77,9 @@ public class CachedHttpDataSource extends HttpDataSource {
 
     private void checkSize() {
         Log.i(TAG, "cache size = " + mSize + " length = " + mLruCache.size());
-        if(mSize > limit){
+        if (mSize > limit) {
             Iterator<Map.Entry<String, File>> iter = mLruCache.entrySet().iterator();
-            while(iter.hasNext()){
+            while (iter.hasNext()) {
                 Map.Entry<String, File> entry = iter.next();
                 mSize -= entry.getValue().length();
                 entry.getValue().delete();

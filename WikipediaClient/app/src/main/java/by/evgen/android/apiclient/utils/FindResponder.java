@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity;
  */
 public class FindResponder {
 
-    public static <T> T findFirstResponder (Fragment fragment, Class<T> clazz) {
+    public static <T> T findFirstResponder(Fragment fragment, Class<T> clazz) {
         FragmentActivity activity = fragment.getActivity();
         if (activity == null)
             return null;

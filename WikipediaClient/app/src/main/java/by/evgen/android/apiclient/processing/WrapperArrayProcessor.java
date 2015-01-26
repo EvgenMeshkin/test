@@ -1,7 +1,5 @@
 package by.evgen.android.apiclient.processing;
 
-import by.evgen.android.apiclient.bo.JSONObjectWrapper;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +11,7 @@ import java.util.List;
 /**
  * Created by User on 22.10.2014.
  */
-public abstract class WrapperArrayProcessor <T> implements Processor<List<T>,InputStream> {
+public abstract class WrapperArrayProcessor<T> implements Processor<List<T>, InputStream> {
 
     @Override
     public List<T> process(InputStream inputStream) throws Exception {
@@ -31,7 +29,7 @@ public abstract class WrapperArrayProcessor <T> implements Processor<List<T>,Inp
     protected abstract T createObject(JSONObject jsonObject);
 
 
-    protected abstract JSONArray createArray (JSONObject jsonObject) throws JSONException;
+    protected abstract JSONArray createArray(JSONObject jsonObject) throws JSONException;
 
 }
 

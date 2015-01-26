@@ -10,7 +10,7 @@ import android.os.Bundle;
  */
 public class WikiOrmMeta {
 
-    static <T> T getMetaData(Context context, String name){
+    static <T> T getMetaData(Context context, String name) {
         try {
             ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle metaData = info.metaData;

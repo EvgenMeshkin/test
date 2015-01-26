@@ -16,7 +16,7 @@ public class GpsLocation implements LocationListener {
     private Callbacks callbacks;
 
     public interface Callbacks {
-        void onShowKor (String latitude);
+        void onShowKor(String latitude);
     }
 
     public void getLocation(Callbacks callbacks, Context сontext) {
@@ -42,7 +42,7 @@ public class GpsLocation implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
-     //  showLocation(lm.getLastKnownLocation(provider));
+        //  showLocation(lm.getLastKnownLocation(provider));
     }
 
     @Override
@@ -53,10 +53,10 @@ public class GpsLocation implements LocationListener {
         if (location == null)
             return;
         if (location.getProvider().equals(LocationManager.NETWORK_PROVIDER)) {
-            mCoords = location.getLatitude()+"|"+location.getLongitude();
+            mCoords = location.getLatitude() + "|" + location.getLongitude();
         } else if (location.getProvider().equals(
                 LocationManager.GPS_PROVIDER)) {
-            mCoords = location.getLatitude()+"|"+location.getLongitude();
+            mCoords = location.getLatitude() + "|" + location.getLongitude();
         }
         if (mCoords != null) {
             lm.removeUpdates(this);

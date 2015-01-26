@@ -13,7 +13,7 @@ public class RightDrawerItemClickListener implements ListView.OnItemClickListene
 
     @Override
     public void onItemClick(
-            AdapterView<?> parent, View view, int position,  long id
+            AdapterView<?> parent, View view, int position, long id
     ) {
         DetailsFragment.setListener(position);
     }

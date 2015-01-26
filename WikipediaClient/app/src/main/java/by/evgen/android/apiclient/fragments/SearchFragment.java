@@ -1,24 +1,18 @@
 package by.evgen.android.apiclient.fragments;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.HeaderViewListAdapter;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.List;
 
 import by.evgen.android.apiclient.Api;
 import by.evgen.android.apiclient.R;
@@ -29,12 +23,8 @@ import by.evgen.android.apiclient.helper.ManagerDownload;
 import by.evgen.android.apiclient.processing.Processor;
 import by.evgen.android.apiclient.processing.SearchPagesProcessor;
 import by.evgen.android.apiclient.source.DataSource;
-import by.evgen.android.apiclient.source.HttpDataSource;
 import by.evgen.android.apiclient.source.VkDataSource;
-import by.evgen.android.apiclient.utils.FindResponder;
 import by.evgen.android.imageloader.ImageLoader;
-
-import java.util.List;
 
 /**
  * Created by User on 18.12.2014.
@@ -70,9 +60,10 @@ public class SearchFragment extends AbstractFragment {
         //TODO do not use several getters in one method
         mValue = "";
         imageLoader = ImageLoader.get(getActivity());
-        if(getArguments() != null) {
-            mValue = getArguments().getString("key");;
-       }
+        if (getArguments() != null) {
+            mValue = getArguments().getString("key");
+            ;
+        }
         return content;
     }
 
@@ -188,8 +179,8 @@ public class SearchFragment extends AbstractFragment {
     }
 
     private String getUrl(int count, int offset) {
-        mKor = Api.SEARCH_GET + "srlimit="+count+"&sroffset="+offset + "&srsearch=" + mValue;
-        Log.d(LOG_TAG, "mKor="+mKor);
+        mKor = Api.SEARCH_GET + "srlimit=" + count + "&sroffset=" + offset + "&srsearch=" + mValue;
+        Log.d(LOG_TAG, "mKor=" + mKor);
         return mKor;
     }
 

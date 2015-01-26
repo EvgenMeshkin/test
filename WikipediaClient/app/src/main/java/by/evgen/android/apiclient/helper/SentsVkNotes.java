@@ -3,6 +3,8 @@ package by.evgen.android.apiclient.helper;
 import android.content.Context;
 import android.widget.Toast;
 
+import java.util.List;
+
 import by.evgen.android.apiclient.Api;
 import by.evgen.android.apiclient.auth.VkOAuthHelper;
 import by.evgen.android.apiclient.bo.Category;
@@ -11,12 +13,10 @@ import by.evgen.android.apiclient.processing.NotesAllProcessor;
 import by.evgen.android.apiclient.source.HttpDataSource;
 import by.evgen.android.apiclient.utils.Log;
 
-import java.util.List;
-
 /**
  * Created by evgen on 11.01.2015.
  */
-public class SentsVkNotes implements ManagerDownload.Callback<List<Category>>{
+public class SentsVkNotes implements ManagerDownload.Callback<List<Category>> {
 
     private String mBaseUrl;
     private Callbacks mCallbacks;
@@ -26,7 +26,7 @@ public class SentsVkNotes implements ManagerDownload.Callback<List<Category>>{
         void onReturnId(Long id);
     }
 
-    public SentsVkNotes (final Callbacks callbacks, final Context context, final String url){
+    public SentsVkNotes(final Callbacks callbacks, final Context context, final String url) {
         mCallbacks = callbacks;
         mContext = context;
         mBaseUrl = url;
@@ -85,9 +85,6 @@ public class SentsVkNotes implements ManagerDownload.Callback<List<Category>>{
     public void onError(Exception e) {
 
     }
-
-
-
 
 
 }

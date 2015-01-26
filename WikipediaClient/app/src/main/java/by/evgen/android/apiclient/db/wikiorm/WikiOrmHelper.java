@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public abstract class WikiOrmHelper extends SQLiteOpenHelper {
 
     protected abstract void onCreate();
+
     protected abstract void onUpgrade(int oldVersion, int newVersion);
 
     public WikiOrmHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {

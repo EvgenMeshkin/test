@@ -39,19 +39,21 @@ public class NoteGsonModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeStringArray(new String[] { id.toString(), title, content });
+        parcel.writeStringArray(new String[]{id.toString(), title, content});
 
     }
-   public static final Parcelable.Creator<NoteGsonModel> CREATOR = new Parcelable.Creator<NoteGsonModel>() {
-    // распаковываем объект из Parcel
-    public NoteGsonModel  createFromParcel(Parcel in) {
-        return new NoteGsonModel(in);
-    }
-    public NoteGsonModel[] newArray(int size) {
-        return new NoteGsonModel[size];
 
-    }
-};
+    public static final Parcelable.Creator<NoteGsonModel> CREATOR = new Parcelable.Creator<NoteGsonModel>() {
+        // распаковываем объект из Parcel
+        public NoteGsonModel createFromParcel(Parcel in) {
+            return new NoteGsonModel(in);
+        }
+
+        public NoteGsonModel[] newArray(int size) {
+            return new NoteGsonModel[size];
+
+        }
+    };
 
     // конструктор, считывающий данные из Parcel
     private NoteGsonModel(Parcel parcel) {

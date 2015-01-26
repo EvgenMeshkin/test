@@ -12,7 +12,7 @@ import android.os.Bundle;
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-  //  public static final String KEY_FEED_ID = "sync.KEY_FEED_ID";
+    //  public static final String KEY_FEED_ID = "sync.KEY_FEED_ID";
 
     public SyncAdapter(Context context) {
         super(context, true);
@@ -31,7 +31,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private void syncFeed(String feedId, String feedUrl, ContentProviderClient provider, SyncResult syncResult) {
 
     }
-
 
 
 }

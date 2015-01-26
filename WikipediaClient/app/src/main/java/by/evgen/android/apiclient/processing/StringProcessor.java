@@ -1,10 +1,10 @@
 package by.evgen.android.apiclient.processing;
 
-import by.evgen.android.apiclient.source.HttpDataSource;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import by.evgen.android.apiclient.source.HttpDataSource;
 
 /**
  * Created by evgen on 18.10.2014.

@@ -2,9 +2,9 @@ package by.evgen.android.apiclient.source;
 
 import android.content.Context;
 
-import by.evgen.android.apiclient.CoreApplication;
-
 import java.io.InputStream;
+
+import by.evgen.android.apiclient.CoreApplication;
 
 /**
  * Created by evgen on 15.11.2014.

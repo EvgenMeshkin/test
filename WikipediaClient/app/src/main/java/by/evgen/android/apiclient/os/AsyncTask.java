@@ -1,12 +1,12 @@
 package by.evgen.android.apiclient.os;
+
 import android.os.Handler;
-
-
-import by.evgen.android.apiclient.os.assist.LIFOLinkedBlockingDeque;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import by.evgen.android.apiclient.os.assist.LIFOLinkedBlockingDeque;
 
 public abstract class AsyncTask<Params, Progress, Result> {
 

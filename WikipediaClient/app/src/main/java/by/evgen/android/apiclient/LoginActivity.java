@@ -1,4 +1,5 @@
 package by.evgen.android.apiclient;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -30,7 +31,7 @@ public class LoginActivity extends ActionBarActivity {
         });
     }
 
-     public void onLoginClick(View view) {
+    public void onLoginClick(View view) {
         Toast.makeText(this, "implement me", Toast.LENGTH_SHORT).show();
     }
 
@@ -69,7 +70,7 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_VK && resultCode == RESULT_OK)  {
+        if (requestCode == REQUEST_CODE_VK && resultCode == RESULT_OK) {
             setResult(RESULT_OK);
             finish();
         }

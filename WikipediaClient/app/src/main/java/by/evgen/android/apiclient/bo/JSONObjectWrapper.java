@@ -67,8 +67,7 @@ public class JSONObjectWrapper implements Parcelable {
     /**
      * Read from parcel.
      *
-     * @param in
-     *            the in
+     * @param in the in
      */
     protected void readFromParcel(final Parcel in) {
         String string = in.readString();

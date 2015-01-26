@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import by.evgen.android.apiclient.Api;
 import by.evgen.android.apiclient.R;
 import by.evgen.android.apiclient.bo.Category;
 import by.evgen.android.apiclient.utils.Log;
 import by.evgen.android.imageloader.ImageLoader;
-
-import java.util.List;
 
 /**
  * Created by User on 13.01.2015.
@@ -43,13 +43,13 @@ public class RecyclerWikiAdapter extends RecyclerView.Adapter<RecyclerWikiAdapte
         Category item = records.get(i);
         viewHolder.name.setText(item.getTitle());
         viewHolder.content.setText(item.getDist() + " m.");
-        final String urlImage = Api.IMAGEVIEW_GET + item.getTitle().replaceAll(" ","%20");
+        final String urlImage = Api.IMAGEVIEW_GET + item.getTitle().replaceAll(" ", "%20");
         viewHolder.icon.setImageBitmap(null);
         viewHolder.icon.setTag(urlImage);
         imageLoader.displayImage(urlImage, viewHolder.icon);
     }
 
-   @Override
+    @Override
     public int getItemCount() {
         return records.size();
     }

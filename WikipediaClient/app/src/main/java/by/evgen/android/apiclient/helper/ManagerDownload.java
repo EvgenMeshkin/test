@@ -12,12 +12,14 @@ public class ManagerDownload {
 
     public static interface Callback<Result> {
         void onPreExecute();
+
         void onPostExecute(Result data);
+
         void onError(Exception e);
     }
 
 
-    public static  void load(
+    public static void load(
             final Callback callback,
             final String params,
             final DataSource dataSource,
@@ -26,7 +28,7 @@ public class ManagerDownload {
             throw new IllegalArgumentException("callback can't be null");
         }
         executeInAsyncTask(callback, params, dataSource, processor);
-   }
+    }
 
     private static <ProcessingResult, DataSourceResult, Params> void executeInAsyncTask(final Callback<ProcessingResult> callback, Params params, final DataSource<DataSourceResult, Params> dataSource, final Processor<ProcessingResult, DataSourceResult> processor) {
         new AsyncTask<Params, Void, ProcessingResult>() {

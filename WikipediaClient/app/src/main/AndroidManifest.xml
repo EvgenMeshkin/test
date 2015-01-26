@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="by.evgen.android.apiclient" >
+    package="by.evgen.android.apiclient">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -22,12 +22,10 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme">
         <activity
             android:name="by.evgen.android.apiclient.StartActivity"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name"></activity>
         <!-- TODO orientation, launchMode, etc -->
         <activity
             android:name="by.evgen.android.apiclient.LoginActivity"
@@ -48,7 +46,7 @@
         <!-- TODO remove -->
         <service
             android:name=".account.WikipediaAccount"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -60,11 +58,11 @@
         <service
             android:name="by.evgen.android.apiclient.account.SyncService"
             android:exported="false"
-            android:process=":sync" >
+            android:process=":sync">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-           <meta-data
+            <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync_adapter" />
         </service>
@@ -75,17 +73,17 @@
             android:label="@string/app_name" />
         <activity
             android:name="by.evgen.android.apiclient.DetailsFragmentActivity"
-            android:label="@string/app_name" >
-           <meta-data android:name="android.app.default_searchable"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.app.default_searchable"
                 android:value=".WikiActivity" />
-           </activity>
+        </activity>
 
         <provider
             android:name="by.evgen.android.apiclient.db.provider.WikiContentProvider"
             android:authorities="com.example.evgenmeshkin.GeoData"
             android:exported="true"
-            android:multiprocess="true" >
-        </provider>
+            android:multiprocess="true"></provider>
 
 
     </application>

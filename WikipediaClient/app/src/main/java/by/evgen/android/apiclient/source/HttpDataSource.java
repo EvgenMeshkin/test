@@ -2,12 +2,12 @@ package by.evgen.android.apiclient.source;
 
 import android.content.Context;
 
-import by.evgen.android.apiclient.CoreApplication;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import by.evgen.android.apiclient.CoreApplication;
 
 /**
  * Created by evgen on 18.10.2014.

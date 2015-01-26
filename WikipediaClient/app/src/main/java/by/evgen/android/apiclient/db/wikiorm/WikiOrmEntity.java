@@ -25,7 +25,7 @@ public abstract class WikiOrmEntity {
         return false;//OrmUtils.alterInTransaction(entity);
     }
 
-    protected boolean delete()  {
+    protected boolean delete() {
         return false;//WikiOrmUtils.delete(this);
     }
 }

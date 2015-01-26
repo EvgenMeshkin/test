@@ -17,7 +17,7 @@
         android:onClick="onVkAuthClick"
         android:scaleType="fitXY"
         android:background="@null"
-        android:src="@drawable/vkbutton"/>
+        android:src="@drawable/vkbutton" />
 
     <Button
         android:id="@+id/login_btn"
@@ -28,7 +28,8 @@
         android:textAlignment="center"
         android:textSize="16dip"
         android:text="Login"
-        android:onClick="onLoginClick"/>
+        android:onClick="onLoginClick" />
+
     <Button
         android:id="@+id/cancel_btn"
         android:layout_toLeftOf="@id/login_btn"
@@ -37,14 +38,15 @@
         android:textSize="16dip"
         android:layout_width="80dip"
         android:layout_height="36dip"
-        android:text="Cancel"
-        />
+        android:text="Cancel" />
+
     <LinearLayout
         android:id="@+id/inputs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/login_btn"
         android:orientation="vertical">
+
         <EditText
             android:id="@+id/edit_text"
             android:layout_width="match_parent"
@@ -59,17 +61,14 @@
             android:inputType="textPassword"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/imageView"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/inputs"
-        android:src = "@drawable/wikibutton"/>
-
-
-
-
+        android:src="@drawable/wikibutton" />
 
 
 </RelativeLayout>

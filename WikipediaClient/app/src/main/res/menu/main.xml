@@ -1,32 +1,35 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".WikiActivity" >
+    tools:context=".WikiActivity">
     <item
         android:id="@+id/search"
         android:orderInCategory="1"
         android:title="search"
         app:showAsAction="always"
-        
+
         android:icon="@android:drawable/ic_menu_search"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        />
-    <item android:id="@+id/action_settings"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+    <item
+        android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
-    <item android:id="@+id/saving_pages"
+    <item
+        android:id="@+id/saving_pages"
         android:title="@string/saving_pages"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <item android:id="@+id/action_note"
+    <item
+        android:id="@+id/action_note"
         android:title="Add note"
         android:onClick="sentNote"
         android:orderInCategory="100"
 
         app:showAsAction="never" />
-    <item android:id="@+id/action_like"
+    <item
+        android:id="@+id/action_like"
         android:title="Like"
         android:onClick="sentLike"
         android:orderInCategory="100"

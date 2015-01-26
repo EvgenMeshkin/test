@@ -12,12 +12,12 @@ import by.evgen.android.apiclient.utils.Log;
 /**
  * Created by User on 12.01.2015.
  */
-public class LikeVkNotes implements SentsVkNotes.Callbacks{
+public class LikeVkNotes implements SentsVkNotes.Callbacks {
 
     private String mBaseUrl;
     private Context mContext;
 
-    public LikeVkNotes (Context context, String url){
+    public LikeVkNotes(Context context, String url) {
         mBaseUrl = url;
         mContext = context;
         new SentsVkNotes(this, context, url);

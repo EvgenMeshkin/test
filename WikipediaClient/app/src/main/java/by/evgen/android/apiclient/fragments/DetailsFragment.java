@@ -1,7 +1,6 @@
 package by.evgen.android.apiclient.fragments;
 
 
-
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.graphics.Bitmap;
@@ -17,6 +16,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import java.util.List;
+
 import by.evgen.android.apiclient.Api;
 import by.evgen.android.apiclient.R;
 import by.evgen.android.apiclient.bo.Category;
@@ -27,8 +28,6 @@ import by.evgen.android.apiclient.processing.MobileViewProcessor;
 import by.evgen.android.apiclient.source.HttpDataSource;
 import by.evgen.android.apiclient.source.VkDataSource;
 import by.evgen.android.apiclient.utils.FindResponder;
-
-import java.util.List;
 
 /**
  * Created by User on 22.10.2014.

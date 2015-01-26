@@ -5,6 +5,12 @@ package by.evgen.android.imageloader;
  */
 
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.util.Log;
+import android.widget.ImageView;
+
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
@@ -15,12 +21,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import android.os.Handler;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.Log;
-import android.widget.ImageView;
 
 import by.evgen.android.apiclient.CoreApplication;
 import by.evgen.android.apiclient.bo.Category;
@@ -44,23 +44,23 @@ public class ImageLoader {
     private Set<ImageView> mImagesViews = new HashSet<ImageView>();
     private final Object mLock = new Object();
 
-    public ImageLoader(Context context){
-    mContext = context;
-    executorService = new ThreadPoolExecutor(5, 5, 0, TimeUnit.MILLISECONDS,
-            new LIFOLinkedBlockingDeque<Runnable>());
+    public ImageLoader(Context context) {
+        mContext = context;
+        executorService = new ThreadPoolExecutor(5, 5, 0, TimeUnit.MILLISECONDS,
+                new LIFOLinkedBlockingDeque<Runnable>());
     }
 
     public static ImageLoader get(Context context) {
         return CoreApplication.get(context, KEY);
     }
 
-    public void displayImage(final String url,final ImageView imageView){
+    public void displayImage(final String url, final ImageView imageView) {
         imageViews.put(imageView, url);
         Bitmap bitmap = memoryCache.get(url);
         if (bitmap != null) {
             Log.i(TAG, "FromTheCache");
             imageView.setImageBitmap(bitmap);
-        }   else {
+        } else {
             Log.i(TAG, "Not FromTheCache");
             queueImage(url, imageView);
             imageView.setImageResource(stub_id);
@@ -84,7 +84,7 @@ public class ImageLoader {
         }
     }
 
-    private void queueImage(String url, ImageView imageView){
+    private void queueImage(String url, ImageView imageView) {
         MemoryValue p = new MemoryValue(url, imageView, mContext);
         executorService.submit(new ImagesLoader(p));
     }
@@ -96,32 +96,34 @@ public class ImageLoader {
         public final Processor processor;
         public final HttpDataSource dataUrl;
         public final Processor processUrl;
-        public MemoryValue(String url, ImageView imageView, Context context){
+
+        public MemoryValue(String url, ImageView imageView, Context context) {
             this.url = url;
             this.imageView = imageView;
             this.dataSource = new CachedHttpDataSource(context);
             this.processor = new BitmapProcessor();
             dataUrl = new VkDataSource();
             processUrl = new ImageUrlProcessor();
-            }
+        }
     }
 
     private class ImagesLoader implements Runnable {
-       private final MemoryValue memoryValue;
-       private Handler handler = new Handler();
-       private ImagesLoader(MemoryValue memoryValue){
+        private final MemoryValue memoryValue;
+        private Handler handler = new Handler();
+
+        private ImagesLoader(MemoryValue memoryValue) {
             this.memoryValue = memoryValue;
         }
 
         @Override
         public void run() {
-            try{
+            try {
                 InputStream dataUrl = memoryValue.dataUrl.getResult(memoryValue.url);
                 Object procesUrl = memoryValue.processUrl.process(dataUrl);
-                List<Category> data = (List<Category>)procesUrl;
+                List<Category> data = (List<Category>) procesUrl;
                 String str = data.get(0).getUrlImage();
-                str = str.substring(str.indexOf("px")-2, str.indexOf("px")+2);
-                String url = data.get(0).getUrlImage().replaceAll(str,"100px");
+                str = str.substring(str.indexOf("px") - 2, str.indexOf("px") + 2);
+                String url = data.get(0).getUrlImage().replaceAll(str, "100px");
                 InputStream dataSource = memoryValue.dataSource.getResult(url);
                 Object processingResult = memoryValue.processor.process(dataSource);
                 Bitmap bmp = (Bitmap) processingResult;
@@ -134,13 +136,13 @@ public class ImageLoader {
                 }
                 BitmapDisplayer bd = new BitmapDisplayer(bmp, memoryValue);
                 handler.post(bd);
-            }catch(Throwable th){
+            } catch (Throwable th) {
                 return;
             }
         }
     }
 
-    synchronized boolean imageViewReused(MemoryValue memoryValue){
+    synchronized boolean imageViewReused(MemoryValue memoryValue) {
         String tag = imageViews.get(memoryValue.imageView);
         Log.i(TAG, "Check " + tag);
         if (tag.equals(null) || !tag.equals(memoryValue.url))
@@ -148,20 +150,21 @@ public class ImageLoader {
         return false;
     }
 
-    class BitmapDisplayer implements Runnable{
+    class BitmapDisplayer implements Runnable {
         private Bitmap bitmap;
         private MemoryValue memoryValue;
-        public BitmapDisplayer(Bitmap bitmap, MemoryValue memoryValue){
+
+        public BitmapDisplayer(Bitmap bitmap, MemoryValue memoryValue) {
             this.bitmap = bitmap;
             this.memoryValue = memoryValue;
         }
 
-        public void run(){
+        public void run() {
 
             if (imageViewReused(memoryValue)) {
                 return;
             }
-        memoryValue.imageView.setImageBitmap(bitmap);
+            memoryValue.imageView.setImageBitmap(bitmap);
         }
     }
 
@@ -205,4 +208,4 @@ public class ImageLoader {
 //        return targetBitmap;
 //    }
 
- }
+}

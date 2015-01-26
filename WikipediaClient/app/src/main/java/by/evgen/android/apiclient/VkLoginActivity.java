@@ -26,6 +26,7 @@ public class VkLoginActivity extends ActionBarActivity implements VkOAuthHelper.
     public static final String AUTHORITY = "com.example.evgen.apiclient";
 
     public static Account sAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,6 @@ public class VkLoginActivity extends ActionBarActivity implements VkOAuthHelper.
         mWebView.setWebViewClient(new VkWebViewClient());
         mWebView.loadUrl(VkOAuthHelper.AUTORIZATION_URL);
     }
-
 
 
     @Override
@@ -79,7 +79,6 @@ public class VkLoginActivity extends ActionBarActivity implements VkOAuthHelper.
             showProgress();
             view.setVisibility(View.INVISIBLE);
         }
-
 
 
         /* (non-Javadoc)

@@ -3,6 +3,7 @@ package by.evgen.android.apiclient.view;
 /**
  * Created by User on 13.11.2014.
  */
+
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;

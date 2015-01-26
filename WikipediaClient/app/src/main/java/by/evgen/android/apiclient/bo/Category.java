@@ -17,7 +17,7 @@ public class Category extends JSONObjectWrapper {
     private static final String FORMAT = "format";
     private static final String NS = "ns";
     private static final String TITLE = "title";
-//    private static final String ONLINE = "online";
+    //    private static final String ONLINE = "online";
     private static final String ID = "id";
     private static final String DIST = "dist";
     private static final String FIRSTNAME = "first_name";
@@ -61,11 +61,11 @@ public class Category extends JSONObjectWrapper {
     }
 
     public String getTitle() {
-        return getString(TITLE );
+        return getString(TITLE);
     }
 
     public String getText() {
-        return getString(TEXT );
+        return getString(TEXT);
     }
 
     public String getUrl() {

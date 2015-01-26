@@ -2,6 +2,7 @@ package by.evgen.android.apiclient.helper;
 
 import android.graphics.Bitmap;
 
+import java.util.List;
 
 import by.evgen.android.apiclient.Api;
 import by.evgen.android.apiclient.auth.VkOAuthHelper;
@@ -12,8 +13,6 @@ import by.evgen.android.apiclient.source.VkDataSource;
 import by.evgen.android.apiclient.utils.Log;
 import by.evgen.android.imageloader.CircleMaskedBitmap;
 
-import java.util.List;
-
 /**
  * Created by User on 20.12.2014.
  */
@@ -22,7 +21,7 @@ public class LoadVkUserData implements ManagerDownload.Callback<List<Category>> 
     final static String LOG_TAG = LoadVkUserData.class.getSimpleName();
     private Callbacks mCallbacks;
 
-    public LoadVkUserData(Callbacks callbacks){
+    public LoadVkUserData(Callbacks callbacks) {
         String url = Api.VKFOTOS_GET + VkOAuthHelper.mAccessToken;
         ManagerDownload.load(this,
                 url,
@@ -35,7 +34,7 @@ public class LoadVkUserData implements ManagerDownload.Callback<List<Category>> 
         void onUserData(Bitmap foto, String first, String last);
     }
 
-   @Override
+    @Override
     public void onPreExecute() {
 
     }
@@ -70,7 +69,7 @@ public class LoadVkUserData implements ManagerDownload.Callback<List<Category>> 
                 new BitmapProcessor());
     }
 
-   @Override
+    @Override
     public void onError(Exception e) {
         //TODO
     }

@@ -18,7 +18,7 @@ public class DetailsFragmentActivity extends ActionBarActivity {
             finish();
             return;
         }
-       ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
     }
 
 

@@ -23,7 +23,7 @@ public class DateAdapter extends SimpleCursorAdapter {
     String prevDate = null;
 
     public DateAdapter(Context context, int layout, Cursor dataCursor, String[] from,
-                         int[] to) {
+                       int[] to) {
         super(context, layout, dataCursor, from, to);
         imageLoader = ImageLoader.get(context);
         this.dataCursor = dataCursor;
@@ -39,7 +39,7 @@ public class DateAdapter extends SimpleCursorAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         dataCursor.moveToPosition(position);
-        if (position > 0 ) {
+        if (position > 0) {
             dataCursor.moveToPrevious();
             prevDate = (new java.sql.Date(dataCursor.getLong(dataCursor.getColumnIndex("wikidate")))).toString();
             dataCursor.moveToNext();

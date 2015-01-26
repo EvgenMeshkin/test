@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +11,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import by.evgen.android.apiclient.R;
 import by.evgen.android.apiclient.adapters.DateAdapter;
 import by.evgen.android.apiclient.bo.NoteGsonModel;
 import by.evgen.android.apiclient.utils.FindResponder;
 import by.evgen.android.imageloader.ImageLoader;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by evgen on 06.01.2015.
@@ -39,6 +38,7 @@ public class WatchListFragment extends Fragment {
 
     public interface Callbacks {
         void onShowDetails(NoteGsonModel note);
+
         void onErrorDialog(Exception e);
     }
 
@@ -83,8 +83,8 @@ public class WatchListFragment extends Fragment {
 
         ListView listView = (ListView) content.findViewById(android.R.id.list);
         imageLoader = ImageLoader.get(getActivity());
-        String[] from = new String[] { "name", "wikidate" };
-        int[] to = new int[] { R.id.text1, R.id.text2 };
+        String[] from = new String[]{"name", "wikidate"};
+        int[] to = new int[]{R.id.text1, R.id.text2};
         mCursor.moveToFirst();
         if (mAdapter == null) {
             mAdapter = new DateAdapter(getActivity(), R.layout.adapter_item, mCursor, from, to);
@@ -94,12 +94,12 @@ public class WatchListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor)mAdapter.getItem(position);
+                Cursor cursor = (Cursor) mAdapter.getItem(position);
                 NoteGsonModel note = new NoteGsonModel(cursor.getLong(cursor.getColumnIndex("_id")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("wikidate")));
                 showDetails(note);
             }
         });
-            return content;
-   }
+        return content;
+    }
 
 }

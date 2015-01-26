@@ -1,8 +1,8 @@
 package by.evgen.android.apiclient;
 
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
 /**
  * Created by User on 07.10.2014.

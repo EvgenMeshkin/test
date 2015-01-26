@@ -1,6 +1,7 @@
 package by.evgen.android.apiclient.helper;
 
 
+import java.util.List;
 
 import by.evgen.android.apiclient.Api;
 import by.evgen.android.apiclient.bo.Category;
@@ -9,22 +10,21 @@ import by.evgen.android.apiclient.processing.RandomProcessor;
 import by.evgen.android.apiclient.source.HttpDataSource;
 import by.evgen.android.apiclient.utils.Log;
 
-import java.util.List;
-
 /**
  * Created by User on 05.01.2015.
  */
 //TODO rename
-public class LoadRandomPage implements ManagerDownload.Callback<List<Category>>{
+public class LoadRandomPage implements ManagerDownload.Callback<List<Category>> {
 
     private Callbacks mCallback;
 
     public interface Callbacks {
         void onShowDetails(NoteGsonModel note);
+
         void onErrorDialog(Exception e);
     }
 
-    public void loadingRandomPage (Callbacks callback){
+    public void loadingRandomPage(Callbacks callback) {
         Log.text(this.getClass(), "SrtartLoader");
         mCallback = callback;
         ManagerDownload.load(this,
@@ -40,15 +40,15 @@ public class LoadRandomPage implements ManagerDownload.Callback<List<Category>>{
 
     @Override
     public void onPostExecute(List<Category> data) {
-      Integer i = data.size();
-      Category item = data.get(i-1);
-      NoteGsonModel note = new NoteGsonModel(null, item.getTitle(), null);
-      mCallback.onShowDetails(note);
+        Integer i = data.size();
+        Category item = data.get(i - 1);
+        NoteGsonModel note = new NoteGsonModel(null, item.getTitle(), null);
+        mCallback.onShowDetails(note);
     }
 
     @Override
     public void onError(Exception e) {
-        Log.text(this.getClass(), "Error" );
+        Log.text(this.getClass(), "Error");
     }
 
 }

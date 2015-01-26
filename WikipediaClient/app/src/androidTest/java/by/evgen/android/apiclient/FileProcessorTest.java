@@ -7,18 +7,19 @@ import android.util.Log;
 import com.example.evgen.apiclient.processing.FileProcessor;
 import com.example.evgen.apiclient.source.FileDataSource;
 
-//import org.junit.Test;
-
 import java.io.File;
 import java.io.InputStream;
+
+//import org.junit.Test;
 
 /**
  * Created by evgen on 20.10.2014.
  */
 public class FileProcessorTest extends ActionBarActivity {
     final String DIR_SD = "MyFiles";
- //   @Test
- //private testCala();
+
+    //   @Test
+    //private testCala();
     public void testCalA() throws Exception {
         //getBaseContext();
         //setContentView(R.layout.activity_main);
@@ -36,12 +37,9 @@ public class FileProcessorTest extends ActionBarActivity {
         String processingResult = proc.process(result);
 
 
-
-
-
         if (text.equals(processingResult)) {
-        Log.d("myLog", "True"); }
-        else Log.d("myLog", "False");
+            Log.d("myLog", "True");
+        } else Log.d("myLog", "False");
 
 
     }

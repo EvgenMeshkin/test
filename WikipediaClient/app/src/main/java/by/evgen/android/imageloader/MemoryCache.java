@@ -3,6 +3,7 @@ package by.evgen.android.imageloader;
 /**
  * Created by User on 26.11.2014.
  */
+
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
@@ -18,12 +19,12 @@ public class MemoryCache {
         }
     };
 
-    public Bitmap get(String id){
-            return cache.get(id);
+    public Bitmap get(String id) {
+        return cache.get(id);
     }
 
-    public void put(String id, Bitmap bitmap){
-            cache.put(id, bitmap);
+    public void put(String id, Bitmap bitmap) {
+        cache.put(id, bitmap);
     }
 
 
